@@ -1,6 +1,6 @@
 <?
-define('CONFIG_TITLE','ZETABYTE');
-define('CONFIG_SUB_TITLE','ZETABYTE');
+define('CONFIG_TITLE','THE KHAN MINE');
+define('CONFIG_SUB_TITLE','THE KHAN MINE');
 
 // 메일설정
 define('CONFIG_MAIL_ACCOUNT','willsoftkr');
