@@ -53,7 +53,9 @@ if($_GET['level']){
 	$sql_search .= " and mb_level = ".$_GET['level'];
 }
 
-
+if($member['mb_id'] != 'admin'){
+	$sql_search .= " and mb_id  != 'admin' ";
+}
 
 if($_GET['nation']){
 	$sql_search .= " and nation_number = ".$_GET['nation'];

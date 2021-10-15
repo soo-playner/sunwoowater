@@ -7,6 +7,11 @@ include_once(G5_PATH.'/util/package.php');
 
 auth_check($auth[$sub_menu], 'w');
 
+/* admin 슈퍼관리자 수정불가 코드*/
+if($_GET['mb_id'] == 'admin' && $member['mb_id'] != 'admin'){
+	alert('슈퍼관리자는 수정할수없습니다.','/adm/member_list.php');
+}
+
 function bonus_pick($val){    
     global $g5;
     $pick_sql = "select * from {$g5['bonus_config']} where code = '{$val}' ";
