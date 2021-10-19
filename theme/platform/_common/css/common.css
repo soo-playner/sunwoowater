@@ -231,7 +231,8 @@ button.caret:hover{background:rgba(0,0,0,0.2)}
 .admin_btn{float: right;position: absolute;right: 15px;width: 80px;}
 .small{width:32px !important;height:32px!important;}
 
-.currency-right{position:absolute;float:right;right:20px;}
+.currency-right{position:absolute;float:right;right:25px;}
+.currency-right2{position: relative; float:right;right:20px;margin-top:-36px;font-size:15px;font-weight: 900;}
 input[type="text"]+.currency-right{position: absolute;;margin-top:16px;color:#666;font-size: 14px;font-weight: bold;}
 
 .read_only{background: rgba(0,0,0,0.3) !important;color:white !important;box-shadow: 0 0 0 2px #1f5c86;}
@@ -813,7 +814,7 @@ input:checked + .slider:before {-webkit-transform: translateX(26px);-ms-transfor
 #eth .pre_price{border:3px solid dodgerblue;}
 #usdt .d_price{color:#4556ff;}
 #eth .d_price{color:dodgerblue;}
-.fee{display:none;margin-top:-10px;font-size:11px;color:#555;height:30px;text-align:right;width:100%;}
+/* .fee{display:none;margin-top:-10px;font-size:11px;color:#555;height:30px;text-align:right;width:100%;} */
 
 #fee_val{margin-left:5px;}
 /* .badge.fee{_background:rgba(0,0,0,0.3);color:white;float: right;font-weight: 400;margin-top:-10px; display:none;}

@@ -158,7 +158,7 @@ $result_withdraw = sql_query($sql);
 ?>
 
 
-<!-- <link rel="stylesheet" href="<?= G5_THEME_CSS_URL ?>/withdrawal.css"> -->
+<link rel="stylesheet" href="<?= G5_THEME_URL ?>/css/scss/page/mywallet.css">
 <!-- <script type="text/javascript" src="./js/qrcode.js"></script> -->
 
 <? include_once(G5_THEME_PATH . '/_include/breadcrumb.php'); ?>
@@ -214,6 +214,7 @@ $result_withdraw = sql_query($sql);
           -->
       </div>
 
+  
 
   <div class="col-sm-12 col-12 content-box round mt20" id="eth">
     <h3 class="wallet_title" data-i18n="deposit.입금확인요청">입금확인요청 </h3> <span class='desc'> - 계좌입금후 1회만 요청해주세요</span>
@@ -223,11 +224,17 @@ $result_withdraw = sql_query($sql);
       <div class="col-sm-12 col-12 withdraw mt20">
         <input type="text" id="deposit_name" class='b_ghostwhite p15' placeholder="" data-i18n='[placeholder]deposit.입금자명을 입력해주세요'>
 
-        <input type="text" id="deposit_value" class='b_ghostwhite p15' placeholder="" data-i18n='[placeholder]deposit.입금액을 입력해주세요' inputmode="numeric">
-        <label class='currency-right'><?= ASSETS_CURENCY ?></label>
+        <input type="text" id="deposit_value" class='b_ghostwhite p15 cabinet' placeholder="입금액(숫자만)을 입력해주세요" inputmode="numeric">
+        <span class='cabinet_inner'>※입금하신 원화금액을 입력해주세요</span>
+        <span class='cabinet_outer'></span>
+        <label class='currency-right2'><?= DEPOSIT_CURENCY ?></label>
+        
+        <!-- <input type='button' class='btn input_right_btn' value='$'> -->
+        <!-- <input type='button' class='btn input_right_btn' value='원'> -->
+
       </div>
 
-      <div class='col-sm-12 col-12 '>
+      <div class='col-sm-12 col-12 mt20'>
         <button class="btn btn_wd font_white deposit_request" data-currency="원">
           <span data-i18n="deposit.입금확인요청">입금확인요청</span>
         </button>
@@ -235,6 +242,10 @@ $result_withdraw = sql_query($sql);
     </div>
   </div>
 
+  <style>
+    /* .w70{width:70%;} */
+    .input_right_btn{width:45px;height:45px;}
+  </style>
 
   <!-- 입금 요청 내역 -->
   <div class="history_box content-box mt40">
@@ -281,7 +292,7 @@ $result_withdraw = sql_query($sql);
               <option value="eth" selected>ETH</option>
               <option value="mbm">MBM</option>
           </select>
-      </div> 
+      </div>   
       -->
 
       <div class="row">
@@ -301,16 +312,25 @@ $result_withdraw = sql_query($sql);
         <label class="sub_title">- 출금금액 (수수료:<?= $withdrwal_fee ?>%)</label>
         <span style='display:inline-block;float:right;'><button type='button' id='max_value' class='btn inline' value=''>max</button></span>
 
-        <input type="text" id="sendValue" class="send_coin b_ghostwhite " placeholder="Enter Withdraw quantity" data-i18n='[placeholder]withdraw.출금 금액을 입력해주세요' inputmode="numeric">
-        <label class='currency-right'><?= ASSETS_CURENCY ?></label>
-        <? if ($fee != 0) { ?>
-          <div class='fee'>
-            <span>출금 총액(+fee): </span><span id='fee_val'></span>
-          </div>
-        <? } ?>
+        <input type="text" id="sendValue" class="send_coin b_ghostwhite p15 cabinet" placeholder="Enter Withdraw quantity" data-i18n='[placeholder]withdraw.출금 금액을 입력해주세요' inputmode="numeric">
+        <span class='cabinet_inner font_red'>※출금하실 달러금액을 입력해주세요</span>
+        <label class='currency-right2'><?= ASSETS_CURENCY ?></label>
+
+        <div class="row fee">         
+            <div class="col-5 text_left fee_left">
+              <i class="ri-exchange-fill"></i>
+              <span id="active_amt">0</span>
+            </div>
+
+            <div class="col-7 text_right fee_right" >
+              <label class="fees">+ 수수료 :</label>
+              <i class='ri-money-dollar-circle-line'></i>
+              <span id="fee_val">0</span>
+            </div>
+        </div>
       </div>
 
-      <div class="b_line5"></div>
+      <div class="b_line5 mt10 mb10" style='position:inherit'></div>
       <div class="otp-auth-code-container mt20">
         <div class="verifyContainerOTP">
           <label class="sub_title" data-i18n="">- 출금 비밀번호</label>
@@ -414,7 +434,8 @@ $result_withdraw = sql_query($sql);
 
 
     /* 출금*/
-    var ASSETS_CURENCY = '<?= ASSETS_CURENCY ?>';
+    var usd_price = '<?=$usd_price?>';
+    var WITHDRAW_CURENCY = '<?= WITHDRAW_CURENCY ?>';
     var mb_block = Number("<?= $member['mb_block'] ?>"); // 차단
 
     var mb_id = '<?= $member['mb_id'] ?>';
@@ -435,13 +456,15 @@ $result_withdraw = sql_query($sql);
     
     // 출금금액 변경 
     function input_change() {
+      
       var inputValue = $('#sendValue').val().replace(/,/g, '');
-      var fee_calc = Number(inputValue * out_fee) + Number(inputValue);
+      var fee_calc = Number(inputValue * out_fee)*Number(usd_price);
       result = parseFloat(fee_calc.toFixed());
       var fee_result = result.toLocaleString('ko-KR');
-
-      $('.fee').css('display', 'block');
-      $('#fee_val').text(fee_result + " <?= BALANCE_CURENCY ?>");
+      
+      $('.fee').css('display', 'flex');
+      $('#active_amt').text( Price(inputValue*(usd_price))+ " <?= WITHDRAW_CURENCY ?>");
+      $('#fee_val').text(fee_result + " <?= WITHDRAW_CURENCY ?>");
     }
 
     $('#sendValue').change(input_change);
@@ -554,7 +577,7 @@ $result_withdraw = sql_query($sql);
             mb_id: mb_id,
             func: 'withdraw',
             amt: inputVal,
-            select_coin : ASSETS_CURENCY,
+            select_coin : WITHDRAW_CURENCY,
             bank_name: withdrawal_bank_name,
             bank_account: withdrawal_bank_account,
             account_name: withdrawal_account_name
@@ -633,6 +656,15 @@ $result_withdraw = sql_query($sql);
       });
     });  */
 
+    /* $('#deposit_value').on('change',function(){
+      var input_val = $(this).val().replace(/,/g, "");
+      var output_val = Price(input_val/ 1.2/1000);
+      $('.cabinet_outer').text("= $"+output_val).css('display','contents');
+    });
+
+    $('#deposit_value').on('click',function(){
+      $('.cabinet_outer').css('display','none');
+    }); */
 
     // 입금확인요청 
     $('.deposit_request').on('click', function(e) {

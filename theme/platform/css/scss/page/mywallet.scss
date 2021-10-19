@@ -3,6 +3,7 @@
 @import "../include/_mixin";
 
 .mywallet {
+    input[type="text"].cabinet{margin-bottom:0 !important;}
 
     .loadable {
         display:none;
@@ -55,7 +56,6 @@
             display:inline-block;
             margin:0;
             padding:0;
-            width:auto;
             color:$main-point-color;
             text-align:center;
             font-size:16px;
@@ -181,6 +181,8 @@
         margin: 3px 0;
         float: right;
     }
+    
+   
 } 
 
 #sendCoin {
@@ -250,12 +252,12 @@
 
 .fee {
     display:none;
-    margin-top:-10px;
     color:#555;
-    height:30px;
+    height:36px;
+    line-height: 36px;
     text-align:right;
     font-size: small; 
-    margin: -10px -15px 10px;
+    margin: 0px 0px;
     
     .ri-exchange-fill {
         font-size:18px;

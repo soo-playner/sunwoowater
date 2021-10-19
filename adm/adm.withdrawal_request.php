@@ -6,11 +6,13 @@ include_once(G5_THEME_PATH.'/_include/wallet.php');
 $g5['title'] = "수당(원화) 출금 요청 내역";
 include_once('./adm.header.php');
 
+$withdraw_curency = WITHDRAW_CURENCY;
+
 function short_code($string, $char = 8){
 	return substr($string,0,$char)." ... ".substr($string,-8);
 }
 
-$sql_condition = "and coin = '원' " ;
+$sql_condition = "and coin = '{$withdraw_curency}' " ;
 
 if($_GET['fr_id']){
 	$sql_condition .= " and A.mb_id = '{$_GET['fr_id']}' ";
@@ -41,6 +43,7 @@ if($_GET['ord']!=null && $_GET['ord_word']!=null){
 $sql = " select count(*) as cnt, sum(amt) as hap, sum(amt_total) as amt_total, sum(fee) as feehap, sum(out_amt) as outamt from {$g5['withdrawal']} A WHERE 1=1 AND DATE_FORMAT(A.create_dt, '%Y-%m-%d') between '{$fr_date}' and '{$to_date}'	 ";
 $sql .= $sql_condition;
 $sql .= $sql_ord;
+
 $row = sql_fetch($sql);
 
 $total_count = $row['cnt'];
@@ -232,19 +235,18 @@ $ord_rev = $ord_array[($ord_key+1)%2]; // 내림차순→오름차순, 오름차
 			<!-- <th style="width:5%;">하부추천인</th> -->
 			<th style="width:auto">출금정보</th>
 
-			<th style="width:8%;">출금신청단위</th>
-			<th style="width:5%;">출금전잔고</th>
-			<th style="width:7%;">출금요청액</th>
-			<th style="width:10%;">출금계산액(수수료)</th>
-
-			<th style="width:8%;">출금액 <span style='color:red'>(<?=WITHDRAW_CURENCY?>)</span></th>
+			<th style="width:6%;">출금단위</th>
+			<th style="width:6%;">출금전잔고(<?=ASSETS_CURENCY?>)</th>
+			<th style="width:7%;">출금요청액(<?=ASSETS_CURENCY?>)</th>
+			<th style="width:5%;">수수료(<?=ASSETS_CURENCY?>)</th>
+			<th style="width:6%;">출금계산액(<?=ASSETS_CURENCY?>)</th>
 			<th style="width:6%;">출금시세</th>
+
+			<th style="width:8%;">실출금액 <span style='color:red'>(<?=WITHDRAW_CURENCY?>)</span></th>
 			
-			<!-- <th style="width:5%;">적용코인시세</th> -->
-			
-			<th style="width:8%;">요청일시</th>
+			<th style="width:6%;">요청일시</th>
 			<th style="width:8%;">승인여부</th>
-			<th style="width:8%;">상태변경일</th>
+			<th style="width:6%;">상태변경일</th>
 		</thead>
 
         <tbody>
@@ -269,13 +271,10 @@ $ord_rev = $ord_array[($ord_key+1)%2]; // 내림차순→오름차순, 오름차
 				<!-- <td><?=$mb['mb_child']?></td> -->
 				
 				<td>
-				<?php if($row['addr'] == ''){?>
+				
 					<?=$row['bank_name']?> | <span id="bank_account" style='font-weight:600;font-size:13px;'><?=$row['bank_account']?></span>(<?=$row['account_name']?>)
-					<button type="button" class="btn inline_btn copybutton f_right" style='margin-right:10px;vertical-align:top;'>계좌복사</button>	 
-					<?php }else{ ?>
-					<!-- <a href='https://etherscan.io/address/<?=$row['addr']?>' target='_blank'><?=short_code($row['addr'],15)?></a>  -->
-					<div class='eth_addr'><a href='https://filfox.info/ko/address/<?=$row['addr']?>' target='_blank'><?=$row['addr']?></a></div>
-					<?php } ?>			
+					<button type="button" class="btn inline_btn copybutton" style='margin-right:10px;'>계좌복사</button>	 
+						
 				</td>
 
 				<input type="hidden" value="<?=$row['addr']?>" name="addr[]">
@@ -284,29 +283,34 @@ $ord_rev = $ord_array[($ord_key+1)%2]; // 내림차순→오름차순, 오름차
 				</td>
 				
 				<!-- 출금전잔고 -->
-				<td class="gray" style='font-size:11px;'><?=shift_auto($row['account'],$row['coin'])?></td>
+				<td class="gray" style='font-size:11px;'><?=shift_auto($row['account'],ASSETS_CURENCY)?></td>
 
 				<!-- 출금요청액 -->
-				<td class="td_amt <?=$coin_class?>"><?=shift_auto($row['amt_total'],$row['coin'])?></td>
+				<td class="td_amt <?=$coin_class?>"><?=shift_auto($row['amt_total'],ASSETS_CURENCY)?></td>
+				
+				<!-- 수수료 -->
+				<td class="gray" style='line-height:18px;'>
+					<?=shift_auto($row['fee'],ASSETS_CURENCY)?>
+				</td>
 
 				<!-- 출금계산 -->
 				<td class="gray" style='line-height:18px;'>
-					<input type="hidden" value="<?=shift_auto($row['amt'],$row['coin'])?>" name="amt[]">
+					<input type="hidden" value="<?=shift_auto($row['amt'],ASSETS_CURENCY)?>" name="amt[]">
 					<!-- 계산액 -->
-					<?=shift_auto($row['amt'],$row['coin'])?> 
-					<!-- 수수료 -->
-					<span style='display:block;font-size:11px;'>(<?=shift_auto($row['fee'],$row['coin'])?>)</span>
+					<?=shift_auto($row['amt'],ASSETS_CURENCY)?> 
 				</td>
-				
 
+				
+				
+				<!-- 출금시세 -->
+				<td class="gray" style='font-size:11px;'><span><?=ASSETS_CURENCY?>/<?=shift_auto($row['cost'],$row['coin'])?><?=WITHDRAW_CURENCY?></span></td>
+				
+				<!-- 실출금액 -->
 				<td  class="td_amt" style="color:red">
 					<input type="hidden" value="<?=shift_auto($row['out_amt'])?>" name="out_amt[]">
 					<?=shift_auto($row['out_amt'],$row['coin'])?>
 				</td>
-				
-				<!-- 출금시세 -->
-				<td class="gray" style='font-size:11px;'><span><?=shift_auto($row['cost'],$row['coin'])?></span></td>
-				
+
 				<td  style="font-size:11px;"><?=timeshift($row['create_dt'])?></td>
 				<td>
 					<select name="status" uid="<?=$row['uid']?>" class='sel_<?=$row['status']?>'>
@@ -331,11 +335,13 @@ $ord_rev = $ord_array[($ord_key+1)%2]; // 내림차순→오름차순, 오름차
 			<td>합계:</td>
 			<td><?=$total_count?></td>
 			<td colspan=2></td>
+			<td ></td>
 			<td colspan=1><?=shift_doller($total_amt)?></td>
 			<td><?=shift_doller($total_fee)?></td>
 			<td colspan=1></td>
+			<td colspan=1></td>
 			<td colspan=1><?=shift_auto($total_out)?></td>
-			<td colspan=4></td>
+			<td colspan=3></td>
 		</tfoot>
     </table>
 </div>

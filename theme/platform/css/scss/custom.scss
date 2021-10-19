@@ -160,6 +160,15 @@ a.btn_cancle, .btn_cancle{
     img{box-shadow:1px 1px 2px rgba(0,0,0,0.25)}
 }
 
+/* 인풋-캐비닛 표시 */
+.cabinet_inner {
+    width: 100%;
+    font-size: 11px;
+    padding-left: 10px;
+    color: #006df3;
+    display: none;
+}
+
 
 /* 모달팝업 제한 추가 */
 .modal-body{max-height: 400px;

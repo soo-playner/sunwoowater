@@ -3,17 +3,15 @@ include_once('./_common.php');
 include_once(G5_THEME_PATH.'/_include/wallet.php');
 
 // 출금처리 PROCESS
+// $debug = 1;
 
 $now_datetime = date('Y-m-d H:i:s');
 $now_date = date('Y-m-d');
 
-/* 메일인증 - 사용안함 */
-//include_once('../lib/otphp/lib/otphp.php');
-//include_once(G5_LIB_PATH.'/mailer.lib.php');
+
 /* 코인출금시 */
 /* $wallet_addr	= trim($_POST['wallet_addr']);
 $select_coin    = trim($_POST['select_coin']);  */
-
 $func				= trim($_POST['func']);
 $mb_id			= trim($_POST['mb_id']);
 $amt		= trim($_POST['amt']);
@@ -24,12 +22,12 @@ $bank_name = trim($_POST['bank_name']);
 $bank_account = trim($_POST['bank_account']);
 $account_name = trim($_POST['account_name']);
 
-// $debug = 1;
 
 if($debug){
-	$mb_id = 'admin';
+	$mb_id = 'test1';
 	$func = 'withdraw';
-	$amt = 133333;
+	$amt = 100;
+	$select_coin = '$';
 	$bank_name = '농협';
 	$account_name = '로그컴퍼니';
 	$bank_account = '123-456789-012';
@@ -42,6 +40,7 @@ $fee = $withdrwal_setting['fee'];
 $min_limit = $withdrwal_setting['amt_minimum'];
 $max_limit = $withdrwal_setting['amt_maximum'];
 $day_limit = $withdrwal_setting['day_limit'];
+
 
 // 출금가능금액 검증
 $withdrwal_total = floor($total_withraw/(1 + $fee*0.01));
@@ -123,6 +122,7 @@ if($total_row['total_sum'] != ""){
 	return false;
 } */
 
+$out_amt = $amt*$usd_price;
 
 //출금 처리
 $proc_receipt = "insert {$g5['withdrawal']} set
@@ -139,8 +139,8 @@ mb_id ='{$mb_id}'
 , coin = '{$select_coin}'
 , status = '0'
 , create_dt = '".$now_datetime."'
-, cost = '1'
-, out_amt = '{$in_amt}'
+, cost = '{$usd_price}'
+, out_amt = '{$out_amt}'
 , od_type = '출금요청' ";
 
 

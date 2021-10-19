@@ -230,8 +230,8 @@ $result = sql_query($sql);
         <th scope="col" width='8%'>추천인</th>
         <th scope="col" width='10%'>입금자명</th>
         <th scope="col" width='15%'>입금요청금액</th>
-        <th scope="col" width='15%'>입금처리금액</th>
         <th scope="col" width='5%'>입금종류</th>
+        <th scope="col" width='15%'>입금처리금액 (<?=ASSETS_CURENCY?>)</th>
         <th scope="col" width='10%'>승인여부</th>
         <th scope="col" width='10%'>요청시간</th>
         <th scope="col" width='15%'>상태변경일</th>
@@ -251,15 +251,16 @@ $result = sql_query($sql);
         $member_result = sql_fetch($member_sql);
 
     ?>
-   
+
     <tr class=" <?=$row_dup?>">
         <td ><?php echo $row['uid'] ?></td>
         <td style='color:#333;font-weight:600'><a href='/adm/member_form.php?sst=&sod=&sfl=&stx=&page=&w=u&mb_id=<?=$row['mb_id']?>' target='_blank'><?=$row['mb_id'] ?></a></td>
         <td style='color:#666'><?=$member_result['mb_recommend']?></td>
         <td ><?=$row['txhash']?></td>
-        <td><?=Number_format($row['in_amt'],ASSETS_NUMBER_POINT)?></td>
-        <td><input type='text' class='reg_text input_amt_val' style='font-weight:600;color:blue' value='<?=Number_format($row['in_amt'],ASSETS_NUMBER_POINT)?>' inputmode="numeric"></td>
+        <td><?=Number_format($row['amt'],DEPOSIT_NUMBER_POINT)?></td>
         <td class='coin'><?=strtoupper($row['coin']);?></td>
+        <td><input type='text' class='reg_text input_amt_val' style='font-weight:600;color:blue' value='<?=shift_auto($row['in_amt'],'$')?>' inputmode="numeric"></td>
+        
         <td>
             <!-- <?=status($row['status'])?> -->
             <select name="status" uid="<?=$row['uid']?>" class='sel_<?=$row['status']?>'>

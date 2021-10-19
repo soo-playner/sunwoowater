@@ -6,11 +6,13 @@ include_once(G5_THEME_PATH.'/_include/wallet.php');
 $g5['title'] = "마이닝(코인) 출금 요청 내역";
 include_once('./adm.header.php');
 
+$withdraw_curency = WITHDRAW_CURENCY;
+
 function short_code($string, $char = 8){
 	return substr($string,0,$char)." ... ".substr($string,-8);
 }
 
-$sql_condition = "and coin != '원' " ;
+$sql_condition = "and coin != '{$withdraw_curency}' " ;
 
 if($_GET['fr_id']){
 	$sql_condition .= " and A.mb_id = '{$_GET['fr_id']}' ";

@@ -24,12 +24,12 @@ $drain = 1;
 
 
 if ($debug) {
-	$uid = 3;
-	$status = 1;
+	$uid = 1;
+	$status = 4;
 	$refund = 'Y';
-	$func = 'deposit';
-	$coin = '원';
-	$in_amt = '330000';
+	$func = 'withrawal';
+	$coin = '$';
+	// $in_amt = '330000';
 }
 
 
@@ -42,12 +42,7 @@ if ($func == 'withrawal') {
 		$in_amt_total = $ret['amt_total'];
 
 		// 출금반환처리
-
-		if($coin == '원'){
-			$coin_target = "mb_deposit_calc";
-		}else{
-			$coin_target = "mb_" . strtolower($coin) . "_calc";
-		}
+		$coin_target = "mb_deposit_calc";
 		
 		$update_member_return = "update g5_member set {$coin_target} = {$coin_target} + {$in_amt_total}, mb_shift_amt = mb_shift_amt - {$in_amt_total}  where mb_id='{$mb_id}' ";
 
@@ -100,14 +95,15 @@ if ($func == 'withrawal') {
 		}
 
 		
+		$auto_leg_regist = false;
 
 		// 추천인 산하 후원인 자리 검색
-		$recomm_sql = "SELECT mb_recommend,mb_brecommend FROM g5_member WHERE mb_id = '{$mb_id}' ";
+		/* $recomm_sql = "SELECT mb_recommend,mb_brecommend FROM g5_member WHERE mb_id = '{$mb_id}' ";
 		$recomm_result = sql_fetch($recomm_sql);
 
-		$brecomm = $recomm_result['mb_brecommend'];  
-
-		if($brecomm == ''){
+		$brecomm = $recomm_result['mb_brecommend'];   */
+		
+		if($auto_leg_regist && $brecomm == ''){
 			// $recomm = $recomm_result['mb_recommend'];
 			$recomm = $config['cf_admin'];
 		
@@ -201,31 +197,36 @@ if ($func == 'withrawal') {
 			}
 
 
-		// 랜덤레그 후원인 기록
-			/* if($recom_update_result){
-			$origin_number_sql = "SELECT mb_recommend from g5_member WHERE mb_id = '{$mb_id}' ";
-			$origin_number_result = sql_fetch($origin_number_sql);
-			$origin_num = $origin_number_result['nation_number'];
-			$origin_recom = $origin_number_result['mb_recommend'];
 
-			$brecomme2 = array_brecommend_binary('atm', 1);
-			$target_key2 = min(array_keys($brecomme2));
-			$now_brecom2 = $brecomme2[$target_key2];
 
-			if($now_brecom2['cnt'] == 0){
-				$now_type2 = 'L';
-			}else{
-				$now_type2 = 'R';
-			}
+
 			
-			if ($debug) {echo "<br><br> 랜덤레그 후원자찾기 :: ";print_R($now_brecom2);}
 
-			$random_recom_update_sql = "INSERT g5_member_binary set mb_id = '{$mb_id}',mb_recommend='{$origin_recom}', mb_brecommend='{$now_brecom2['id']}', mb_brecommend_type='{$now_type2}',nation_number = {$origin_num} ";
-			
-			//중복아이디 없을때만
-			$dup_check_sql = "SELECT count(*) as cnt from g5_member_binary WHERE mb_id = '{$mb_id}' ";
-			$dup_check_result = sql_fetch($dup_check_sql);
-			$dup_check = $dup_check_result['cnt'];
+			// 랜덤레그 후원인 기록
+				/* if($recom_update_result){
+				$origin_number_sql = "SELECT mb_recommend from g5_member WHERE mb_id = '{$mb_id}' ";
+				$origin_number_result = sql_fetch($origin_number_sql);
+				$origin_num = $origin_number_result['nation_number'];
+				$origin_recom = $origin_number_result['mb_recommend'];
+
+				$brecomme2 = array_brecommend_binary('atm', 1);
+				$target_key2 = min(array_keys($brecomme2));
+				$now_brecom2 = $brecomme2[$target_key2];
+
+				if($now_brecom2['cnt'] == 0){
+					$now_type2 = 'L';
+				}else{
+					$now_type2 = 'R';
+				}
+				
+				if ($debug) {echo "<br><br> 랜덤레그 후원자찾기 :: ";print_R($now_brecom2);}
+
+				$random_recom_update_sql = "INSERT g5_member_binary set mb_id = '{$mb_id}',mb_recommend='{$origin_recom}', mb_brecommend='{$now_brecom2['id']}', mb_brecommend_type='{$now_type2}',nation_number = {$origin_num} ";
+				
+				//중복아이디 없을때만
+				$dup_check_sql = "SELECT count(*) as cnt from g5_member_binary WHERE mb_id = '{$mb_id}' ";
+				$dup_check_result = sql_fetch($dup_check_sql);
+				$dup_check = $dup_check_result['cnt'];
 
 				if ($debug){
 					echo "<br><br>랜덤 후원인 기록 :: ";
@@ -239,7 +240,6 @@ if ($func == 'withrawal') {
 					}
 				}
 			} */
-
 
 			//$recom_update_result = sql_query($recom_update_sql);
 
@@ -358,7 +358,7 @@ if ($func == 'withrawal') {
 				}
 
 			}  */
-		// 아바타생성프로세스
+			// 아바타생성프로세스
 		}
 
 	} // 승인인경우

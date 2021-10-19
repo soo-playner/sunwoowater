@@ -38,14 +38,14 @@ function coin_price($income){
 	}
 }
 
-
+/* 
 function shift_price($income,$val = 1, $outcome){
 	$in_price = coin_price($income);
 	$out_price = coin_price($outcome);
 	
 	return $in_price * $val / $out_price;
 }
-
+ */
 
 // 예치금/수당 퍼센트
 function bonus_state($mb_id){

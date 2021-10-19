@@ -49,8 +49,8 @@ $limited = $pre_setting['limited'];
 $limited_per = ($limited/100)/100;
 
 // 현재 통화(달러) 시세
-$usd_price = coin_price('usd')*1000;
-$fil_price = coin_prices('fil');
+$usd_price = coin_prices('usdt')*1000;
+// $fil_price = coin_prices('fil');
 $eth_price = coin_prices('eth');
 
 function coin_price($income){
@@ -65,6 +65,7 @@ function coin_price($income){
 		return $result['current_cost'];
 	}
 }
+
 
 
 function coin_prices($income,$category = 'cost'){
@@ -103,6 +104,8 @@ function coin_prices($income,$category = 'cost'){
 		return $daily;
 	}else if($category == 'icon'){
 		return $icon;
+	}else if($category == 'currency_point'){
+		return $result['currency_point'];
 	}else if($category == 'all'){
 		return array($symbol,$cost,$dollor,$daily,$chart,$icon);
 	}else{
@@ -243,14 +246,34 @@ function wallet_config($func){
 
 
 
-
-
 // 환율변환시 (입력통화, 비율, 출력할통화)
-function shift_price($income,$val = 1, $outcome){
-	$in_price = coin_price($income);
-	$out_price = coin_price($outcome);
-	
-	return $in_price * $val / $out_price;
+function shift_price($value,$incom_currency, $out_currency,$price=false){
+	global $usd_price;
+
+	if($incom_currency == $out_currency){
+		return $value;
+	}
+
+	if($incom_currency == '원'){
+		$doller_value = $value / $usd_price;
+	}else if($incom_currency == '$'){
+		$won_value = $value * $usd_price;
+	}
+
+	if($out_currency == '$'){
+		if($price){
+			$result = Number_format($doller_value,2);
+		}else{
+			$result = $doller_value;
+		}
+	}else if($out_currency == '원'){
+		if($price){
+			$result = Number_format($won_value,0);
+		}else{
+			$result = $won_value;
+		}
+	}
+	return $result;
 }
 
 
