@@ -59,7 +59,7 @@ if($_POST['nw_member_reset'] == 'on'){
 
 if($_POST['nw_asset_reset'] == 'on'){
 
-    $trunc2 = sql_query(" TRUNCATE TABLE `{$g5['widthdrawal']}` ");
+    $trunc2 = sql_query(" TRUNCATE TABLE `{$g5['withdrawal']}` ");
     $trunc3 = sql_query(" TRUNCATE TABLE `{$g5['deposit']}` ");
 
     if($trunc3){

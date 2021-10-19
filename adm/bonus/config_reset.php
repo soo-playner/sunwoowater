@@ -5,137 +5,13 @@ include_once('./_common.php');
 $g5['title'] = "데이터 초기화 설정";
 
 include_once(G5_ADMIN_PATH . '/admin.head.php');
-
-
 ?>
 
 <link rel="stylesheet" href="/adm/css/switch.css">
-
-<style type="text/css">
-	/* xmp {font-family: 'Noto Sans KR', sans-serif; font-size:12px;} */
-	.adminWrp {
-		padding: 30px;
-		min-height: 50vh
-	}
-
-	input[type="radio"] {}
-
-	input[type="radio"]+label {
-		color: #999;
-	}
-
-	input[type="radio"]:checked+label {
-		color: #e50000;
-		font-weight: bold;
-		font-size: 14px;
-	}
-
-	table.regTb {
-		width: 100%;
-		table-layout: fixed;
-		bdata_test-collapse: collapse;
-	}
-
-	table.regTb th,
-	table.regTb td {
-		line-height: 28px;
-	}
-
-	table.regTb th {
-		padding: 6px 0;
-		bdata_test: 1px solid #d1dee2;
-		background: #e5ecef;
-		color: #383838;
-		letter-spacing: -0.1em;
-	}
-
-	table.regTb td {
-		padding: 8px 0;
-		padding-left: 10px;
-		bdata_test-bottom: solid 1px #ddd;
-		bdata_test-right: solid 1px #ddd;
-	}
-
-	table.regTb input[type="text"],
-	table.regTb input[type="password"] {
-		padding: 0;
-		padding-left: 8px;
-		height: 23px;
-		line-height: 23px;
-		bdata_test: solid 1px #ccc;
-		background-color: #f9f9f9;
-	}
-
-	table.regTb textarea {
-		padding: 0;
-		padding-left: 8px;
-		line-height: 23px;
-		bdata_test: solid 1px #ccc;
-		background-color: #f9f9f9;
-	}
-
-	table.regTb label {
-		cursor: pointer;
-	}
-
-	table.regTb input[type="radio"] {}
-
-	table.regTb input[type="radio"]+label {
-		color: #999;
-	}
-
-	table.regTb input[type="radio"]:checked+label {
-		color: #e50000;
-		font-weight: bold;
-	}
-
-	tfoot {
-		clear: both;
-		display: table-footer-group;
-		vertical-align: middle;
-		bdata_test-color: inherit;
-	}
-
-	span.help {
-		font-size: 11px;
-		font-weight: normal;
-		color: rgba(38, 103, 184, 1);
-	}
-
-	.name {
-		background: #222437;
-		color: white;
-		font-weight: 900
-	}
-
-	.text-center {
-		text-align: center !important;
-	}
-
-	.currency {
-		font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-		font-size: 16px;
-		font-weight: 900;
-		letter-spacing: 1px;
-		text-indent: 20%;
-	}
-
-	.currency-right {
-		position: relative;
-		float: right;
-		right: 25px;
-	}
-
-	.btn_ly {
-		width: 50%;
-		min-height: 80px;
-		display: block;
-		margin: 20px auto;
-		text-align: right;
-	}
-	
+<style>
+	th{font-size:18px;font-family: 'Nanum-Gothic';letter-spacing: -0.5px;}
+	.desc{font-size:12px;font-weight:300;display:block;margin:5px 0;}
 </style>
-
 <div class="local_desc01 local_desc">
 	<p>
 		- 수당 초기화는 설정을 제외한 수당지급 로그,기록 관련 데이터등을 초기화<br>
@@ -149,15 +25,9 @@ include_once(G5_ADMIN_PATH . '/admin.head.php');
 <form name="frmnewwin" action="./config_reset.proc.php" onsubmit="return frmnewwin_check(this);" method="post">
 	<input type="hidden" name="w" value="<?php echo $w; ?>">
 	<div class="tbl_frm01 tbl_wrap">
-		<table>
+		<table >
 			<caption><?php echo $g5['title']; ?></caption>
-			<colgroup>
-				<col class="grid_3">
-				<col>
-			</colgroup>
 			<tbody>
-
-
 				<tr>
 					<th scope="row"><label for="nw_soodang_reset"> 수당 초기화<strong class="sound_only"> 필수</strong></label></th>
 					<td>
@@ -169,12 +39,18 @@ include_once(G5_ADMIN_PATH . '/admin.head.php');
 						<p style="padding:0;"><input type="checkbox" id="nw_member_reset" name="nw_member_reset" <?if($nw['nw_member_reset']=='Y' ) {echo "checked" ;}?>/><label for="nw_member_reset"><span class="ui"></span><span class="nw_member_reset_txt">사용 설정</span></label></p>
 					</td>
 				</tr>
-					<th scope="row"><label for="nw_asset_reset"> 입출금 내역 초기화<strong class="sound_only"> 필수</strong></label></th>
+					<th scope="row"><label for="nw_asset_reset"> 입출금 내역 초기화<strong class="sound_only"> 필수</strong></label>
+						<span class='desc' >※ 수당,마이닝 입출금</span>
+					</th>
 					<td>
 						<p style="padding:0;"><input type="checkbox" id="nw_asset_reset" name="nw_asset_reset" <?if($nw['nw_asset_reset']=='Y' ) {echo "checked" ;}?>/><label for="nw_asset_reset"><span class="ui"></span><span class="nw_asset_reset_txt">사용 설정</span></label></p>
 					</td>
+					
 
-					<th scope="row"><label for="nw_mining_reset"> 마이닝 내역 초기화<strong class="sound_only"> 필수</strong></label></th>
+					<th scope="row">
+						<label for="nw_mining_reset"> 마이닝 내역 초기화<strong class="sound_only"> 필수</strong></label>
+						<!-- <span class='desc' >※ 마이닝수당 지급내역 초기화</span> -->
+					</th>
 					<td>
 						<p style="padding:0;"><input type="checkbox" id="nw_mining_reset" name="nw_mining_reset" <?if($nw['nw_mining_reset']=='Y' ) {echo "checked" ;}?>/><label for="nw_mining_reset"><span class="ui"></span><span class="nw_mining_reset_txt">사용 설정</span></label></p>
 					</td>
