@@ -60,13 +60,15 @@ if ($_GET['recom_referral']){
 		}); */
 
 		onlyNumber('reg_mb_hp');
-		$('.cabinet').on('click',function(){
+
+		// 공통함수로 이전 common.js
+		/* $('.cabinet').on('click',function(){
 			$(this).next().css('display','contents');
 		});
 
 		$('.cabinet').on('mouseout',function(){
 			$(this).next().css('display','none');
-		})
+		}); */
 
 
 		/*초기설정*/

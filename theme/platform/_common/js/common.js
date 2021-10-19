@@ -14,6 +14,7 @@ $(function(){
 });
 */
 // var debug = '<?=$is_debug?>';
+
 var debug = "";
 
 // 인풋 세자리콤마
@@ -185,5 +186,14 @@ function dialogModal(title, htmlBody, category,dim = true){
 	}
 
 	$('#dialogModal').focus();
-	
 }
+
+$(function() {
+	$('.cabinet').on('click',function(){
+	  $(this).next().css('display','contents');
+	});
+
+	$('.cabinet').on('mouseout',function(){
+	  $(this).next().css('display','none');
+	});
+});

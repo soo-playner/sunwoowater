@@ -63,13 +63,7 @@
 .enroll_wrap input[type=text]:first-child, .enroll_wrap input[type=number]:first-child, .enroll_wrap input[type=email]:first-child {
   margin: 0;
 }
-.enroll_wrap .cabinet_inner {
-  width: 100%;
-  font-size: 11px;
-  padding-left: 10px;
-  color: #006df3;
-  display: none;
-}
+
 .enroll_wrap .in_btn_ly {
   margin-top: -42px;
 }
