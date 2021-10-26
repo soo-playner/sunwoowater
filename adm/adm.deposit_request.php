@@ -79,6 +79,8 @@ $result = sql_query($sql);
 
 <style>
     .red{color:red}
+    .f_blue{color:blue}
+    .f_red{color:red}
     .text-center{text-align:center}
     .hash{min-width:120px;height:auto;display:block;}
     .reg_text{border:1px solid #ccc;padding:5px 10px;width:80%;}
@@ -239,6 +241,14 @@ $result = sql_query($sql);
     </thead>
     <tbody>
     <?php
+    function value_color($val){
+        if($val > 0 ){
+            return "f_blue";
+        }else{ 
+            return "f_red";
+        }
+    }
+
     for ($i=0; $row=sql_fetch_array($result); $i++) {
         $bg = 'bg'.($i%2);
         $duplicate_sql ="select COUNT(*) as cnt from wallet_deposit_request WHERE mb_id='{$row['mb_id']}' ";
@@ -249,7 +259,7 @@ $result = sql_query($sql);
         $member_sql = "SELECT A.mb_recommend,A.mb_sponsor,B.mb_brecommend from g5_member A, g5_member B WHERE A.mb_id = '{$row['mb_id']}' AND B.mb_id = A.mb_recommend";
         // echo $member_sql;
         $member_result = sql_fetch($member_sql);
-
+        
     ?>
 
     <tr class=" <?=$row_dup?>">
@@ -259,7 +269,7 @@ $result = sql_query($sql);
         <td ><?=$row['txhash']?></td>
         <td><?=Number_format($row['amt'],DEPOSIT_NUMBER_POINT)?></td>
         <td class='coin'><?=strtoupper($row['coin']);?></td>
-        <td><input type='text' class='reg_text input_amt_val' style='font-weight:600;color:blue' value='<?=shift_auto($row['in_amt'],'$')?>' inputmode="numeric"></td>
+        <td><input type='text' class='reg_text input_amt_val <?=value_color($row['in_amt'])?>' style='font-weight:600;' value='<?=shift_auto($row['in_amt'],'$')?>' inputmode="numeric"></td>
         
         <td>
             <!-- <?=status($row['status'])?> -->

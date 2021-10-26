@@ -125,7 +125,8 @@ $(function(){
 <style>
     .adm_logo{display:inline-block;width:100px;left:180px !important;top:20px !important;}
 </style>
-
+<link href="/adm/css/scss/admin_custom.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <header id="hd">
     <div id="hd_wrap">
         <h1><?php echo $config['cf_title'] ?></h1>

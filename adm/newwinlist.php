@@ -1,8 +1,8 @@
 <?php
-$sub_menu = '100310';
+$sub_menu = '300310';
 include_once('./_common.php');
 
-auth_check($auth[$sub_menu], "r");
+// auth_check($auth[$sub_menu], "r");
 
 if( !isset($g5['new_win_table']) ){
     die('<meta charset="utf-8">/data/dbconfig.php 파일에 <strong>$g5[\'new_win_table\'] = G5_TABLE_PREFIX.\'new_win\';</strong> 를 추가해 주세요.');

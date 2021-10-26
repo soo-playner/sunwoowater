@@ -3,12 +3,12 @@ if (!defined('G5_USE_SHOP') || !G5_USE_SHOP) return;
 
 if($member['mb_id'] == 'admin'){
 
-$menu['menu400'] = array (
+    $menu['menu400'] = array (
     // array('400000', 'm3cron 설정', G5_ADMIN_URL.'/m3cron_list.php'),
     // array('400100', 'm3cron 설정', G5_ADMIN_URL.'/m3cron_list.php'),
     // array('400300', 'm3cron Log', G5_ADMIN_URL.'/m3cron_log.php'),
     // array('400300', 'm3cron Log Delete', G5_ADMIN_URL.'/m3cron_delete.php'),
-
+    
     // array('400000', '팩 상품관리', G5_ADMIN_URL.'/shop_admin/itemlist.php', 'scf_item'),
     // array('400100', '팩 상품관리', G5_ADMIN_URL.'/shop_admin/itemlist.php', 'scf_item'),
     // array('400400', '주문내역', G5_ADMIN_URL.'/shop_admin/cart_list.php', 'scf_order', 1),
@@ -28,8 +28,16 @@ $menu['menu400'] = array (
     // array('400800', '쿠폰관리', G5_ADMIN_URL.'/shop_admin/couponlist.php', 'scf_coupon'),
     // array('400750', '추가배송비관리', G5_ADMIN_URL.'/shop_admin/sendcostlist.php', 'scf_sendcost', 1),
     // array('400410', '미완료주문', G5_ADMIN_URL.'/shop_admin/inorderlist.php', 'scf_inorder', 1),
-    
-);
+    array('400300', '패키지 상품관리', G5_ADMIN_URL.'/shop_admin/itemlist.php', 'scf_item'),
+    array('400300', '패키지 상품관리', G5_ADMIN_URL.'/shop_admin/itemlist.php', 'scf_item'),
+    array('400400', '패키지 상품 현황', ''.G5_ADMIN_URL.'/bonus/rank_table.php','bbs_board'),
+    );
+}else{
+    $menu['menu400'] = array (
+        array('400000', '패키지 상품관리', G5_ADMIN_URL.'/shop_admin/itemlist.php', 'scf_item'),
+        array('400300', '패키지 상품관리', G5_ADMIN_URL.'/shop_admin/itemlist.php', 'scf_item'),
+        array('400400', '패키지 상품 현황', ''.G5_ADMIN_URL.'/bonus/rank_table.php','bbs_board'),
+    );
 }
 
 ?>

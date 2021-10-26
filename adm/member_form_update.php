@@ -228,8 +228,9 @@ else if ($w == 'u')
 		}else{
 			$deposit_adm_code = '차감';
 		}
-
+		$ASSETS_CURENCY = ASSETS_CURENCY;
 		$deposit_adm_value = $deposit_code.$deposit_adm;
+		
 		$deposit_adm_sql = "insert wallet_deposit_request set
 				mb_id             = '{$mb_id}'
 				, txhash     =  '관리자 {$deposit_adm_code} : {$member['mb_id']}'
@@ -237,7 +238,7 @@ else if ($w == 'u')
 				, create_d    		= '{$today}'
 				, status   			= {$process_code}
 				, update_dt         = '{$todate}'
-				, coin          	= '원'
+				, coin          	= '{$ASSETS_CURENCY}'
 				, fee    			= 0
 				, cost         		= 0
 				, amt    			= {$deposit_adm_value}
@@ -252,27 +253,6 @@ else if ($w == 'u')
 		}
 	}
 
-
-
-	/* if($upstair_2 > 0){
-		$upstair_sql_2 = "insert g5_shop_order set
-				od_id				= '{$od_id}'
-				, mb_no             = '{$mb_no}'
-				, mb_id             = '{$mb_id}'
-				, od_cart_price     =  {$upstair_2}
-				, od_name           = 'MBM'
-				, od_cash    		= '1'
-				, od_receipt_time   = '{$today}'
-				, od_time           = '{$today}'
-				, od_date           = '{$todate}'
-				, od_settle_case    = 'admin'
-				, od_status         = '매출'
-				, upstair    		= {$upstair}
-				, pv				= {$upstair}
-				, od_memo 			= 'admin'  ";
-		
-		sql_query($upstair_sql_2);
-	} */
 
 	
 	if ($mb_password)

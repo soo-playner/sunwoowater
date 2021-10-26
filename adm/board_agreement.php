@@ -1,5 +1,5 @@
 <?php
-$sub_menu = "300300";
+$sub_menu = "300200";
 include_once('./_common.php');
 
 auth_check($auth[$sub_menu], 'r');
@@ -60,8 +60,8 @@ $colspan = 15;
 	 body{background:#fff !important}
      iframe html body{background:#fff !important}
      .board_menu{color:blue;font-weight: 600}
-</style>
 
+</style>
 <div class="local_ov01 local_ov">
     <?php echo $listall ?>
     생성된 게시판수 <?php echo number_format($total_count) ?>개
@@ -73,7 +73,7 @@ $colspan = 15;
     <!-- | <a href="/adm/board_kyc.php" class="board_menu">KYC 회원인증</a> -->
 </div>
 
-<iframe src= "<?=G5_THEME_URL?>/support_center.admin.php" width="100%" height="700px;" scrolling="auto" style="border:0;background:white;"></iframe>
+<iframe src="/bbs/board.php?bo_table=agreement" width="100%" height="1000px;" scrolling="auto" style="border:0;background:white;"></iframe>
 
 <?php
 include_once('./admin.tail.php');

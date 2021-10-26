@@ -1,7 +1,6 @@
 <?php
 $sub_menu = "200100";
 include_once('./_common.php');
-include_once(G5_THEME_PATH.'/_include/wallet.php');
 include_once(G5_PATH.'/util/package.php');
 
 
@@ -171,6 +170,7 @@ include_once('./admin.head.php');
 add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 ?>
 <!-- <script src="https://kit.fontawesome.com/21599d63fd.js" crossorigin="anonymous"></script> -->
+<link rel="stylesheet" href="<?=G5_THEME_URL?>/css/scss/custom.css">
 <link rel="stylesheet" href="./css/scss/admin_custom.css">
 <script src="<?=G5_THEME_URL?>/_common/js/common.js" crossorigin="anonymous"></script>
 
@@ -401,17 +401,17 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 		.bonus{color:#0072d1;}
 		.mining{color:green;}
 		.soodang{color:orangered;}
-		.mining_soodang{color:#ef21fd;}
+		.mining_soodang{color:#4c124b;}
 		.amt {color:red}
 	</style>
 	
 	<tr class="ly_up padding-box fund">
-		<th scope="row">보유 잔고</th>
+		<th scope="row">보유 잔고 (<?=ASSETS_CURENCY?>)</th>
 		
 		<td colspan="1">
-			<strong><?=Number_format($mb['mb_deposit_point']+$mb['mb_deposit_calc'])?></strong> 원 &nbsp&nbsp (총 입금액 : <?=Number_format($mb['mb_deposit_point'])?>)
+			<strong><?=shift_auto_zero($mb['mb_deposit_point']+$mb['mb_deposit_calc'])?></strong> <?=ASSETS_CURENCY?> &nbsp&nbsp (총 입금액 : <?=Number_format($mb['mb_deposit_point'])?> <?=ASSETS_CURENCY?>)
 		</td>
-		<th>수동입금 </th>
+		<th>수동입금 (<?=ASSETS_CURENCY?>)</th>
 		<!-- <td>
 			<input type="text" name="mb_deposit_point" value="<?=Number_format($mb['mb_deposit_point'])?>" id="field_upstair" class="frm_input wide" size="15" style="min-width:100px !important;" inputmode=numeric>
 			차액: + 
@@ -430,27 +430,27 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 	<tr class="ly_up padding-box fund">
 
 		<th scope="row">누적 매출 합계 (PV)</th>
-		<td colspan="1"><span class='strong soodang'><?=Number_format($mb['mb_save_point'])?> 원</span></td>
+		<td colspan="1"><span class='strong soodang'><?=shift_auto_zero($mb['mb_save_point'])?> <?=ASSETS_CURENCY?></span></td>
 
 		<th scope="row">총 받은보너스(수당)</th>
-		<td colspan="1"><span class='strong bonus'><?=Number_format($mb['mb_balance'])?></span> 원</td>
+		<td colspan="1"><span class='strong bonus'><?=shift_auto_zero($mb['mb_balance'])?> <?=ASSETS_CURENCY?></span> </td>
 
 	</tr>
 
 	<tr class="ly_up padding-box fund">
-		<th scope="row">보유마이닝해쉬 (MH/S)</th>
-		<td colspan="1"><span class='strong mining'><?=number_format($mb['mb_rate'])?> MH/s</span></td>
+		<th scope="row">보유마이닝해쉬 (HP/S)</th>
+		<td colspan="1"><span class='strong mining'><?=Number_format($mb['mb_rate'])?> HP/s</span></td>
 
 		<th scope="row">총 받은마이닝보너스</th>
-		<td colspan="1"><span class='strong mining_soodang'><?=Number_format($mb[$mining_target])?></span></td>
+		<td colspan="1"><span class='strong mining_soodang'><?=shift_auto($mb[$mining_target],$minings[0])?> <?=strtoupper($minings[0])?></span> </td>
 	</tr>
 
 	<tr class="ly_up padding-box fund">
 		<th scope="row">출금총액</th>
-		<td colspan="1"><span class='strong amt'><?=number_format($mb['mb_shift_amt'])?> 원</span></td>
+		<td colspan="1"><span class='strong amt'><?=shift_auto_zero($mb['mb_shift_amt'])?> <?=ASSETS_CURENCY?> </span>  ( <?=shift_auto_zero(($mb['mb_shift_amt']*$usd_price),WITHDRAW_CURENCY)?><?=WITHDRAW_CURENCY?> )</td>
 
 		<th scope="row">마이닝출금액</th>
-		<td colspan="1"><span class='strong amt'><?=Number_format($mb[$mining_amt_target])?> ETH</span></td>
+		<td colspan="1"><span class='strong amt'><?=shift_auto($mb[$mining_amt_target],$minings[0])?> <?=strtoupper($minings[0])?></span></td>
 	</tr>
 	
 	<!-- <tr class="ly_up padding-box week_dividend ">
@@ -480,7 +480,7 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 			.purchase_btn{display:inline-grid;height:40px;padding:0;}
 			.purchase_btn.pack{width:150px;margin-left:20px;color:white}			
 			.pack_title{font-weight:600;padding:1px 10px;color:#fff;min-width:50px;display:grid;border-top-left-radius:5px;border-top-right-radius:5px}
-			.color0{background:black;}
+			
 			.pack_have{font-size:16px;font-weight:600;padding:5px;color:red}
 		</style>
 
@@ -509,15 +509,18 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 					
 				}
 			}
+			/**/
+			$shop_item = get_shop_item(null,1);
+			$shop_item_cnt = count($shop_item);
 
 			$pack_array = package_have_return($mb['mb_id']);
-			$get_shop_item = get_shop_item();
+			
 			
 			for ($i = 0; $i < count($pack_array); $i++) {
 				
 			?>
-				<button type='button' class='btn purchase_btn' value='' data-row='<?=json_encode($get_shop_item[$i],JSON_FORCE_OBJECT)?>'>
-					<span class='pack_title color<?=$i?>'><?= $get_shop_item[$i]['it_name'] ?></span>
+				<button type='button' class='btn purchase_btn' value='' data-row='<?=json_encode($shop_item[$i],JSON_FORCE_OBJECT)?>'>
+					<span class='pack_title color<?=$i?>'><?= $shop_item[$i]['it_name'] ?></span>
 					<div class='pack_have'><span><?= $pack_array[$i] ?>
 				</button>
 			<?php } ?>
@@ -526,10 +529,6 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 			<button type='button' class='btn purchase_btn pack m-pack' data-point='0' data-name='[인정회원패키지]' data-id='2021051040' data-it_supply_point='0' value=''>P3-1 인정회원 팩</button> -->
 		</td>
 
-		<!-- <td colspan="2">
-			<button type='button' class='btn `purchase_btn` pack m-pack' data-price='1' data-name='Membership Pack' data-id='2020120890' value=''>M-PACK</button>
-			<button type='button' class='btn purchase_btn pack p-pack' data-price='0.8' data-name='Promotion Pack' data-id='2020120892' value=''>P-PACK</button>
-		</td> -->
 	</tr>
 
 	
@@ -552,7 +551,7 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 		//패키지구매처리
 		$('.purchase_btn').on('click',function(){
 
-			var func ='new';
+			var func ='admin';
 			var item = $(this).data('row');
 			var mb_item_rank = '<?=$mb['rank_note']?>';
 			var item_num = item.it_maker.substr(1,1);
@@ -563,24 +562,25 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 			console.log(`total:${total_fund}\nprice:${item.it_cust_price}`);
 			// console.log(`it_id:${item_id}\nit_sp:${item_supply_point}\ncoin:${select_coin}`);
 			
-			if(mb_item_rank == '' && item_num > 0){
+			/*멤버쉽 구매조건 있는경우*/
+			/* if(mb_item_rank == '' && item_num > 0){
 				alert("MEMBERSHIP 팩을 보유하지 않았습니다.");
 				return false;
-			}
+			} */
 
-			if (confirm("해당 회원에게 "+item.it_name+" 패키지를 지급하시겠습니까?\n회원 잔고에서 ￦"+Price(item.it_cust_price)+" 원 (이)가 차감됩니다.")) {
+			if (confirm("해당 회원에게 "+item.it_name+" : "+item.it_option_subject+" 패키지를 지급하시겠습니까?\n회원 잔고에서 $ "+Price(item.it_price)+" (이)가 차감됩니다.")) {
 			} else {
 				return false;
 			}
 			
-			if(Number(total_fund) < Number(item.it_cust_price) ){
+			if(Number(total_fund) < Number(item.it_price) ){
 				alert("회원 잔고가 부족합니다.\n잔고지급후 사용해주세요.");
 				return false;
 			}
 
 			$.ajax({
 				type: "POST",
-				url: "./adm.upstairs_proc.php",
+				url: "/util/upstairs_proc.php",
 				cache: false,
 				async: false,
 				dataType: "json",

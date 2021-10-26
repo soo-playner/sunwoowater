@@ -222,9 +222,12 @@ if ($board['bo_use_nogood'])
 $admin_href = "";
 // 최고관리자 또는 그룹관리자라면
 if ($member['mb_id'] && ($is_admin == 'super' || $group['gr_admin'] == $member['mb_id']))
-    $admin_href = G5_ADMIN_URL.'/board_form.php?w=u&amp;bo_table='.$bo_table;
+    $admin_href = G5_ADMIN_URL.'/bbs/board_form.php?w=u&amp;bo_table='.$bo_table;
 
 // include_once(G5_BBS_PATH.'/board_head.php');
+
+$board_skin_path = G5_ADMIN_PATH.'/bbs/skin/board/basic';
+$board_skin_url = G5_ADMIN_URL.'/bbs/skin/board/basic';
 
 // 게시물 아이디가 있다면 게시물 보기를 INCLUDE
 if (isset($wr_id) && $wr_id) {
@@ -236,7 +239,6 @@ if (isset($wr_id) && $wr_id) {
 if ($member['mb_level'] >= $board['bo_list_level'] && $board['bo_use_list_view'] || empty($wr_id))
     include_once (G5_ADMIN_PATH.'/bbs/list.php');
 
-// include_once(G5_BBS_PATH.'/board_tail.php');
 
 echo "\n<!-- 사용스킨 : ".(G5_IS_MOBILE ? $board['bo_mobile_skin'] : $board['bo_skin'])." -->\n";
 

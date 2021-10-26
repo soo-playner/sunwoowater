@@ -6,6 +6,9 @@ include_once(G5_PATH.'/util/package.php');
 
 auth_check($auth[$sub_menu], 'r');
 
+$g5['title'] = '회원관리';
+include_once('./admin.head.php');
+
 $get_shop_item = get_shop_item();
 
 $sub_sql = "";
@@ -70,7 +73,7 @@ if (!$sst) {
 	$sod = "desc";
 }
 
-if($_GET['grade'] > -1){
+if($_GET['grade'] && $_GET['grade'] != ''){
 	$sql_search .= " and grade = ".$_GET['grade'];
 }
 
@@ -101,26 +104,18 @@ $intercept_count = $row['cnt'];
 
 $listall = '<a href="'.$_SERVER['SCRIPT_NAME'].'" class="ov_listall">전체목록</a>';
 
-
-
-$g5['title'] = '회원관리';
-include_once('./admin.head.php');
-
 $sql = " select * {$sql_common} {$sql_search} {$sql_order} limit {$from_record}, {$rows} ";
 
 $result = sql_query($sql);
-
 $colspan = 11;
-
 
 /* 레벨 */
 $grade = "SELECT grade, count( grade ) as cnt FROM g5_member GROUP BY grade order by grade";
 $get_lc = sql_query($grade);
 
-/* 국가 */
-$nation_sql = "SELECT nation_number, count( nation_number ) as cnt FROM g5_member GROUP BY nation_number";
-$nation_row = sql_query($nation_sql);
 
+
+/* 차단 */
 $blockRec = sql_fetch("select count(mb_block) as cnt from g5_member where mb_block = 1");
 
 
@@ -152,57 +147,14 @@ $stats_result = sql_fetch($stats_sql);
 .local_ov strong{color:red; font-weight:600;}
 .local_ov .tit{color:black; font-weight:600;}
 .local_ov a{margin-left:20px;}
-</style>
 
-<div class="local_ov01 local_ov">
-	<?php echo $listall ?>
-	총회원수 <strong><?php echo number_format($total_count) ?></strong>명|
-	<?
-		if($member['mb_id'] == 'admin'){
-			echo "<span style='padding-left:10px;'>회원 총 자산 합계 <strong>".Number_format($stats_result['fund'])."</strong></span> | ";
-			echo "<span style='padding-left:10px;'>회원 총 입금 합계 <strong>".Number_format($stats_result['deposit'])."</strong></span> | ";
-			echo "<span style='padding-left:10px;'>회원 총 수당 합계 <strong>".Number_format($stats_result['balance'])."</strong></span> | ";
-		}
-	?>
-	
-	<!-- <a href="?sst=mb_intercept_date&amp;sod=desc&amp;sfl=<?php echo $sfl ?>&amp;stx=<?php echo $stx ?>">
-	차단 <?php echo number_format($intercept_count) ?></a>명,
-	<a href="?sst=mb_leave_date&amp;sod=desc&amp;sfl=<?php echo $sfl ?>&amp;stx=<?php echo $stx ?>">탈퇴 <?php echo number_format($leave_count) ?></a>명,
-	<a href="?block=1">
-		지급차단 <?php echo number_format($blockRec['cnt']) ?>명
-	</a> -->
-</div>
-
-<form id="fsearch" name="fsearch" class="local_sch01 local_sch" method="get">
-	<label for="sfl" class="sound_only">검색대상</label>
-	<select name="sfl" id="sfl">
-		<option value="mb_id"<?php echo get_selected($_GET['sfl'], "mb_id"); ?>>회원아이디</option>
-		<option value="mb_nick"<?php echo get_selected($_GET['sfl'], "mb_nick"); ?>>닉네임</option>
-		<option value="mb_name"<?php echo get_selected($_GET['sfl'], "mb_name"); ?>>이름</option>
-		<!-- <option value="mb_level"<?php echo get_selected($_GET['sfl'], "mb_level"); ?>>권한</option>
-		<option value="mb_email"<?php echo get_selected($_GET['sfl'], "mb_email"); ?>>E-MAIL</option> -->
-		<option value="mb_tel"<?php echo get_selected($_GET['sfl'], "mb_tel"); ?>>전화번호</option>
-		<option value="mb_hp"<?php echo get_selected($_GET['sfl'], "mb_hp"); ?>>휴대폰번호</option>
-		<option value="mb_point"<?php echo get_selected($_GET['sfl'], "mb_point"); ?>>PV</option>
-		<option value="mb_datetime"<?php echo get_selected($_GET['sfl'], "mb_datetime"); ?>>가입일시</option>
-		<option value="mb_ip"<?php echo get_selected($_GET['sfl'], "mb_ip"); ?>>IP</option>
-		<option value="mb_recommend"<?php echo get_selected($_GET['sfl'], "mb_recommend"); ?>>추천인</option>
-		<option value="mb_wallet"<?php echo get_selected($_GET['sfl'], "mb_wallet"); ?>>지갑</option>
-	</select>
-
-	<label for="stx" class="sound_only">검색어<strong class="sound_only"> 필수</strong></label>
-	<input type="text" name="stx" value="<?php echo $stx ?>" id="stx" required class="required frm_input">
-	<input type="submit" class="btn_submit" value="검색">
-</form>
-
-<style>
-	#member_depth{background:lightskyblue}
+#member_depth{background:lightskyblue}
 	#member_depth:hover{background:black; color:white;}
 	.mem_icon{width:20px;height:20px;margin-right:5px;}
 	.area{display:inline-block;margin-right:20px;vertical-align: middle}
 	.area span{cursor:pointer}
 	.area span:hover{text-decoration: underline}
-	.area.nation{border-right:3px solid black;padding-right:20px;}
+	.area.nation{padding-right:20px;}
 
 	.nation_item{
 		display: inline-block;
@@ -252,65 +204,79 @@ $stats_result = sql_fetch($stats_sql);
     display: inline-block;
     font-weight: 600;
     color: black;}
+
+	.td_mbstat{text-align:right;padding-right:10px !important;font-size:12px;}
+	.icon{display:inline-block;vertical-align: bottom;}
+	.icon i{vertical-align: -webkit-baseline-middle;}
 </style>
+
+<div class="local_ov01 local_ov">
+	<?php echo $listall ?>
+	총회원수 <strong><?php echo number_format($total_count) ?></strong>명|
+	<?
+		if($member['mb_id'] == 'admin'){
+			echo "<span style='padding-left:10px;'>회원 총 자산 합계 <strong>".Number_format($stats_result['fund'])."</strong></span> | ";
+			echo "<span style='padding-left:10px;'>회원 총 입금 합계 <strong>".Number_format($stats_result['deposit'])."</strong></span> | ";
+			echo "<span style='padding-left:10px;'>회원 총 수당 합계 <strong>".Number_format($stats_result['balance'])."</strong></span> | ";
+		}
+	?>
+	
+	<!-- <a href="?sst=mb_intercept_date&amp;sod=desc&amp;sfl=<?php echo $sfl ?>&amp;stx=<?php echo $stx ?>">
+	차단 <?php echo number_format($intercept_count) ?></a>명,
+	<a href="?sst=mb_leave_date&amp;sod=desc&amp;sfl=<?php echo $sfl ?>&amp;stx=<?php echo $stx ?>">탈퇴 <?php echo number_format($leave_count) ?></a>명,
+	<a href="?block=1">
+		지급차단 <?php echo number_format($blockRec['cnt']) ?>명
+	</a> -->
+</div>
+
+<form id="fsearch" name="fsearch" class="local_sch01 local_sch" method="get">
+	<label for="sfl" class="sound_only">검색대상</label>
+	<select name="sfl" id="sfl">
+		<option value="mb_id"<?php echo get_selected($_GET['sfl'], "mb_id"); ?>>회원아이디</option>
+		<option value="mb_nick"<?php echo get_selected($_GET['sfl'], "mb_nick"); ?>>닉네임</option>
+		<option value="mb_name"<?php echo get_selected($_GET['sfl'], "mb_name"); ?>>이름</option>
+		<!-- <option value="mb_level"<?php echo get_selected($_GET['sfl'], "mb_level"); ?>>권한</option>
+		<option value="mb_email"<?php echo get_selected($_GET['sfl'], "mb_email"); ?>>E-MAIL</option> -->
+		<option value="mb_tel"<?php echo get_selected($_GET['sfl'], "mb_tel"); ?>>전화번호</option>
+		<option value="mb_hp"<?php echo get_selected($_GET['sfl'], "mb_hp"); ?>>휴대폰번호</option>
+		<option value="mb_point"<?php echo get_selected($_GET['sfl'], "mb_point"); ?>>PV</option>
+		<option value="mb_datetime"<?php echo get_selected($_GET['sfl'], "mb_datetime"); ?>>가입일시</option>
+		<option value="mb_ip"<?php echo get_selected($_GET['sfl'], "mb_ip"); ?>>IP</option>
+		<option value="mb_recommend"<?php echo get_selected($_GET['sfl'], "mb_recommend"); ?>>추천인</option>
+		<option value="mb_wallet"<?php echo get_selected($_GET['sfl'], "mb_wallet"); ?>>지갑</option>
+	</select>
+
+	<label for="stx" class="sound_only">검색어<strong class="sound_only"> 필수</strong></label>
+	<input type="text" name="stx" value="<?php echo $stx ?>" id="stx" required class="required frm_input">
+	<input type="submit" class="btn_submit" value="검색">
+</form>
 
 
 <div style="padding:8px 20px 10px;font-size:15px;margin-bottom:10px;float:left">
+<link rel="stylesheet" href="<?=G5_THEME_URL?>/css/scss/custom.css">
 <link rel="stylesheet" href="./css/scss/admin_custom.css">
 
 <form name="search_bar" id="search_bar" action="./member_list.php" method="get">
+	
 	<input type='hidden' name ='nation' id='nation' value=''/>
 	<input type='hidden' name ='level' id='level' value=''/>
-	<input type='hidden' name ='grade' id='grade' value=''/>
-
-	<!-- <div class="area nation">
+	
+	<div class="area nation">
 		<?
-		while( $row = sql_fetch_array($nation_row)){
-			if($row['nation_number']=='1'){
-				echo "<span onclick='nation_search(1);' class='nation_item ".active_check(1, 'nation')."'><img src='./img/contry_3.png' class='nation_icon'/>".$row['cnt']." </span> ";
-			}else if($row['nation_number']=='62'){
-				echo "<span onclick='nation_search(62);' class='nation_item ".active_check(62, 'nation')."'> indo ".$row['cnt']." </span> ";
-			}else if($row['nation_number']=='63'){
-				echo "<span onclick='nation_search(63);' class='nation_item ".active_check(63, 'nation')."'> Phil ".$row['cnt']." </span> ";
-			}else if($row['nation_number']=='66'){
-				echo "<span onclick='nation_search(66);' class='nation_item ".active_check(66, 'nation')."'> THailand ".$row['cnt']." </span> ";
-			}else if($row['nation_number']=='81'){
-				echo "<span onclick='nation_search(81);' class='nation_item ".active_check(81, 'nation')."'> JAPAN ".$row['cnt']." </span> ";
-			}else if($row['nation_number']=='82'){
-				echo "<span onclick='nation_search(82);' class='nation_item ".active_check(82, 'nation')."'><img src='./img/contry_1.png' class='nation_icon'/>".$row['cnt']." </span> ";
-			}else{
-				echo "<span onclick='nation_search(0);' class='nation_item  ".active_check(0, 'nation')."'> ETC ".$row['cnt']." </span> ";
-			}
+		if(NATION_USE){
+			
+			/* 국가 */
+			$nation_sql = "SELECT nation_number, count( nation_number ) as cnt FROM g5_member GROUP BY nation_number ORDER BY FIELD(nation_number, 82) DESC";
+			$nation_row = sql_query($nation_sql);
+
+			while( $row = sql_fetch_array($nation_row)){?>
+				<span onclick="nation_search('<?=$row['nation_number']?>');" class="nation_item <?=active_check($row['nation_number'], 'nation')?> ">
+				<img src='<?=national_flag($row['nation_number'])?>' class='nation_icon'/><?=$row['cnt']?></span> 
+			<?}
 		}
 		?>
-	</div> -->
+	</div>
 
-	<!-- <div class="area level">
-	<?while($l_row = sql_fetch_array($get_lc)){
-
-		if($l_row['grade']==6){
-			echo "<span onclick='grade_search(6);'><img src='/img/6.png' class='mem_icon'>".$l_row['cnt']."명</span>";
-		}
-		else if($l_row['grade']==5){
-			echo "<span onclick='grade_search(5);'><img src='/img/5.png' class='mem_icon'>".$l_row['cnt']."명</span> | ";
-		}
-		else if($l_row['grade']==4){
-			echo "<span onclick='grade_search(4);'><img src='/img/4.png' class='mem_icon'>".$l_row['cnt']."명</span> | ";
-		}
-		else if($l_row['grade']==3){
-			echo "<span onclick='grade_search(3);'><img src='/img/3.png' class='mem_icon'>".$l_row['cnt']."명</span> | ";
-		}
-		else if($l_row['grade']==2){
-			echo "<span onclick='grade_search(2);'><img src='/img/2.png' class='mem_icon'>".$l_row['cnt']."명</span> | ";
-		}
-		else if($l_row['grade']==1){
-			echo "<span onclick='grade_search(1);'><img src='/img/1.png' class='mem_icon'>".$l_row['cnt']."명</span> | ";
-		}
-		else if($l_row['grade']==0){
-			echo "<span onclick='grade_search(0);'><img src='/img/0.png' class='mem_icon'>".$l_row['cnt']."명</span> | ";
-		}
-	}?>
-	</div> -->
 </form>
 </div>
 
@@ -326,34 +292,22 @@ $stats_result = sql_fetch($stats_sql);
 
 
 <?php if ($is_admin == 'super') { ?>
-<div class="btn_add01 btn_add">
-	
-	<a href="./member_table_fixtest.php">추천관계검사</a>
-	<a href="./member_table_depth.php" id="member_depth">회원추천관계갱신</a>
-	<!-- <a href="./member_table_sponsor.php" style='background:antiquewhite'>추천상위스폰서갱신</a> -->
-	<a href="./member_form.php" id="member_add">회원직접추가</a>
-	<a href="../excel/excel_with_eth.php">회원엑셀다운로드</a> 
-	<!-- <a href="#" onclick="javascript:document.myForm.submit();">회원엑셀다운로드</a>
-	<a href="../excel/all_member_list_excel.php">전체회원엑셀다운로드</a>  -->
-</div>
+	<div class="btn_add01 btn_add">
+		<a href="./member_table_fixtest.php">추천관계검사</a>
+		<a href="./member_table_depth.php" id="member_depth">회원추천관계갱신</a>
+		<!-- <a href="./member_table_sponsor.php" style='background:antiquewhite'>추천상위스폰서갱신</a> -->
+		<a href="./member_form.php" id="member_add">회원직접추가</a>
+		<a href="../excel/excel_with_eth.php">회원엑셀다운로드</a> 
+		<!-- <a href="#" onclick="javascript:document.myForm.submit();">회원엑셀다운로드</a>
+		<a href="../excel/all_member_list_excel.php">전체회원엑셀다운로드</a>  -->
+	</div>
 <?php } ?>
 
-<!-- <div style="padding: 20px;font-size:15px;"> -->
-<!-- ETH(총자산) = Deposit + 출금구매사용 + 총수당  -->
-<?
-$i = 0;
-while($l_row = sql_fetch_array($get_lc)){
-
-	if($l_row['grade']==$i){
-		echo $start." ".$i."star :".$l_row['cnt']."명 | ";
-	}
-	++$i;
-}?>
 </div>
 
 <div class="local_desc01 local_desc">
     <p>
-		- 인정회원의 정회원 전환은 인정회원 아래의 정회원으로 변경 사용 (표시는 같음).
+		- <strong>보유잔고</strong> : ( 총입금액 - 사용금액및출금액 )
 	</p>
 </div>
 
@@ -397,27 +351,23 @@ while($l_row = sql_fetch_array($get_lc)){
 			<label for="chkall" class="sound_only">회원 전체</label>
 			<input type="checkbox" name="chkall" value="1" id="chkall" onclick="check_all(this.form)">
 		</th>
-		<th scope="col" rowspan="2" id="" class="td_chk" style='max-width:30px;width:40px !important;'>회원등급</th>
+		<th scope="col" rowspan="2" id="" class="td_chk" style='max-width:30px;width:40px !important;'><?php echo subject_sort_link('grade') ?>회원등급</th>
 		<th scope="col" rowspan="2" id="mb_list_id" class="td_name center"><?php echo subject_sort_link('mb_id') ?>아이디</a></th>
 		<!--<th scope="col" rowspan="2"  id="mb_list_cert"><?php echo subject_sort_link('mb_certify', '', 'desc') ?>메일인증확인</a></th>-->
 
 		<!-- <th scope="col" rowspan="2" id="mb_list_mobile" class="td_mail">추천상위스폰서</th> -->
 		<th scope="col" rowspan="2" id="mb_list_mobile" class="td_mail">추천인</th>
 		<th scope="col" rowspan="2" id="mb_list_mobile" class="td_mail">후원인</th>
-		<!-- <th scope="col" rowspan="2" id="mb_list_mobile" class="td_mail">메일주소</th> -->
-		<!-- <th scope="col" id="mb_list_auth"  class="total" rowspan="2">TOTAL <br>fund</th>
-		<th scope="col" id="mb_list_auth"  class="bonus_total" rowspan="2">HAZ </th>
-		<th scope="col" id="mb_list_auth"  class="bonus_usdt" rowspan="2">USDT </th>  -->
 		<th scope="col" id="mb_list_auth"  class="bonus_eth" rowspan="2"><?php echo subject_sort_link('total_fund') ?>현재잔고<br></a></th>
 		<th scope="col" id="mb_list_auth2" class="bonus_calc"  rowspan="2"><?php echo subject_sort_link('deposit_point') ?>총입금액 <br></th>
 		<th scope="col" id="mb_list_auth2" class="bonus_bb"  rowspan="2"><?php echo subject_sort_link('deposit_calc') ?>사용금액<br>(출금포함)<br></th>
 		<th scope="col" id="mb_list_auth2" class="bonus_usdt" style='color:white !important' rowspan="2"><?php echo subject_sort_link('mb_shift_amt') ?>출금총액<br>(+수수료)<br></th>
-		<!-- <th scope="col" id="mb_list_auth2" class="bonus_bb bonus_calc"  rowspan="2"><?php echo subject_sort_link('deposit_calc') ?>USE <br>출금 및 구매사용</th> -->
+		
 		<th scope="col" id="mb_list_auth2" class="bonus_bb bonus_benefit"  rowspan="2"><?php echo subject_sort_link('mb_balance') ?> 수당합계</th>
-		<th scope="col" id="mb_list_auth2" class="bonus_aa"  rowspan="2"><?php echo subject_sort_link('mb_save_point') ?> 누적매출</th>
-		<th scope="col" id="mb_list_auth2" class=""  rowspan="2"><?php echo subject_sort_link('mb_rate') ?> PV</th>
+		<th scope="col" id="mb_list_auth2" class="bonus_aa"  rowspan="2"><?php echo subject_sort_link('mb_pv') ?> 누적매출(PV)</th>
+		<th scope="col" id="mb_list_auth2" class=""  rowspan="2"><?php echo subject_sort_link('mb_rate') ?> 마이닝해쉬(<?=$mining_hash[0]?>)</th>
 		<th scope="col" id="mb_list_auth2" class="bonus_bb bonus_out"  rowspan="2">수당/한계<br>(100%)</th>
-		<!-- <th scope="col" id="mb_list_auth2" class="bonus_bb"  rowspan="2" style="background:aliceblue !important">UPSTAIR ACC <br> ( 누적 예치금 )</th> -->
+		
 		<th scope="col" rowspan="2" id="" class="item_title">상위보유패키지</th>
 		<th scope="col" id="mb_list_authcheck" style='min-width:130px;' rowspan="2">상태/<?php echo subject_sort_link('mb_level', '', 'desc') ?>회원레벨</a></th>
 		<th scope="col" id="mb_list_member"><?php echo subject_sort_link('mb_today_login', '', 'desc') ?>최종접속</a></th>
@@ -425,14 +375,6 @@ while($l_row = sql_fetch_array($get_lc)){
 	</tr>
 
 	<tr>
-	<!-- <th scope="col" id="mb_list_auth" class="item item1" rowspan="2"><?=$get_shop_item['0']['it_name']?> </th>
-	<th scope="col" id="mb_list_auth" class="item item2" rowspan="2"><?=$get_shop_item['1']['it_name']?> </th>
-	<th scope="col" id="mb_list_auth" class="item item3" rowspan="2"><?=$get_shop_item['2']['it_name']?> </th>
-	<th scope="col" id="mb_list_auth" class="item item4" rowspan="2"><?=$get_shop_item['3']['it_name']?> </th>
-	<th scope="col" id="mb_list_auth" class="item item4" rowspan="2"><?=$get_shop_item['4']['it_name']?> </th>
-	<th scope="col" id="mb_list_auth" class="item item4" rowspan="2"><?=$get_shop_item['5']['it_name']?> </th> -->
-
-
 		<!--<th scope="col" id="mb_list_mailc"><?php echo subject_sort_link('mb_email_certify', '', 'desc') ?>메일<br>인증</a></th>-->
 		<th scope="col" id="mb_list_join"><?php echo subject_sort_link('mb_datetime', '', 'desc') ?>가입일</a></th>
 	</tr>
@@ -464,36 +406,14 @@ while($l_row = sql_fetch_array($get_lc)){
 		$intercept_date = $row['mb_intercept_date'] ? $row['mb_intercept_date'] : date('Ymd', G5_SERVER_TIME);
 
 		$mb_nick = get_sideview($row['mb_id'], get_text($row['mb_nick']), $row['mb_email'], $row['mb_homepage']);
-
 		$mb_id = $row['mb_id'];
-		// $sponsor = $row['mb_sponsor'];
-
-		// 회원 자산, 보너스 정보
-		/* $total_deposit = $member['mb_deposit_point'] + $member['mb_deposit_calc'];
-		$total_bonus = $member['mb_balance']; 
-		$total_shift_amt = $member['mb_shift_amt'];
-		$total_fund = $total_deposit  +  $total_bonus;
-
-		$shop_point = $total_bonus*0.1;
-		$total_withraw =$total_fund - $shop_point;
-		$available_fund = $total_withraw; */
-
-
 		
+		// 현재잔고
 		$total_deposit = $row['mb_deposit_point'] + $row['mb_deposit_calc'];
 		$total_bonus = $row['mb_balance'];
-		$total_fund = $total_deposit + $total_bonus;
+		$total_fund = $total_deposit;
 		
-
-		// 보너스 수당 - 한계 
-		/* if($row['mb_balance'] != 0 && $row['mb_save_point']!= 0){
-
-			$bonus_per = ($row['mb_balance']/($row['mb_save_point'] * $limited_per));
-
-		} */
-		$bonus_per = bonus_per($row['mb_id'],$row['mb_balance'],$row['mb_save_point']);
-
-
+		$bonus_per = bonus_per($row['mb_id'],$row['mb_balance'],$row['mb_pv']);
 
 		$leave_msg = '';
 		$intercept_msg = '';
@@ -590,34 +510,20 @@ while($l_row = sql_fetch_array($get_lc)){
 		-->
 		<!-- <td headers="mb_list_mobile" rowspan="2" class="td_mail"><?php echo get_text($row['mb_email']); ?></td> -->
 
-		<style>
-			.td_mbstat{text-align:right;padding-right:10px !important;font-size:12px;}
-		</style>
 
 
-		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><strong><?=Number_format($total_fund)?></strong></td>
-		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><strong><?=Number_format($row['mb_deposit_point'])?> </strong></td>
-		<td headers="mb_list_auth" class="td_mbstat" style='color:red' rowspan="2"><?=Number_format($row['mb_deposit_calc'])?></td>
-		<td headers="mb_list_auth" class="td_mbstat" style='color:red' rowspan="2"><?=Number_format($row['mb_shift_amt'])?></td>
-		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><strong><?= Number_format($total_bonus) ?> </strong></td>
-		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><?= Number_format($row['mb_save_point']) ?></td>
-		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><?= Number_format($row['mb_rate']) ?></td>
-		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"> <?=$bonus_per?>% </td>
-		<td headers="mb_list_auth" class="td_mbstat td_item" rowspan="2"><span class='badge t_white color<?=max_item_level_array($row['mb_id'],'number')?>'><?=max_item_level_array($row['mb_id'],'name')?></span></td>
-		<!-- <td headers="mb_list_auth" class="td_mbstat td_item" rowspan="2"><span class='badge t_white color<?=$row['rank']?>'>P<?=$row['rank']?></span></td> -->
+		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><strong><?=shift_auto_zero($total_fund)?></strong></td>
+		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><strong><?=shift_auto_zero($row['mb_deposit_point'])?> </strong></td>
+		<td headers="mb_list_auth" class="td_mbstat" style='color:red' rowspan="2"><?=shift_auto_zero($row['mb_deposit_calc'])?></td>
+		<td headers="mb_list_auth" class="td_mbstat" style='color:red' rowspan="2"><?=shift_auto_zero($row['mb_shift_amt'])?></td>
+		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><strong><?= shift_auto_zero($total_bonus) ?> </strong></td>
+		<!-- <td headers="mb_list_auth" class="td_mbstat" rowspan="2"><?= shift_auto_zero($row['mb_save_point']) ?></td> -->
+		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><?= shift_auto_zero($row['mb_pv']) ?></td>
+		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><?= shift_auto_zero($row['mb_rate']) ?></td>
+		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"> <?=$bonus_per?></td>
+		<td headers="mb_list_auth" class="td_mbstat text-center" rowspan="2"><span class='badge t_white color<?=$row['rank']?>'><?if($row['rank']){echo 'P'.$row['rank'];}?></span></td>
 		
-		<!-- <?php /*$pack_array = package_have_return($row['mb_id']);*/ ?>
-		<td headers="mb_list_auth" class="td_mbstat td_item" rowspan="2"><?= $pack_array[0] ?></td>
-		<td headers="mb_list_auth" class="td_mbstat td_item" rowspan="2"><?= $pack_array[1] ?></td>
-		<td headers="mb_list_auth" class="td_mbstat td_item" rowspan="2"><?= $pack_array[2] ?></td>
-		<td headers="mb_list_auth" class="td_mbstat td_item" rowspan="2"><?= $pack_array[3] ?></td>
-		<td headers="mb_list_auth" class="td_mbstat td_item" rowspan="2"><?= $pack_array[4] ?></td>
-		<td headers="mb_list_auth" class="td_mbstat td_item" rowspan="2"><?= $pack_array[5] ?></td>
-		<td headers="mb_list_auth" class="td_mbstat td_item" rowspan="2"><?= $pack_array[6] ?></td> -->
-
-
 		<td headers="mb_list_member" class="td_mbgrade" rowspan="2">
-			<!-- <?echo "<img src='/img/".$row['grade'].".png' style='width:20px;height:20px;'>";?> -->
 			<span class='icon'><?=user_icon($row['mb_id'],'icon')?></span>
 			<?php echo get_member_level_select("mb_level[$i]", 0, $member['mb_level'], $row['mb_level']) ?>
 		</td>
@@ -635,7 +541,6 @@ while($l_row = sql_fetch_array($get_lc)){
 			<input type="radio" name="mb_certify[<?php echo $i; ?>]" value="hp" id="mb_certify_hp_<?php echo $i; ?>" <?php echo $row['mb_certify']=='hp'?'checked':''; ?>>
 			<label for="mb_certify_hp_<?php echo $i; ?>">휴대폰</label>
 
-			P1 <?=$row['it_pool1']?>개 / P2 - <?=$row['it_pool2']?>개 / P3 - <?=$row['it_pool3']?>개 / P4 - <?=$row['it_pool4']?>개 / G - <?=$row['it_GPU']?>개
 			</td>-->
 
 

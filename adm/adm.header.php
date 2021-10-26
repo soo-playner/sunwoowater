@@ -28,7 +28,8 @@ $query_string = $qstr ? '?'.$qstr : '';
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/jquery-ui.min.js"></script>
 <script type="text/javascript" src="<?=G5_THEME_URL?>/_common/js/common.js"></script>
 
-<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+
+
 
 <form name="fvisit" id="fvisit" class="local_sch02 local_sch" method="get">
 

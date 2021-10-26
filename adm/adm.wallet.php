@@ -265,13 +265,12 @@ function string_shift_code($val){
 
    function get_shop_item(){
         $array = array();
-        $sql = "SELECT * FROM g5_shop_item";
+        $sql = "SELECT * FROM g5_shop_item ";
         $result = sql_query($sql);
     
         while($row = sql_fetch_array($result)){
             array_push($array,$row);
         }
-    
         return $array;
     }
 

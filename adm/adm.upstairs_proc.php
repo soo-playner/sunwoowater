@@ -6,15 +6,12 @@ include_once(G5_PATH.'/util/purchase_proc.php');
 // $debug = 1;
 $now_datetime = date('Y-m-d H:i:s');
 $now_date = date('Y-m-d');
-// $debug=1;
-
 
 $mb_id = $_POST['mb_id'];
 $mb_no = $_POST['mb_no'];
 $mb_rank = $_POST['rank'];
 
-
-
+$coin_val = PURCHASE_CURENCY;
 $func = $_POST['func'];
 $input_val= $_POST['input_val'];
 $output_val = $_POST['output_val'];
@@ -25,14 +22,14 @@ $pack_maker = $_POST['select_maker'];
 $it_supply_point = $_POST['it_supply_point'];
 
 $val = substr($pack_maker,1,1);
-$coin_val = '원';
+
 
 if($debug){
 	$mb_id = 'test3';
 	$mb_no = 4;
 	$mb_rank = 1;
 	$func = 'new';
-	$input_val =5500000; // 결제금액 (부가세포함)
+	$input_val =5500000; // 표시금액 (부가세포함)
 	$output_val =5000000; // 구매금액 (부가세제외)
 	$pack_name = 'P2';
 	$pack_id = 2021091722;
@@ -41,10 +38,10 @@ if($debug){
 }
 
 $target = "mb_deposit_calc";
-$pv = $it_supply_point;
+$od_rate = $it_supply_point;
 
 if($func == "new"){
-	$orderid = date("YmdHis",time()).'01';
+	$orderid = date("mdHis",time()).'01';
 }else{
 	$orderid = $_POST['od_id'];
 }
@@ -53,8 +50,8 @@ $sql = "insert g5_shop_order set
 	od_id				= '".$orderid."'
 	, mb_no             = '".$mb_no."'
 	, mb_id             = '".$mb_id."'
-	, od_cart_price     = ".$input_val."
-	, od_cash    		= ".$output_val."
+	, od_cart_price     = '{$output_val}'
+	, od_cash    		= '{$input_val}'
 	, od_name           = '{$pack_name}'
 	, od_tno            = '{$pack_id}'
 	, od_receipt_time   = '".$now_datetime."'
@@ -63,7 +60,7 @@ $sql = "insert g5_shop_order set
 	, od_settle_case    = '".$coin_val."'
 	, od_status         = '패키지구매(관리자)'
 	, upstair    		= ".$it_point."
-	, pv				= ".$pv." ";
+	, od_rate				= ".$od_rate." ";
 
 
 if($debug){
@@ -73,10 +70,10 @@ if($debug){
 }else{
 	$rst = sql_query($sql);
 }
-
-$logic = purchase_package($mb_id,$pack_id);
-
-$calc_value = conv_number($input_val);
+if($func == "new"){
+	$logic = purchase_package($mb_id,$pack_id);
+	$calc_value = conv_number($output_val);
+}
 
 if($rst && $logic){
 
@@ -93,7 +90,8 @@ if($rst && $logic){
 		$update_rank = $val;
 	}
 	
-	$update_point .= ", mb_rate = ( mb_rate + {$pv}) ";
+	$update_point .= ", mb_rate = ( mb_rate + {$od_rate}) ";
+	$update_point .= ", mb_pv = ( mb_pv + {$it_point}) ";
 	$update_point .= ", mb_save_point = ( mb_save_point + {$output_val}) ";
 	$update_point .= ", rank = '{$update_rank}', rank_note = '{$pack_name}', sales_day = '{$now_datetime}' ";
 	$update_point .= " where mb_id ='".$mb_id."'";

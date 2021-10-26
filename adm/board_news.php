@@ -61,15 +61,16 @@ $colspan = 15;
      iframe html body{background:#fff !important}
      .board_menu{color:blue;font-weight: 600}
 </style>
-<!-- 
 <div class="local_ov01 local_ov">
     <?php echo $listall ?>
     생성된 게시판수 <?php echo number_format($total_count) ?>개
 
-    | <a href="/adm/board_notice.php" class="board_menu">notice</a>
+    | <a href="/adm/board_notice.php" class="board_menu">Notice</a>
     | <a href="/adm/board_news.php" class="board_menu">News</a>
     | <a href="/adm/board_support.php" class="board_menu">Support center</a>
-</div> -->
+    | <a href="/adm/board_agreement.php" class="board_menu">agreement</a>
+    <!-- | <a href="/adm/board_kyc.php" class="board_menu">KYC 회원인증</a> -->
+</div>
 
 <iframe src="/bbs/board.php?bo_table=news" width="100%" height="1000px;" scrolling="auto" style="border:0;background:white;"></iframe>
 
