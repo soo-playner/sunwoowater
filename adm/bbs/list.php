@@ -4,6 +4,7 @@ if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 // 분류 사용 여부
 $is_category = false;
 $category_option = '';
+
 if ($board['bo_use_category']) {
     $is_category = true;
     $category_href = G5_ADMIN_URL.'/bbs/board.php?bo_table='.$bo_table;
@@ -210,7 +211,7 @@ if ($sca || $stx) {
     $prev_spt = $spt - $config['cf_search_part'];
     if (isset($min_spt) && $prev_spt >= $min_spt) {
         $qstr1 = preg_replace($patterns, '', $qstr);
-        $prev_part_href = './board.php?bo_table='.$bo_table.$qstr1.'&amp;spt='.$prev_spt.'&amp;page=1';
+        $prev_part_href = '/board.php?bo_table='.$bo_table.$qstr1.'&amp;spt='.$prev_spt.'&amp;page=1';
         $write_pages = page_insertbefore($write_pages, '<a href="'.$prev_part_href.'" class="pg_page pg_prev">이전검색</a>');
     }
 
@@ -241,5 +242,6 @@ if ($board['bo_use_rss_view']) {
 }
 
 $stx = get_text(stripslashes($stx));
+
 include_once($board_skin_path.'/list.skin.php');
 ?>
