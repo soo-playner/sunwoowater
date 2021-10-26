@@ -4,9 +4,11 @@
     include_once(G5_THEME_PATH.'/_include/wallet.php');
 	include_once(G5_THEME_PATH.'/_include/gnb.php');
 
+    login_check($member['mb_id']);
+
 	$title = '마이닝';
 
-    $ordered_items = ordered_items($member['mb_id'],$_GET['item']);
+    $ordered_items = ordered_items($member['mb_id'],$_GET['item'],2);
     $mining_cnt = count($ordered_items);
 
   
@@ -24,13 +26,13 @@
     $max_mining_total = $mining_total;
 
     /* 리스트 기본값*/
-    $mining_history_limit = " limit 0,1 ";
+    $mining_history_limit = " AND DAY IN (SELECT MAX(DAY) FROM soodang_mining WHERE mb_id = '{$member['mb_id']}')";
     $mining_history_limit_text ='전체 내역보기';
     $mining_amt_limit = " limit 0,1 ";
     $mining_amt_limit_text = '전체 내역보기';
 
     if($_GET['history_limit'] == 'all'){
-        $mining_history_limit = "";
+        $mining_history_limit = " ORDER BY day desc ";
         $mining_history_limit_text = "최근내역만보기";
     }
 
@@ -40,7 +42,9 @@
     }
 
     // 마이닝 내역
-    $mining_history = sql_query("SELECT * from {$g5['mining']} WHERE mb_id = '{$member['mb_id']}' {$mining_history_limit} ");
+    $mining_history_sql = "SELECT * from {$g5['mining']} WHERE mb_id = '{$member['mb_id']}'  {$mining_history_limit} ";
+    // print_R($mining_history_sql);
+    $mining_history = sql_query($mining_history_sql);
     $mining_history_cnt = sql_num_rows($mining_history);
 
     // 마이닝 출금 내역
@@ -84,7 +88,7 @@
                 for($i = 0; $i < $list_cnt; $i++){	
                     $color_num = substr($ordered_items[$i]['it_maker'],1,1); 
                 ?>
-                    <div class="product_buy_wrap round r_card r_card_<?=$color_num?> col-12">
+                    <div class="product_buy_wrap round r_card color<?=$color_num?> col-12">
                         <li class="row">
                             <p class="title col-12" style="font-size:14px;">
                                 
@@ -100,14 +104,22 @@
                         <li class="row">
                             <div class="value col-10">
                                 <div class="value1" style="font-size:18px;line-height:42px;">
-                                    <?=$ordered_items[$i]['pv']?> mh/s
+                                    <?=$ordered_items[$i]['pv']?> Hp/s
                                 </div>
-                                <div class="date"><?=$ordered_items[$i]['row']['cdate']?> ~ <?=expire_date($ordered_items[$i]['row']['cdate'])?></div>
                             </div>
-                            <div class="col-2" style='padding:8px 0px 0px;'>
+                            <div class="col-2" style='padding:3px 0px 0px;text-align:right;padding-right:10px;'>
                                 <span class='mining_ico' ><img src='<?=coin_prices('eth','icon')?>'/></span>
                             </div>
                         </li>
+                        <li class="row">
+                            <div class="value col-4" style='line-height:20px;' >
+                                <i class="ri-calendar-check-fill" style='font-size:16px;'></i> <?=$ordered_items[$i]['mine_date']?>
+                            </div>
+                            <div class="value col-8" style='line-height:20px;text-align:right'>
+                                <div class="date"><?=$ordered_items[$i]['mine_start_date']?> ~ <?=$ordered_items[$i]['mine_end_date']?></div>
+                            </div>
+                        </li>
+                        
                     </div>
                     <?php
                         // echo "<script>slide_color('$color_num')</script>";

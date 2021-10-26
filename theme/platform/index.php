@@ -7,13 +7,13 @@ if (G5_IS_MOBILE) {
     return;
 }
 
-Header("Location:/page.php?id=structure");
-// include_once(G5_THEME_PATH.'/dashboard.php');
+// Header("Location:/page.php?id=structure");
+include_once(G5_THEME_PATH.'/dashboard.php');
 
 ?>
 
 <!-- 최신글 시작 { 
-<h2 class="sound_only">최신글</h2>
+<h2 class="sound_only">최신글</h2> ㄹ
 
 <div class="latest_wr">
 

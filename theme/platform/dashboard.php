@@ -55,7 +55,7 @@
 							<div class="col-12 r_card_box">
 							<a href='/page.php?id=upstairs'>
 							
-								<div class="r_card r_card_<?=substr($row['od_name'],1,1)?>">
+								<div class="r_card color<?=substr($row['od_name'],1,1)?>">
 									<p class="title">
 										<span style='font-size:14px;'><?=$ordered_items[$i]['it_option_subject']?></span> 
 										- <?=$ordered_items[$i]['it_name']?>

@@ -7,15 +7,19 @@ include_once(G5_PATH.'/util/purchase_proc.php');
 $now_datetime = date('Y-m-d H:i:s');
 $now_date = date('Y-m-d');
 
-$mb_id = $member['mb_id'];
-$mb_no = $member['mb_no'];
-$mb_rank = $member['rank'];
+if($func == "admin"){
+	$od_status = '패키지구매(관리자)';
+	$mb_id = $_POST['mb_id'];
+	$mb_no = $_POST['mb_no'];
+	$mb_rank = $_POST['rank'];
+}else{
+	$od_status =  '패키지구매';
+	$mb_id = $member['mb_id'];
+	$mb_no = $member['mb_no'];
+	$mb_rank = $member['rank'];
+}
 
-// $input_val ='1';
-// $output_val ='169.09';
-// $coin_val = 'eth';
-
-$coin_val = '원';
+$coin_val = PURCHASE_CURENCY;
 $func = $_POST['func'];
 $input_val= $_POST['input_val'];
 $output_val = $_POST['output_val'];
@@ -28,40 +32,40 @@ $it_supply_point = $_POST['it_supply_point'];
 $val = substr($pack_maker,1,1);
 
 if($debug){
-	$mb_id = 'test3';
-	$func = 'new';
-	$input_val ='5500000'; // 결제금액 (부가세포함)
-	$output_val ='5000000'; // 구매금액 (부가세제외)
-	$pack_name = 'Membership-Package';
-	$pack_id = 2021091720;
-	$it_point = 5000000;
+	$mb_id = 'test8';
+	$mb_no = 5;
+	$mb_rank = 0;
+	$func = 'admin';
+	$input_val ='6000000'; // 결제금액 (부가세포함)
+	$output_val ='5000'; // 구매금액 (부가세제외)
+	$pack_name = 'P5';
+	$pack_maker = 'P5';
+	$pack_id = 2021101835;
+	$it_point = 5000;
 	$it_supply_point = 5;
 }
 
 $target = "mb_deposit_calc";
-$pv = $it_supply_point;
+$od_rate = $it_supply_point;
 
-if($func == "new"){
-	$orderid = date("YmdHis",time()).'01';
-}else{
-	$orderid = $_POST['od_id'];
-}
+$orderid = date("mdHis",time()).substr($pack_id,-2,2).$mb_no;
+
 
 $sql = "insert g5_shop_order set
-	od_id				= '".$orderid."'
-	, mb_no             = '".$mb_no."'
-	, mb_id             = '".$mb_id."'
-	, od_cart_price     = ".$input_val."
-	, od_cash    		= ".$output_val."
+	od_id				= '{$orderid}'
+	, mb_no             = '{$mb_no}'
+	, mb_id             = '{$mb_id}'
+	, od_cart_price     = '{$output_val}'
+	, od_cash    		= '{$input_val}'
 	, od_name           = '{$pack_name}'
 	, od_tno            = '{$pack_id}'
-	, od_receipt_time   = '".$now_datetime."'
-	, od_time           = '".$now_datetime."'
-	, od_date           = '".$now_date."'
-	, od_settle_case    = '".$coin_val."'
-	, od_status         = '패키지구매'
-	, upstair    		= ".$it_point."
-	, pv				= ".$pv." ";
+	, od_receipt_time   = '{$now_datetime}'
+	, od_time           = '{$now_datetime}'
+	, od_date           = '{$now_date}'
+	, od_settle_case    = '{$coin_val}'
+	, od_status         = '{$od_status}'
+	, upstair    		= {$it_point}
+	, od_rate			= {$od_rate} ";
 
 if($debug){
 	$rst = 1;
@@ -71,22 +75,15 @@ if($debug){
 	$rst = sql_query($sql);
 }
 
-if($func == "new"){
-	$logic = purchase_package($mb_id,$pack_id);
-}
-
-/* else{
-	if($val <= 5){
-		$logic = rankup($val,$mb_id,$orderid);
-	}
-} */
-
+$logic = purchase_package($mb_id,$pack_id);
+$calc_value = conv_number($output_val);
 
 if($rst && $logic){
+	$mb = sql_fetch("SELECT * from g5_member WHERE mb_id ='{$mb_id}' ");
 
-	$update_point = " UPDATE g5_member set $target = ($target - $input_val) ";
+	$update_point = " UPDATE g5_member set $target = ($target - $calc_value) ";
 
-	if($member['mb_level'] == 0){
+	if($mb['mb_level'] == 0){
 		$update_point .= ", mb_level = 1 " ;
 	}
 
@@ -96,7 +93,8 @@ if($rst && $logic){
 		$update_rank = $val;
 	}
 	
-	$update_point .= ", mb_rate = ( mb_rate + {$pv}) ";
+	$update_point .= ", mb_rate = ( mb_rate + {$od_rate}) ";
+	$update_point .= ", mb_pv = ( mb_pv + {$it_point}) ";
 	$update_point .= ", mb_save_point = ( mb_save_point + {$output_val}) ";
 	$update_point .= ", rank = '{$update_rank}', rank_note = '{$pack_name}', sales_day = '{$now_datetime}' ";
 	$update_point .= " where mb_id ='".$mb_id."'";

@@ -189,7 +189,10 @@ $result_withdraw = sql_query($sql);
           <div class='col-12 text-center bank_info'>
             <?= $bank_name ?> : <input type="text" id="bank_account" class="bank_account" value="<?= $bank_account ?>" title='bank_account' disabled />(<?= $account_name ?>)
             <?if ($sel_price) { ?>
-              <div class='sel_price'>입금액 : <span class='price'><?= Number_format($sel_price) ?><?= ASSETS_CURENCY ?></span></div>
+              <div class='sel_price'>
+                입금액 : <span class='price'><?= ASSETS_CURENCY ?><?= Number_format($sel_price) ?></span><br>
+                <span class='small'>( =￦<?=Shift_auto($sel_price*$usd_price)?><?=DEPOSIT_CURENCY?> )</span>
+              </div>
             <?}?>
           </div>
 
@@ -260,7 +263,10 @@ $result_withdraw = sql_query($sql);
       <div class="hist_con_row1">
         <div class="row">
           <span class="hist_date"><?= $row['create_dt'] ?></span>
-          <span class="hist_value"><?= Number_format($row['in_amt']) ?><?= $row['coin'] ?></span>
+          <span class="hist_value">
+            <?=ASSETS_CURENCY?> <?= Number_format($row['in_amt']) ?><br>
+            <span class='small' style='color:#333'>= ￦<?= Number_format($row['amt']) ?><?= $row['coin'] ?></span>
+          </span>
         </div>
 
         <div class="row">

@@ -9,6 +9,7 @@ $shop_item_cnt = count($shop_item);
         
         global $shop_item_cnt,$item_default;
         
+
         $my_package = [];
 
         if($have==1){

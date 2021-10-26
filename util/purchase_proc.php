@@ -61,12 +61,21 @@ function purchase_package($mb_id,$pack_id,$return = 0){
                 
                 // 승급처리
                 // $proc_done = process();
-                $result_data .= $proc_done = 1;
+                
+                /* 마이닝큐 등록 처리*/
+                if($pack_table_code > 2){
+                    $proc_done = mining_process($pack_table_code);
+                }else{
+                    $proc_done = 1;
+                }
+
+                $result_data .= $proc_done;
 
             }
         }
 
         if($result && $proc_done && $return == 0  ){
+            echo  $result_data;
             echo "<br>처리완료<br><br>";
             return true;
         }else if($result && $proc_done && $return == 1){
@@ -80,6 +89,30 @@ function purchase_package($mb_id,$pack_id,$return = 0){
     }
 }
 
+
+
+
+function mining_process($pack_table_code){
+    global $orderid,$now_date,$od_rate;
+    global $debug;
+    
+    $mine_start_date = date("Y-m-d", strtotime($now_date."+45 day"));
+    $mine_date = $mine_start_date;
+    $mine_end_date = date("Y-m-d", strtotime($now_date."+15 day"."+5 year"));
+
+    $update_order_mine_sql = " UPDATE g5_shop_order set mine_table = {$pack_table_code}, mine_rate={$od_rate}, mine_start_date = '{$mine_start_date}', mine_date = '{$mine_date}',mine_end_date = '{$mine_end_date}' WHERE od_id = '{$orderid}' ";
+    
+    if($debug){
+        print_r($update_order_mine_sql);
+        $result = 1; 
+    }else{
+        $result = sql_query($update_order_mine_sql);
+    }
+    
+    if($result){
+        return ' & 마이닝상품 구매처리';
+    }
+}
 
 
 function direct_bonus($mb_id){

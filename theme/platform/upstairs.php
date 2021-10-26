@@ -31,7 +31,7 @@ $total_page  = ceil($total_count / $rows);
 if ($page < 1) $page = 1; // 페이지가 없으면 첫 페이지
 $from_record = ($page - 1) * $rows; // 시작 열
 
-$sql = "SELECT mb_id, od_cart_price, od_receipt_time, od_name, od_cash, od_settle_case, upstair, od_status,od_date,pv
+$sql = "SELECT mb_id, od_cart_price, od_receipt_time, od_name, od_cash, od_settle_case, upstair, od_status,od_date,od_rate
 {$sql_common}
 {$sql_search} ";
 
@@ -47,6 +47,13 @@ $result = sql_query($sql);
 .product_buy_wrap .title{padding-right:0;}
 .mining_ico{vertical-align: middle;}
 .mining_ico, .mining_ico img{margin-left:5px;height:22px;}
+.mining_product{width:100%;display: table;}
+.iconbox{display:block;width:100%;height:30px;margin-top:10px;}
+.table-cell{display:table-cell;}
+.v-middle{vertical-align: middle;}
+.v-bottom{vertical-align: bottom;}
+.mining_product img{max-width:30px;max-height:30px;vertical-align: middle;}
+.iconbox + .text_wrap{margin-top:5px !important;}
 </style>
 
 <?include_once(G5_THEME_PATH.'/_include/breadcrumb.php');?>
@@ -69,53 +76,47 @@ $result = sql_query($sql);
 						if(count($row) == 0) {
 							echo "<div class='no_data'>패키지 상품이 존재하지 않습니다</div>";
 						}else{
-
-							/*패키지상품구매체크*/
-							if($member['rank_note'] == ''){
-								$start_pack = 1;
-								$max_count = 1;
-							}else{
-								$start_pack = 2;
-								$max_count = count($row);
-							}
 						
-							for($i=$start_pack; $i <= $max_count; $i++){
+							for($i=0; $i < count($row); $i++){
 
-							$origin_price = $usd_price * $row[$i-1]['it_price'];
+							$origin_price = $usd_price * $row[$i]['it_price'];
 							$sign = "원";
 
 							$data_arr = array();
 							array_push($data_arr, array(
-								"it_id"=>$row[$i-1]['it_id'],
-								"it_name"=>$row[$i-1]['it_name'],
-								"it_price"=>$row[$i-1]['it_price'],
-								"it_point"=>$row[$i-1]['it_point'],
-								"it_cust_price"=>$row[$i-1]['it_cust_price'],
-								"it_maker"=>$row[$i-1]['it_maker'],
-								"it_supply_point"=>$row[$i-1]['it_supply_point'],
-								"it_option_subject"=>$row[$i-1]['it_option_subject'],
-								"it_model"=>$row[$i-1]['it_model'],
+								"it_id"=>$row[$i]['it_id'],
+								"it_name"=>$row[$i]['it_name'],
+								"it_price"=>$row[$i]['it_price'],
+								"it_point"=>$row[$i]['it_point'],
+								"it_cust_price"=>$row[$i]['it_cust_price'],
+								"it_maker"=>$row[$i]['it_maker'],
+								"it_supply_point"=>$row[$i]['it_supply_point'],
+								"it_option_subject"=>$row[$i]['it_option_subject'],
+								"it_model"=>$row[$i]['it_model'],
 								"sign" => $sign
 							));
 
-							if($row[$i-1]['it_id'] == '2021091720'){
+							if($i == 0){
 								$row_col = 'col-12 col-lg-12';
 							}else{
 								$row_col = 'col-6 col-lg-4';
 							}
 						?>
 							<div class="<?=$row_col?> r_card_box">
-								<div class="r_card r_card_<?=$i-1?>" data-row=<?=json_encode($data_arr,JSON_UNESCAPED_UNICODE)?>>
+								<div class="r_card color<?=$i+1?>" data-row=<?=json_encode($data_arr,JSON_UNESCAPED_UNICODE)?>>
 									<p class="title">
-										<span style='vertical-align:middle'><?=$row[$i-1]['it_name']?></span>
-										<?if($i!=1){?>
-										<span style='font-size:13px;float:right;line-height:36px;'><?=$row[$i-1]['it_option_subject']?></span>
-										<?}?>
+										<span style='vertical-align:middle'><?=$row[$i]['it_name']?></span>
+										<span style='font-size:13px;float:right;line-height:36px;'><?=$row[$i]['it_option_subject']?></span>
+										
 									</p>
 									<div class="b_blue_bottom"></div>
-									<div class="text_wrap">
-										<div class="it_price">￦<?=Number_format($row[$i-1]['it_price'])?></div>
-										<div class='origin_price'>VAT ￦<?=Number_format($row[$i-1]['it_price']*0.1)?></div>
+
+									<div class='mining_product'>
+										<?if($i != 0){?><div class="iconbox v-bottom"><?if($i > 1){?><img src='<?=G5_THEME_URL?>/img/mine_icon.png'><?}?></div><?}?>
+										<div class="text_wrap ">
+											<div class="it_price">$ <?=Number_format($row[$i]['it_price'])?></div>
+											<div class='origin_price'>=￦<?=Number_format($row[$i]['it_cust_price'])?></div>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -260,31 +261,26 @@ $result = sql_query($sql);
 
 			<?if(sql_num_rows($result) == 0) {?>	
 				<div class="no_data"> Package 구매 내역이 존재하지 않습니다</div>
-			<?}?>
+			<?}else{?>
 
-			<?while( $row = sql_fetch_array($result) ){
-				if(strlen($row['od_name']) > 2){
-					$od_name = "P0";
-				}else{
-					$od_name = $row['od_name'];
-				}
-			?>
-				
-			<div class="hist_con">
-				<div class="hist_con_row1">
-					<div class="row">
-						<span class="hist_date"><?= $row['od_receipt_time'] ?></span>
-						<span class="hist_value">$ <?=Number_format($row['od_cart_price'])?></span>
-					</div>
+				<?while( $row = sql_fetch_array($result) ){?>
+					
+				<div class="hist_con">
+					<div class="hist_con_row1">
+						<div class="row">
+							<span class="hist_date"><?= $row['od_receipt_time'] ?></span>
+							<span class="hist_value">$ <?=Number_format($row['od_cart_price'])?></span>
+						</div>
 
-					<div class="row">
-						<h2 class="pack_name pack_f_<?=substr($od_name,1,1)?>"><?= strtoupper($row['od_name']) ?> </h2>
-						<span class='hist_sub_price'><?=Number_format($row['od_cash'])?><?=$row['od_settle_case']?></span>
+						<div class="row">
+							
+							<h2 class="pack_name pack_f_<?=substr($od_name,1,1)?>"><?= strtoupper($row['od_name']) ?> </h2>
+							<span class='hist_sub_price'><?=Number_format($row['od_cash'])?><?=$row['od_settle_case']?></span>
+						</div>
 					</div>
 				</div>
-			</div>
+				<?}?>
 			<?}?>
-
 			<?php
 			$pagelist = get_paging($config['cf_write_pages'], $page, $total_page, "{$_SERVER['SCRIPT_NAME']}?id=upstairs&$qstr");
 			echo $pagelist;
@@ -313,8 +309,8 @@ $(function(){
 	var mb_no = "<?=$member['mb_no']?>";
 
 	// 시세
-	var vat_price = 1.1;
-	var usd_price = vat_price;
+	var usd_price = '<?=$usd_price?>';
+	var purchase_curency = '<?=PURCHASE_CURENCY?>';
 	
 	// 패키지
 	var data, it_id, it_name, it_price, func, od_id, it_supply_point, input_val, won_price,origin_bal,price_calc;
@@ -332,7 +328,7 @@ $(function(){
 	// 패키지 리스트 선택
 	$('.r_card').on('click',function(){
 		data = $(this).data('row');
-		console.log(data);
+		// console.log(data);
 
 		it_id = data[0].it_id;
 		it_name = data[0].it_name;
@@ -342,10 +338,9 @@ $(function(){
 		it_supply_point = data[0].it_supply_point; //MP 
 		won_price = data[0].it_cust_price;
 		func = "new";
-		od_id = "";
 		origin_bal = '<?=$available_fund?>';
-		price_calc = origin_bal - won_price ;
-		change_coin = "원";
+		price_calc = origin_bal - it_price ;
+		change_coin = purchase_curency;
 
 		change_coin_status();
 	});
@@ -371,8 +366,8 @@ $(function(){
 	}); */
 
 	function change_coin_status(){
-		$('#trade_total').val( '￦ ' + Price(it_price) );
-		$('#shift_won').text( 'VAT 포함 : ￦' + Price(won_price) + '원' );
+		$('#trade_total').val( purchase_curency + Price(it_price) );
+		$('#shift_won').text( '￦' + Price(won_price) + '원' );
 		$('#shift_dollor').val( Price(price_calc) );
 		
 		// 상품구매로 이동
@@ -383,10 +378,10 @@ $(function(){
 
 	// 패키지구매
 	$('#purchase').on('click', function(){
-		var nw_upstair = '<?=$nw_upstair?>'; // 점검코드
+		var nw_purchase = '<?=$nw_purchase?>'; // 점검코드
 		
 		// 부분시스템 점검
-		if(nw_upstair == 'N'){
+		if(nw_purchase == 'N'){
 			dialogModal('Not available right now','<strong>Not available right now.</strong>','warning');
 			if(debug) console.log('error : 1');
 			return false;

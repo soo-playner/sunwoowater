@@ -476,13 +476,13 @@ a.more i{font-size:18px;font-weight:500;color:#555;vertical-align: bottom;}
 .r_card_wrap .r_card{background: #b55dccd9;padding: 10px 15px 20px 13px;border:2px solid transparent;border-radius: 8px;border-top-right-radius: 25px;margin: 10px 0;box-shadow:1px 2px 5px 0 rgba(0,0,0,.22);cursor: pointer;}
 .r_card_wrap .r_card:hover {transition: all .2s; border:2px solid white;outline:0;box-shadow:0 2px 5px 0 rgba(0,0,0,0.3)}
 
-.r_card.r_card_0, .pack_0 {background:#b55dccd9 !important;}
+/* .r_card.r_card_0, .pack_0 {background:#b55dccd9 !important;}
 .r_card.r_card_1, .pack_1 {background: #516feb !important;}
 .r_card.r_card_2, .pack_2 {background: #09c3fd !important;}
 .r_card.r_card_3, .pack_3 {background: #5ed2dc !important;}
 .r_card.r_card_4, .pack_4 {background: #373cbc !important;}
 .r_card.r_card_5, .pack_5 {background: #2b3a6d !important;}
-.r_card.r_card_6, .pack_6 {background: #6214ab !important;}
+.r_card.r_card_6, .pack_6 {background: #6214ab !important;} */
 
 
 .pack_f_0 {color:#b55dccd9}
@@ -938,7 +938,6 @@ input.input_price{font-size:16px;text-align: right;color:black;}
 .product_buy_wrap .title {font-size: 20px;color: white;margin: 0px;}
 .product_buy_wrap .num {font-size: 16px;color: white;font-weight: normal;text-align: right;line-height: 30px;padding-right: 25px;}
 .product_buy_wrap .value {font-size: 12px;color: white;line-height: 35px;}
-.product_buy_wrap .date {margin-top: -17px;}
 .product_buy_wrap .upgrade {text-align: right;}
 .product_buy_wrap .upgrade input{background:white;border:none;border-radius:10px;max-width:120px;padding-top:6px;padding-bottom:8px;border-radius:30px;font-size:12px;font-weight: bold;}
 .product_buy_wrap .pack_btn {cursor: pointer;height: 12vh;}

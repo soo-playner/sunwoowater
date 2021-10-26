@@ -67,8 +67,8 @@
 		return $right_bottom;
 	}
 
-	$left_bottom = get_left_bottom($start_id);
-	$right_bottom = get_right_bottom($start_id);
+	$left_bottom = get_left_bottom($member['mb_id']);
+	$right_bottom = get_right_bottom($member['mb_id']);
 
 /* ____________________________________________________________________________*/
 
@@ -350,12 +350,17 @@ if($mem_self <= 0){
 								</div>
 
 								<?}else{?>
-								<div class="lvl-open" id="<?echo $i ;?>" >
-									<select class="form-control">
-										<option selected value="" data-i18n='binary.회원선택하기'>Select Member</option>
-									</select>
-									<button class="addMem b_skyblue b_radius_5"><span data-i18n='binary.등록하기'>Add member</span></button>
-								</div>
+									<?if($i == 2 && ($_GET['left'] || $member['mb_id'] == $start_id) || $i == 3 && ($_GET['right'] || $member['mb_id'] == $start_id)){?>
+										<div class="lvl-open" id="<?echo $i ;?>" >
+											<select class="form-control">
+												<option selected value="" data-i18n='binary.회원선택하기'>Select Member</option>
+											</select>
+											<button class="addMem b_skyblue b_radius_5"><i class="ri-add-circle-line" style='font-size:15px;vertical-align:sub;'></i><span data-i18n='binary.등록하기'>Add member</span></button>
+										</div>
+									<?}else{?>
+										<div class="lvl-open" id="<?echo $i ;?>" ></div>
+									<?}?>
+
 								<?}//else end
 								}//for end?>
 							</div>
@@ -394,10 +399,10 @@ if($mem_self <= 0){
 								}
 								else{?>
 								<div class="lvl-open" id="<?echo $i ;?>" >
-									<select class="form-control">
+									<!-- <select class="form-control">
 										<option selected="" value="" data-i18n='binary.회원선택하기'>Select Member</option>
 									</select>
-									<button class="addMem b_skyblue b_radius_5"><span data-i18n='binary.등록하기'>등록하기</span></button>
+									<button class="addMem b_skyblue b_radius_5"><span data-i18n='binary.등록하기'>등록하기</span></button> -->
 								</div>
 								<?}//else end
 								}//for end?>
@@ -419,10 +424,10 @@ if($mem_self <= 0){
 						</div>
 						<div class="b_line3"></div>
 						<div class="page-scroll">
-							<span id="left_top" class="b_skyblue b_radius_5" data-i18n='binary.왼쪽 맨 아래로'>Left bottom</span>
+							<span id="left_top" class="b_skyblue b_radius_5" >왼쪽 하부 <br>보기/등록</span>
 							<span id="go_top" class="b_skyblue b_radius_5" data-i18n='binary.맨 위로 가기'>Back to top</span>
 							<span id="go_up_one" class="b_skyblue b_radius_5" data-i18n='binary.한 단계 위로 가기'>One level up</span>
-							<span id="right_top" class="b_skyblue b_radius_5" data-i18n='binary.오른쪽 맨 아래로'>Right bottom</span>
+							<span id="right_top" class="b_skyblue b_radius_5" >오른쪽 하부 <br>보기/등록</span>
 						</div>
 					</div>
 
@@ -773,11 +778,15 @@ if($mem_self <= 0){
 //		var left_bottom = $('.8').val();
 		var left_bottom =  "<?=$left_bottom?>";
 		if(left_bottom!=null && left_bottom!=""){
-			location.replace(g5_url + "/page.php?id=binary&start_id="+left_bottom);
+			location.replace(g5_url + "/page.php?id=binary&left=1&start_id="+left_bottom);
 		}
-		else
-			//alert("Can't move left bottom");
-			commonModal('Error',"Can't move left bottom.",80);
+		else{
+			dialogModal('Error',"해당 하부회원이 없거나 이동할수없습니다.<br>신규회원을 등록해주세요",'warning');
+			$('#modal_return_url').on('click', function(){
+				url = g5_url + "/page.php?id=binary&left=1";
+				$(location).attr('href',url);
+			});
+		}
 	});
 
 	$("#go_top").click(function(){
@@ -811,11 +820,15 @@ if($mem_self <= 0){
 	$("#right_top").click(function(){
 		var right_bottom = "<?=$right_bottom?>";
 		if(right_bottom!=null && right_bottom!=""){
-			location.replace(g5_url + "/page.php?id=binary&start_id="+right_bottom);
+			location.replace(g5_url + "/page.php?id=binary&right=1&start_id="+right_bottom);
 		}
 		else
 			//alert("Can't move left bottom");
-			commonModal('Error',"Can't move left bottom.",80);
+			dialogModal('Error',"해당 하부회원이 없거나 이동할수없습니다.<br>신규회원을 등록해주세요",'warning');
+			$('#modal_return_url').on('click', function(){
+				url = g5_url + "/page.php?id=binary&right=1";
+				$(location).attr('href',url);
+			});
 	});
 
 });

@@ -75,17 +75,17 @@ $(document).ready(function(){
 			<!-- <li class="dashboard_icon"><a href="/"><span data-i18n="">대쉬보드</span></a></li> -->
 
 			<li class="profile_icon"><a href="/page.php?id=profile"><span data-i18n="">개인정보&보안설정</span></a></li>
-			<!-- <li class="mywallet_icon"><a href="/page.php?id=mywallet"><span data-i18n="">입출금</span></a></li> 
+			<li class="mywallet_icon"><a href="/page.php?id=mywallet"><span data-i18n="">입출금</span></a></li> 
 			<li class="mining_icon"><a href="/page.php?id=mining"><span data-i18n="">마이닝</span></a></li>
 			<li class="upstairs_icon"><a href="/page.php?id=upstairs"><span data-i18n="">패키지구매</span></a></li>
-			<li class="bonus_history_icon"><a href="/page.php?id=bonus_history"><span data-i18n="">보너스내역</span></a></li> -->
+			<li class="bonus_history_icon"><a href="/page.php?id=bonus_history"><span data-i18n="">보너스내역</span></a></li>
 			<?
 				if($member['center_use'] == 1){?>
 				<li class="center_page"><a href="/page.php?id=center_page"><i class="ri-team-line" style='font-size:26px;color:#435388'></i><span style='margin-left:22px;'>센터회원관리</span></a></li>
 				<?}
 			?>
 			<li class="recommend_icon"><a href="/page.php?id=structure"><span data-i18n="">추천조직도</span></a></li>
-			<!-- <li class="support_icon"><a href="/page.php?id=binary"><span data-i18n="">후원조직도</span></a></li> -->
+			<li class="support_icon"><a href="/page.php?id=binary"><span data-i18n="">후원조직도</span></a></li>
 
 			<li class="notice_icon"><a href="/page.php?id=news"><span data-i18n="">공지사항</span></a></li>
 			<li class="question_icon"><a href="/page.php?id=support_center"><span data-i18n="">1:1문의사항</span></a></li>

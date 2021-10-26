@@ -5,4 +5,4 @@ include_once(G5_ADMIN_PATH.'/_head.php');
  
  
 
-<section class="v_center wrap" style="width:1000px;">
+<section class="v_center wrap" style="width:auto;">

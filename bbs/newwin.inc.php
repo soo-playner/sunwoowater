@@ -20,7 +20,7 @@ for ($i=0; $nw=sql_fetch_array($result); $i++)
         continue;
 ?>
 
-<link href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css" rel="stylesheet">
+
     
      
      <div id="hd_pops_<?php echo $nw['nw_id'] ?>" class="hd_pops" style="top:<?php echo $nw['nw_top']?>px;left:<?php echo $nw['nw_left']?>px; border:3px solid gold;">

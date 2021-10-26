@@ -204,8 +204,8 @@ function bonus_per($mb_id ='',$mb_balance='', $mb_limit = ''){
 	global $member,$limited_per;
 
 	if($mb_id == ''){
-		if($member['mb_save_point'] != 0 && $member['mb_balance'] !=0 && $limited_per != 0){
-			$bonus_per = ($member['mb_balance']/($member['mb_save_point'] * $limited_per));
+		if($member['mb_pv'] != 0 && $member['mb_balance'] !=0 && $limited_per != 0){
+			$bonus_per = ($member['mb_balance']/($member['mb_pv'] * $limited_per));
 		}else{
 			$bonus_per = 0;
 		}
@@ -213,10 +213,15 @@ function bonus_per($mb_id ='',$mb_balance='', $mb_limit = ''){
 		if($mb_limit != 0 && $mb_balance !=0 && $limited_per != 0){
 			$bonus_per = ($mb_balance/($mb_limit * $limited_per));
 		}else{
-			$bonus_per = 0;
+			$bonus_per = '-';
 		}
 	}
-	return round($bonus_per);
+
+	if($bonus_per != '-'){
+		return round($bonus_per).'%';
+	}else{
+		return $bonus_per;
+	}
 }
 
 
@@ -288,13 +293,6 @@ function bonus_state($mb_id){
 }
 
 
-function division_count($val){
-	if($val < 0){
-		return 0;
-	}else{
-		return number_format($val);
-	}
-}
 
 
 /*레퍼러 하부매출*/
@@ -419,8 +417,14 @@ function next_exchange_rate_time(){
 
 // 마이닝상품 만료일 계산
 function expire_date($start){
-	$expire_date = date("Y-m-d", strtotime($start."+3 year"));
+	$expire_date = date("Y-m-d", strtotime($start."+5 year"."+ 15 day"));
 	return $expire_date;
+}
+
+// 마이닝상품 시작일 계산
+function starting_date($start){
+	$starting_date = date("Y-m-d", strtotime($start."+15 day"));
+	return $starting_date;
 }
 
 // 원 표시
@@ -441,13 +445,40 @@ function shift_coin($val){
 // 달러 , ETH 코인 표시
 function shift_auto($val,$coin = '원'){
 	if($coin == '$'){
-		return shift_doller($val);
+		$result = explode('.',shift_doller($val));
+		return "<font class='value_font'>".$result[0].".</font><font class='point_font'>".$result[1]."</font>";
+
 	}else if($coin == '원'){
 		return shift_kor($val);
 	}else{
 		return shift_coin($val);
 	}
 }
+
+function shift_auto_zero($val,$coin = ASSETS_CURENCY){
+	if($val == 0 || $val ==''){
+		return '-';
+	}else{
+		if($coin == '$'){
+			$result = explode('.',shift_doller($val));
+			return "<font class='value_font'>".$result[0].".</font><font class='point_font'>".$result[1]."</font>";
+		}else if($coin == '원'){
+			return shift_kor($val);
+		}else{
+			return shift_coin($val);
+		}
+	}
+}
+
+// 음수처리
+function division_count($val){
+	if($val < 0){
+		return 0;
+	}else{
+		return number_format($val);
+	}
+}
+
 
 /*숫자표시*/
 function shift_number($val){
@@ -537,14 +568,19 @@ function string_shift_code($val){
 }
 
 // 사용중 아이템(패키지)
-function get_shop_item($table=null){
+function get_shop_item($table=null,$admin = 0){
 	$array = array();
 	$sql = "SELECT * FROM g5_shop_item";
-	$sql .= " WHERE it_use = 1 ORDER BY it_order";
+	if($admin == 0){
+		$search = " it_use > 0 ";
+	}else{
+		$search = " it_use != 2 ";
+	}
+	$sql .= " WHERE {$search} ORDER BY it_order";
 
 	if($table != null){
 		$table = strtoupper($table);
-		$sql .= " WHERE it_use = 1 AND it_name='{$table}' ";
+		$sql .= " WHERE {$search} AND it_name='{$table}' ";
 	}
 	
 	$result = sql_query($sql);
@@ -558,12 +594,12 @@ function get_shop_item($table=null){
 
 
 // 아이템 그룹 내 구매패키지정보
-function ordered_items($mb_id, $table=null){
+function ordered_items($mb_id, $table=null,$range = 0){
 
 	$item = get_shop_item($table);
 	$upgrade_array = array();
 
-	for($i = 1; $i < count($item); $i++){
+	for($i = $range; $i < count($item); $i++){
 
 		if($table != null){
 			$name_lower = $table;
@@ -595,6 +631,9 @@ function ordered_items($mb_id, $table=null){
 				"it_option_subject" => $item[$i]['it_option_subject'],
 				"it_supply_subject" => $item[$i]['it_supply_subject'],
 				"od_cart_price" => $order_row['od_cart_price'],
+				"mine_start_date" => $order_row['mine_start_date'],
+				"mine_date" => $order_row['mine_date'],
+				"mine_end_date" => $order_row['mine_end_date'],
 				"upstair" => $order_row['upstair'],
 				"pv" => $order_row['pv'],
 				"od_time" => $order_row['od_time'],
@@ -607,8 +646,6 @@ function ordered_items($mb_id, $table=null){
 	}
 	return $upgrade_array;
 }
-
-
 
 
 // 보유 최상위 패키지
@@ -679,7 +716,7 @@ function national_flag($ncode, $return = 'icon'){
 				$tcode = 'th';
 				break;
 			default :
-				$tcode = 'kr';
+				$tcode = 'etc';
 		}
 		$code_return = G5_IMG_URL.'/flag/'.$tcode.'.png';
 		return $code_return;

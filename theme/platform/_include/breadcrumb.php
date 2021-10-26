@@ -89,15 +89,15 @@ $title = 'Dashboard';
 					<ul class="row top">
 						<li class="col-4">
 							<dt class="title" >구매 가능 잔고</dt>
-							<dd class="value" style='font-size:15px;'><?=number_format($available_fund)?><span class='currency'><?=ASSETS_CURENCY?></span></dd>
+							<dd class="value" style='font-size:15px;'><?=ASSETS_CURENCY?> <?=shift_auto($available_fund,ASSETS_CURENCY)?><span class='currency'></span></dd>
 						</li>
 						<li class="col-4">
 							<dt class="title" >총 누적 보너스 </dt>
-							<dd class="value" style='font-size:15px;'><?=number_format($total_bonus)?><span class='currency'><?=ASSETS_CURENCY?></span></dd>
+							<dd class="value" style='font-size:15px;'><?=ASSETS_CURENCY?> <?=shift_auto($total_bonus,ASSETS_CURENCY)?><span class='currency'></span></dd>
 						</li>
 						<li class="col-4">
 							<dt class="title">출금 가능 잔고</dt>
-							<dd class="value" style='font-size:15px;'><?=number_format($total_withraw)?><span class='currency'><?=ASSETS_CURENCY?></span></dd>
+							<dd class="value" style='font-size:15px;'><?=ASSETS_CURENCY?> <?=shift_auto($total_withraw,ASSETS_CURENCY)?><span class='currency'></span></dd>
 						</li>
 					</ul>
 				</div>
