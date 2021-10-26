@@ -99,11 +99,12 @@ function bonus_limit_check($mb_id,$bonus,$kind = '$'){
     }
 
     // $mem_sql="SELECT mb_balance, mb_rate,(SELECT SUM(benefit) FROM soodang_pay WHERE mb_id ='{$mb_id}' AND DAY = '{$bonus_day}') AS b_total FROM g5_member WHERE mb_id ='{$mb_id}' ";
-    $mem_sql="SELECT mb_balance, mb_rate, mb_save_point FROM g5_member WHERE mb_id ='{$mb_id}' ";
+    $mem_sql="SELECT mb_balance, mb_rate, mb_pv, mb_save_point FROM g5_member WHERE mb_id ='{$mb_id}' ";
     $mem_result = sql_fetch($mem_sql);
 
     $mb_balance = $mem_result['mb_balance'];
-    $mb_pv = $mem_result['mb_save_point'] * $bonus_limit;
+
+    $mb_pv = $mem_result['mb_pv'] * $bonus_limit;
     
     if($mb_id == 'admin' || $mb_id == $config['cf_admin']){
         $mb_pv = 100000000000;
@@ -225,11 +226,11 @@ $bonus_layer_tx = bonus_layer_tx($bonus_layer);
 function get_shop_item($table=null){
 	$array = array();
 	$sql = "SELECT * FROM g5_shop_item";
-	$sql .= " WHERE it_use = 1 ";
+	$sql .= " WHERE it_use > 0 ORDER BY it_order";
 
 	if($table != null){
 		$table = strtoupper($table);
-		$sql .= " WHERE it_use = 1 AND it_name='{$table}'";
+		$sql .= " WHERE it_use > 0 AND it_name='{$table}'";
 	}
 	
 	$result = sql_query($sql);
@@ -310,10 +311,12 @@ $mining_table = sql_query("CREATE table if not exists `soodang_mining`(
   )");
 }
 
+$mining_data = bonus_pick('mining');
+$mining_rate = $mining_data['rate'];
 
 // 마이닝
 function mining_record($mb_id, $code, $bonus_val,$bonus_rate,$currency, $rec,$rec_adm,$bonus_day){
-    global $g5,$debug,$now_datetime;
+    global $g5,$debug,$now_datetime,$mining_rate;
 
     $soodang_sql = " insert `soodang_mining` set day='".$bonus_day."'";
     $soodang_sql .= " ,mb_id			= '{$mb_id}' ";
@@ -321,6 +324,7 @@ function mining_record($mb_id, $code, $bonus_val,$bonus_rate,$currency, $rec,$re
     $soodang_sql .= " ,mining		=  {$bonus_val} ";
     $soodang_sql .= " ,currency		=  '{$currency}' ";
     $soodang_sql .= " ,rate		=  {$bonus_rate} ";	
+    $soodang_sql .= " ,global_rate		=  {$mining_rate} ";	
     $soodang_sql .= " ,rec			= '{$rec}' ";
     $soodang_sql .= " ,rec_adm		= '{$rec_adm}' ";
     $soodang_sql .= " ,datetime		= '{$now_datetime}' ";
@@ -403,4 +407,12 @@ function shift_auto($val,$coin = '원'){
 	}else{
 		return shift_coin($val);
 	}
+}
+
+
+// Not zero express
+function zero_value($val){
+    if($val != 0){
+        return 'strong f_blue';
+    }
 }

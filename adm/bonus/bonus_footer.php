@@ -12,6 +12,7 @@
 	code{color:green;display:block;margin-bottom:5px;font-size:11px;}
     .red{color:red;font-weight:600;}
     .blue{color:blue;font-weight:600;}
+	.purple{color:purple;font-weight:600}
 	.big {font-size:16px;font-weight:600;}
 	.title{font-weight:800;color:black;font-size:16px;display:block;}
 	.box{background:ghostwhite;margin-top:30px;border-bottom:1px solid #eee;padding-left:5px;width:100%;display:block;}
@@ -30,7 +31,7 @@
 <script>
  function bonus_url($val){
 	 if($val == 'mining'){
-		location.href = '/adm/bonus/bonus_mining.php?to_date=<?=$bonus_day?>';
+		location.href = '/adm/bonus/bonus_mining2.php?to_date=<?=$bonus_day?>';
 	 }else{
 		location.href = '/adm/bonus/bonus_list.php?to_date=<?=$bonus_day?>';
 	 }

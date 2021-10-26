@@ -141,8 +141,8 @@ include_once(G5_PLUGIN_PATH.'/jquery-ui/datepicker.php');
 <div class="local_desc01 local_desc">
     <p>
 		공통 : 보너스기준일자로 각 보너스지급버튼 클릭<br>
-		<!-- <strong>직급보너스, 센터보너스 : </strong>① 14일~20일 실행시 - 이번달 1분기(1~15) 매출로 정산<br>
-		<span style='margin-left:155px;'></span>② 21일~ 말일 실행시 - 이번달 2분기(15~말일) 매출로 정산<br>
+		<strong>센터보너스 : </strong>① 전주 월요일~일요일 매출로 정산지급 ② 센터별 매출내역은 <strong><a href='.//bonus.center_member.php'>센터관리</a></strong>에서 확인<br>
+		<!-- <span style='margin-left:155px;'></span>② 21일~ 말일 실행시 - 이번달 2분기(15~말일) 매출로 정산<br>
 		<span style='margin-left:155px;'></span>③  1일 ~ 13일 실행시 - 지난달 2분기(15~말일) 매출로 정산
  -->
 	</p>
@@ -274,7 +274,7 @@ include_once(G5_PLUGIN_PATH.'/jquery-ui/datepicker.php');
 
     <tr class="<?php echo $bg; ?>">
 		<td width='100'><? echo $row['day'];?></td>
-		<td width="100" style='text-align:center'>
+		<td width="100" style='text-align:center;font-weight:600'>
 			<a href='/adm/member_form.php?w=u&mb_id=<?=$row['mb_id']?>'><?php echo get_text($row['mb_id']); ?></a>
 		</td>
 

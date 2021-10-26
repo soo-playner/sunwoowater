@@ -8,19 +8,19 @@ auth_check($auth[$sub_menu], 'r');
 
 // $debug =1;
 
-// 지난주 날짜 구하기 
+// 지난주 대비 날짜 구하기 
 /* $today=$bonus_day;
 $timestr        = strtotime($today);
 $week           = date('w', strtotime($todate));
 $weekfr         = $timestr - ($week * 86400);
 $weekla         = $weekfr + (6 * 86400);
-$week_frdate    = date('Y-m-d', $weekfr - (86400 * 5)); // 지난주 시작일자
-$week_todate    = date('Y-m-d', $weekla - (86400 * 5)); // 지난주 종료일자 */
-
+$week_frdate    = date('Y-m-d', $weekfr - (86400 * 3)); // 지난주 시작일자
+$week_todate    = date('Y-m-d', $weekla - (86400 * 3)); // 지난주 종료일자
+ */
 $day = date('d', $timestr);
 $lastday = date('t', $timestr);
 
-
+/* 
 if($day > 13 && $day <= 20){
     $half = '1/2';
     $half_frdate    = date('Y-m-1', $timestr); // 매월 1 시작일자
@@ -29,7 +29,7 @@ if($day > 13 && $day <= 20){
     $half = '2/2';
     $half_frdate    = date('Y-m-16', $timestr); // 매월 15
     $half_todate    = date('Y-m-'.$lastday, $timestr); // 매월 말일
-}
+} */
 
 
 
@@ -81,7 +81,7 @@ ob_start();
 
 // 설정로그 
 echo "<strong>센터 지급비율 : ". $bonus_row['rate']."%   </strong> |    지급조건 :".$pre_condition.' | '.$bonus_condition_tx." | ".$bonus_layer_tx."<br>";
-echo "<br><strong> 현재일 : ".$bonus_day." |  ".$half."(지급산정기준) : <span class='red'>".$half_frdate."~".$half_todate."</span><br>";
+echo "<br><strong> 현재일 : ".$bonus_day." |  ".($week-1)."주 (지급산정기준) : <span class='red'>".$week_frdate."~".$week_todate."</span><br>";
 
 echo "<br><br>기준대상자(센터회원) : <span class='red'>".$result_cnt."</span>";
 echo "</span><br><br>";
@@ -127,7 +127,7 @@ function  excute(){
     global $result;
     global $g5, $bonus_day, $bonus_condition, $code, $bonus_rate,$pre_condition_in,$bonus_limit,$week_frdate,$week_todate,$half_frdate,$half_todate;
     global $debug,$log_sql;
-
+    
 
     for ($i=0; $row=sql_fetch_array($result); $i++) {   
    
@@ -155,25 +155,25 @@ function  excute(){
         while( $center = sql_fetch_array($sql_result) ){   
             
             $recom_id = $center['mb_id'];
-            $half_bonus_sql = "SELECT SUM(pv) AS hap FROM g5_shop_order WHERE od_date BETWEEN '{$half_frdate}' AND '{$half_todate}' AND mb_id = '{$recom_id}' ";
-            // if($debug){echo "<code>".$half_bonus_sql."</code>";}
-            $half_bonus_result = sql_fetch($half_bonus_sql);
+            $week_bonus_sql = "SELECT SUM(upstair) AS hap FROM g5_shop_order WHERE od_date BETWEEN '{$week_frdate}' AND '{$week_todate}' AND mb_id = '{$recom_id}' ";
+            if($debug){echo "<code>".$week_bonus_sql."</code>";}
+            $week_bonus_result = sql_fetch($week_bonus_sql);
 
-            if($half_bonus_result['hap'] > 0){
-                $recom_half_bonus = $half_bonus_result['hap'];
+            if($week_bonus_result['hap'] > 0){
+                $recom_week_bonus = $week_bonus_result['hap'];
             }else{
-                $recom_half_bonus = 0;
+                $recom_week_bonus = 0;
             }
 
-            $recom_half_total += $recom_half_bonus;
+            $recom_week_total += $recom_week_bonus;
 
             echo "<br>".$recom_id;
-            echo " | 기간내 매출 : <span class='blue'>".Number_format($recom_half_bonus)."</span>";
+            echo " | 기간내 매출 : <span class='blue'>".Number_format($recom_week_bonus)." $</span>";
         } 
 
-        $benefit = $recom_half_total * $bonus_rate;
+        $benefit = $recom_week_total * $bonus_rate;
         
-        echo "<br><br><span class='title box'> ".$mb_id."  - 지난주 하부 총매출 : <span class='blue'>".Number_format($recom_half_total)."</span>";
+        echo "<br><br><span class='title box'> ".$mb_id."  - 지난주 하부 총매출 : <span class='blue'>".Number_format($recom_week_total)."</span>";
         echo " | 센터수당 : <span class='blue'>".Number_format($benefit)." (".($bonus_rate*100)."%)</span></span><br>";
         
         list($mb_balance,$balance_limit,$benefit_limit) = bonus_limit_check($recom_id,$benefit);
@@ -186,11 +186,11 @@ function  excute(){
         echo "</code><br>";
         
         $rec=$code.' Bonus By Center:'.$mb_id;
-        $rec_adm= 'CENTER | '.$recom_half_total.'*'.$bonus_rate.'='.$benefit;
+        $rec_adm= 'CENTER | '.$recom_week_total.'*'.$bonus_rate.'='.$benefit;
 
 
         // 수당제한
-        echo $mb_id." | ".Number_format($recom_half_total).'*'.$bonus_rate;
+        echo $mb_id." | ".Number_format($recom_week_total).'*'.$bonus_rate;
 
         if($benefit > $benefit_limit && $balance_limit != 0 ){
 
@@ -226,7 +226,7 @@ function  excute(){
             }
 
         }
-        $recom_half_total = 0;
+        $recom_week_total = 0;
     } // for
 
    

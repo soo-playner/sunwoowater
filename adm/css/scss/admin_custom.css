@@ -16,38 +16,24 @@
   font-size: 11px;
 }
 
-.color0 {
-  background: #555;
+.strong {
+  font-weight: 600;
 }
 
-.color1 {
-  background: #b55dccd9 !important;
+.f_blue {
+  color: blue;
 }
 
-.color2 {
-  background: #516feb !important;
+.nanum {
+  font-family: "Nanum-Gothic";
 }
 
-.color3 {
-  background: #09c3fd !important;
+.value_font {
+  font-size: 13px;
+  font-weight: 600;
 }
 
-.color4 {
-  background: #5ed2dc !important;
-}
-
-.color5 {
-  background: #373cbc !important;
-}
-
-.color6 {
-  background: #2b3a6d !important;
-}
-
-.color9 {
-  background: #6214ab !important;
-}
-
-.color10 {
-  background: #6214ab !important;
+.point_font {
+  font-size: 11px;
+  font-weight: 100;
 }

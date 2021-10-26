@@ -1,6 +1,7 @@
 <?php
 $sub_menu = '700200';
 include_once('./_common.php');
+include_once(G5_THEME_PATH . '/_include/wallet.php');
 
 auth_check($auth[$sub_menu], "r");
 
@@ -140,6 +141,8 @@ if(!sql_query(" select mb_id from {$g5['g5_shop_order_delete_table']} limit 1 ",
 	.local_ov strong{color:red; font-weight:600;}
 	.local_ov .tit{color:black; font-weight:600;}
 	.local_ov a{margin-left:20px;padding-right:10px;}
+
+    tfoot td{padding:0 5px;}
 </style>
 
 <form name="frmorderlist" class="local_sch01 local_sch">
@@ -423,9 +426,9 @@ if(!sql_query(" select mb_id from {$g5['g5_shop_order_delete_table']} limit 1 ",
 			<?php echo $row['od_status']; ?>
         </td>
         <td rowspan="2" class="td_numsum"><?=$row['od_name']?></td>
-        <td rowspan="2" class="td_numsum" style='text-align:right'><?= number_format($row['od_cart_price'])?> 원</td>
+        <td rowspan="2" class="td_numsum" style='text-align:right'><?= number_format($row['od_cart_price'])?> <?=PURCHASE_CURENCY?></td>
         <td ><?php echo $row['od_settle_case'] ?></td>
-		<td rowspan="2" style="text-align:right;font-weight:600"><?=number_format($row['od_cash'])?> 원</td>
+		<td rowspan="2" style="text-align:right;font-weight:600"><?=number_format($row['od_cash'])?> <?=PURCHASE_CURENCY?></td>
 		<td ><?=number_format($row['upstair'])?> </td>
         <td >
             <?php echo $row['pv']; ?>
@@ -477,12 +480,11 @@ if(!sql_query(" select mb_id from {$g5['g5_shop_order_delete_table']} limit 1 ",
             <!-- <?php echo number_format($tot_itemcount); ?>건 -->
         </td>
         <th scope="row">합 계</th>
-        <td style='text-align:right'><?=Number_format($tot_orderprice)?> 원</td>
+        <td style='text-align:right'><?=Number_format($tot_orderprice)?> <?=PURCHASE_CURENCY?></td>
         <td></td>
-        <td style='text-align:right'><?=Number_format($tot_receiptprice)?> 원</td>
+        <td style='text-align:right'><?=Number_format($tot_receiptprice)?> <?=PURCHASE_CURENCY?></td>
         <td></td>
 		<td></td>
-
     </tr>
     </tfoot>
     </table>

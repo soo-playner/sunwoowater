@@ -10,7 +10,7 @@ auth_check($auth[$sub_menu], 'r');
 
 //회원 리스트를 읽어 온다.
 $sql_common = " FROM g5_shop_order AS o, g5_member AS m ";
-$sql_search=" WHERE o.mb_id=m.mb_id AND od_date ='".$bonus_day."' AND LENGTH(od_name) < 4 ";
+$sql_search=" WHERE o.mb_id=m.mb_id AND od_date ='".$bonus_day."' ";
 $sql_mgroup=' GROUP BY m.mb_id ORDER BY m.mb_no asc';
 
 $pre_sql = "select count(*) 
@@ -46,7 +46,7 @@ echo "<div class='btn' onclick='bonus_url();'>돌아가기</div>";
 
 $price_cond=", SUM(pv) AS hap";
 
-$sql = "SELECT o.od_date,o.pv,o.upstair,o.od_tno,o.od_name, m.mb_no, m.mb_id, m.mb_recommend, m.mb_name, m.mb_level, m.mb_deposit_point, m.mb_balance, m.grade
+$sql = "SELECT o.od_date,o.od_rate,o.upstair,o.od_tno,o.od_name, m.mb_no, m.mb_id, m.mb_recommend, m.mb_name, m.mb_level, m.mb_deposit_point, m.mb_balance, m.grade
             {$sql_common}
             {$sql_search}
             ORDER BY m.mb_no asc ";
@@ -117,7 +117,7 @@ function  excute(){
                 }
                 $benefit=($it_bonus*$bonus_rate); // 매출자 * 수당비율
 
-               /*  list($mb_balance,$balance_limit,$benefit_limit,$admin_cash) = bonus_limit_check($recom_id,$benefit);
+                list($mb_balance,$balance_limit,$benefit_limit,$admin_cash) = bonus_limit_check($recom_id,$benefit);
 
                 echo "<code>";
                 echo "현재수당 : ".Number_format($mb_balance)."  | 수당한계 :". Number_format($balance_limit).' | ';
@@ -126,9 +126,7 @@ function  excute(){
                 if($admin_cash == 1){
                     $rec_adm= 'fall check';
                 }
-                 */
-
-                $benefit_limit = $benefit;
+               
                 
                 $rec=$code.' Recommend Bonus from  '.$mb_id.' | '.$it_name;
                 $rec_adm= $it_name.' | '.$it_bonus.'*'.$bonus_rate.'='.$benefit;

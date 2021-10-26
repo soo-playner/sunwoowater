@@ -32,14 +32,14 @@ $token = get_token();
         <th scope="col" width="30px">No</th>
         <th scope="col" width="40px">사용설정</th>
         <th scope="col" width="100px">수당명</th>	
-        <th scope="col" width="50px">수당코드</th>
+        <th scope="col" width="80px">수당코드</th>
         <th scope="col" width="80px">수당지급수단</th>
         <th scope="col" width="80px">수당한계</th>
-		<th scope="col" width="120px">수당비율 (%)<br>( 콤마로 구분)</th>
-		<th scope="col" width="80px">지급한계(대수/%)<br>( 콤마로 구분)</th>
+		<th scope="col" width="200px">수당비율 (%)<br>( 콤마로 구분)</th>
+		<th scope="col" width="200px">지급한계(대수/%)<br>( 콤마로 구분)</th>
         <th scope="col" width="80px">수당지급방식</th>
-        <th scope="col" width="180px">수당조건</th>
-        <th scope="col" width="180px">수당설명</th>
+        <th scope="col" width="100px">수당조건</th>
+        <th scope="col" width="auto">수당설명</th>
     </tr>
     </thead>
 

@@ -1,7 +1,9 @@
 <?php
 $sub_menu = "600800";
 include_once('./_common.php');
+include_once('./bonus_inc.php');
 
+$debug = 1;
 
 $g5['title'] = '센터수당(멤버)';
 $code = 'center';
@@ -35,7 +37,7 @@ function active_check($val, $target){
     }
 }
 
-$colspan = 6;
+$colspan = 7;
 
 $sql_common = " FROM g5_shop_order A left JOIN g5_member B ON A.mb_id = B.mb_id ";
 $sql_search = " where B.mb_center = '{$select_id}' and B.mb_center != '' ";
@@ -74,13 +76,6 @@ if($member_search == 'all'){
             limit {$from_record}, {$rows} ";
 }    
 
-if($debug){
-    echo "<br>";
-    echo "=====================";
-    print_R($sql);
-    echo "=====================";
-    echo "<br>";
-}
 $excel_sql = urlencode($sql);
 $result = sql_query($sql);
 
@@ -216,10 +211,15 @@ function fvisit_submit(act)
 
 <div class='head_bar'>
     <input type='hidden' id='select_id' value='<?=$select_id?>' />
-    <?if($select_id){?>
-        <p class="labelM title"> <?=$center?>
+    <?if($select_id){
+
+        $center_bonus_acc_sql = "SELECT sum(benefit) as center_bonus_acc FROM soodang_pay WHERE mb_id = '{$select_id}' AND allowance_name = 'center' ";
+        $center_bonus_acc = sql_fetch($center_bonus_acc_sql)['center_bonus_acc'];
+        
+        ?>
+        <p class="labelM title nanum"> <?=$center?>
         <!-- <span class='eng'>(<?=strtoupper($select_id)?>)</span> -->
-        의 센터회원 </p>
+        의 센터회원 | 총 누적 센터보너스 지급량 <span class='f_blue'>(<?=BALANCE_CURENCY?> <?=shift_auto($center_bonus_acc,BALANCE_CURENCY)?>)</span></p>
 
         <span class='sys_btn'>
         <!-- <p id='content_member' class='btn' >센터회원 목록보기</p> -->
@@ -256,25 +256,29 @@ function fvisit_submit(act)
         <th>회원아이디</th>
         <th>회원가입일</th>
         <th>회원의 추천인</th>
-        <th>기간매출금액</th>
-        <th>기간PV</th>
-        <th>센터수당</th>
+        <th>기간매출금액(<?=PURCHASE_CURENCY?>)</th>
+        <th>기간PV(<?=ASSETS_CURENCY?>)</th>
+        <th>센터수당(<?=ASSETS_CURENCY?>)</th>
     </tr>
     </thead>
     <tbody>
 
     <?php
+    $center_bonus_rate = bonus_pick('center')['rate']/100;
+    
     for ($i=0; $row=sql_fetch_array($result); $i++) {
 
-        $order_total_sql = "SELECT sum(upstair) as upstair_total, sum(pv) as pv_total from g5_shop_order WHERE mb_id = '{$row['mb_id']}' AND od_date >= '{$fr_date}' AND od_date < '{$to_date}' ";
+        $order_total_sql = "SELECT sum(upstair) as upstair_total, sum(od_cart_price) as sales_total from g5_shop_order WHERE mb_id = '{$row['mb_id']}' AND od_date >= '{$fr_date}' AND od_date < '{$to_date}' ";
         $order_total = sql_fetch($order_total_sql);
         
-
+        
+        
         $bg = 'bg'.($i%2);
-        $total_hap += $order_total['upstair_total'];
-        $total_pv +=  $order_total['pv_total'];
-        $center_bonus = $order_total['pv_total']*0.02;
+        $total_sales += $order_total['sales_total'];
+        $total_pv += $order_total['upstair_total'];
+        $center_bonus = $order_total['upstair_total'] * $center_bonus_rate;
         $total_center_bonus += $center_bonus ;
+
     ?>
    
     <tr class="<?php echo $bg; ?>">
@@ -285,9 +289,9 @@ function fvisit_submit(act)
         <td class='text-center'><?echo "<img src='/img/".$row['mb_level'].".png' style='width:20px;height:20px;margin-right:5px;'>".$row['mb_id']?></td>
         <td class='text-center'><?=$row['mb_open_date']?></td>
         <td class='text-center'><?=$row['mb_recommend']?></td>
-        <td class='text-center'><?=Number_format($order_total['upstair_total'])?></td>
-        <td class='text-center'><?=Number_format($order_total['pv_total'])?></td>	
-        <td class='text-center'><?=Number_format($center_bonus)?></td>			
+        <td class='text-center <?=zero_value($order_total['sales_total'])?>'><?=shift_auto($order_total['sales_total'],BALANCE_CURENCY)?></td>
+        <td class='text-center <?=zero_value($order_total['upstair_total'])?>'><?=shift_auto($order_total['upstair_total'],BALANCE_CURENCY)?></td>	
+        <td class='text-center <?=zero_value($center_bonus)?>'><?=shift_auto($center_bonus,BALANCE_CURENCY)?></td>			
     </tr>
 
     <?php
@@ -301,9 +305,9 @@ function fvisit_submit(act)
         <td></td>
         <td><?=$i?>명</td>
         <td colspan='2'></td>
-        <td><?=number_format($total_hap)?><?=BALANCE_CURENCY?></td>
-        <td><?=number_format($total_pv)?><?=BALANCE_CURENCY?></td>
-        <td><?=number_format($total_center_bonus)?><?=BALANCE_CURENCY?></td>
+        <td><?=BALANCE_CURENCY?> <?=shift_auto($total_sales,BALANCE_CURENCY)?></td>
+        <td><?=BALANCE_CURENCY?> <?=shift_auto($total_pv,BALANCE_CURENCY)?></td>
+        <td class='<?=zero_value($total_center_bonus)?>'><?=BALANCE_CURENCY?> <?=shift_auto($total_center_bonus,BALANCE_CURENCY)?></td>
     </tfoot>
 
     </table>

@@ -26,9 +26,7 @@ $token = get_token();
 
 <div class="local_desc01 local_desc">
     <p>
-        - 마케팅수당설정<br>
-        - 마이닝 : 1MH/S 당 지급량 (고정값)(ETH)<br>
-        - 마이닝매칭 : 마이닝지급량의 % 입력
+        - 마이닝 : 1HP/S 당 지급량 (고정값)(ETH)<br>
 	</p>
 </div>
 
@@ -107,12 +105,12 @@ $token = get_token();
     </div>
 
     <?
-        $mining_rate_result = sql_query("SELECT day,rate from soodang_mining group by day order by day desc limit 0,7");
+        $mining_rate_result = sql_query("SELECT day,global_rate from soodang_mining group by day order by day desc limit 0,7");
         while($row = sql_fetch_array($mining_rate_result)){
     ?>
     <div class='body'>
         <dt><?=$row['day']?></dt>
-        <dd><?=$row['rate']?></dd>
+        <dd><?=$row['global_rate']?></dd>
     </div>
     <?}?>
 </div>

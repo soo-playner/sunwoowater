@@ -1,11 +1,12 @@
 <?php
 $sub_menu = "600900";
 include_once('./_common.php');
+// $debug=1;
 include_once('./bonus_inc.php');
 
 auth_check($auth[$sub_menu], 'r');
 
-// $debug=1;
+
 
 // 바이너리(후원)매칭 수당
 $min30= date("Y-m-d", strtotime( "-30 day", strtotime($bonus_day)) );
@@ -16,7 +17,7 @@ $min30= date("Y-m-d", strtotime( "-30 day", strtotime($bonus_day)) );
 if($_GET['test_id']){
     $pre_sql = "select * from g5_member where mb_id = '".$test_id."'";
 }else{
-    $pre_sql = "select * from {$g5['member_table']} where (1)".$pre_condition .' '. $admin_condition." order by mb_no asc";
+    $pre_sql = "select * from {$g5['member_table']} where (1)".$pre_condition .' '. $admin_condition." order by mb_no desc";
 }
 
 $pre_result = sql_query($pre_sql);
@@ -89,19 +90,19 @@ function habu_sales_calc($gubun, $recom, $deep){
         $recom=$rrr['mb_id'];
        
         //누적매출
-		$sql1= sql_fetch("select sum(pv)as hap from g5_shop_order where mb_id='".$recom."' ");
+		$sql1= sql_fetch("select sum(upstair)as hap from g5_shop_order where mb_id='".$recom."' AND od_date <= '{$bonus_day}'  ");
         $noo +=$sql1['hap'];
         
         //월간매출
         /*
 		$mon_search = " and od_date >='$min30' and od_date <='$bonus_day'";
-        $sql2= sql_fetch("select sum(pv)as hap from g5_shop_order where mb_id='".$recom."' $mon_search");
+        $sql2= sql_fetch("select sum(upstair)as hap from g5_shop_order where mb_id='".$recom."' $mon_search");
         $mon+=$sql2['hap'];
         */
         
         //일일매출
 		$day_search = " and od_date ='$bonus_day'";
-		$sql3= sql_fetch("select sum(pv)as hap from g5_shop_order where mb_id='".$recom."' $day_search");
+		$sql3= sql_fetch("select sum(upstair)as hap from g5_shop_order where mb_id='".$recom."' $day_search");
         $today +=$sql3['hap'];
         
          // 디버그 로그
@@ -243,12 +244,13 @@ function habu_sales_calc($gubun, $recom, $deep){
                 else if($hap1 == 0){ //소실적이 0일때
                     
                     $today_sales=$bonus;
+                    $note_adm2='소실적 0 (대실적만 이월) (1-3) 소실적:'.$hap1.	'('.$id1.') || 대실적:'.$hap2.'('.$id2.') | 이월금:'.($hap2-$hap1);
 
                     // 수당 로그
                     echo " ▶▶ 수당 계산 1-3 ::  대실적-<strong>".$hap2."</strong>(".$id2.") ||  소실적-<strong>".$hap1."</strong>(".$id1.") ||  수당: <span class=blue>".($bonus_rate*100)."%</span> || 발생수당 : <strong>".Number_format($today_sales)."</strong><br><br>";
                     $note_adm='소실적 0 (대실적만 이월) (1-3-1) 대실적:'.$hap2.	'('.$id2.') || 소실적:'.$hap1.'('.$id1.') | 이월금:'.($hap2-$hap1);
                         
-                        iwol_process($bonus_day, $mb_id, $id1, $mb_name, 13, $hap1-$hap2, $note_adm2);
+                        iwol_process($bonus_day, $mb_id, $id2, $mb_name, 13, $hap2-$hap1, $note_adm2);
                 }
 
                 else { //수당발생
@@ -300,6 +302,7 @@ function habu_sales_calc($gubun, $recom, $deep){
 
                         iwol_process($bonus_day, $mb_id, $id1, $mb_name, 23, $hap1-$hap2, $note_adm);
                         
+                        
                 }else{ //소실적이 극점x
                     
                     $today_sales=$bonus;
@@ -347,7 +350,7 @@ function habu_sales_calc($gubun, $recom, $deep){
 function today_sales($mb_id, $day){
     
 	$day_search = " and od_date = '$day'";
-	$sql= sql_fetch("select sum(pv)as hap from g5_shop_order where mb_id='".$mb_id."' $day_search");
+	$sql= sql_fetch("select sum(upstair)as hap from g5_shop_order where mb_id='".$mb_id."' $day_search");
 	if($sql['hap']=='')
 	{
 		$hap=0;
@@ -384,7 +387,7 @@ function habu_iwol($mb_id,$day){
 
 // 하위매출 가져오기
 function my_bchild($mb_id,$day){
-    echo '<br><br><br>  - Run : <strong style=font-size:20px>'.$mb_id.'</strong><br>';
+    echo "<br><br><div class='title block' style='font-size:30px;padding:0 5px;'>".$mb_id."</div><br>";
     
 	$id1='';
 	$id2='';
@@ -415,7 +418,12 @@ function my_bchild($mb_id,$day){
 function iwol_process($bonus_day,$mb_brecommend, $mb_id, $mb_name, $kind, $pv, $note){
     global $debug;
     
-	if( $pv>=0){   // 소실적 제거용
+	if( $pv>=0){
+        
+    }else{
+        $pv = $pv * -1;
+    }
+
 		$temp_sql1 = " insert iwol set iwolday='".$bonus_day."'";
 		$temp_sql1 .= " ,mb_id		= '".$mb_id."'";
 		$temp_sql1 .= " ,mb_name		= '".$mb_name."'";
@@ -439,7 +447,7 @@ function iwol_process($bonus_day,$mb_brecommend, $mb_id, $mb_name, $kind, $pv, $
         }else{
             sql_query($temp_sql1);
         }
-	}
+	
 }
 
 

@@ -2,7 +2,7 @@
 
 $sub_menu = "600200";
 include_once('./_common.php');
-$debug = 1;
+// $debug = 1;
 include_once('./bonus_inc.php');
 
 auth_check($auth[$sub_menu], 'r');
@@ -20,21 +20,21 @@ if (!$debug) {
 }
 
 // 직급 승급
-$grade_cnt = 4;
+$grade_cnt = 6;
 $levelup_result = bonus_pick($code);
 
 // 직추천 회원수 
-// $lvlimit_cnt = explode(',', $levelup_result['limited']);
+$lvlimit_cnt = explode(',', $levelup_result['limited']);
 
 
 // 구매등급기준
-$lvlimit_sales_level = explode(',', $levelup_result['rate']);
-$lvlimit_sales_level_val = 6000000;
+/* $lvlimit_sales_level = explode(',', $levelup_result['rate']);
+$lvlimit_sales_level_val = 6000000; */
 
 
 // 추천산하매출기준
 $lvlimit_recom = explode(',', $levelup_result['layer']);
-$lvlimit_recom_val = 1000000;
+$lvlimit_recom_val = 1;
 
 
 //회원 리스트를 읽어 온다.
@@ -68,13 +68,11 @@ echo "</strong> <br>";
 function grade_name($val)
 {
     global $grade_cnt;
-    if($val == 4){$full_name = '제타';}
-    else if($val == 3){$full_name = '테라';}
-    else if($val == 2){$full_name = '기가';}
-    else if($val == 1){$full_name = '메가';}
-
-    $grade_name = $val . " STAR - ".$full_name;
-
+    if($val == 6){
+        $grade_name = $val . " STAR[KHAN]";
+    }else{
+        $grade_name = $val . " STAR ";
+    }
     return $grade_name;
 }
 
@@ -82,7 +80,7 @@ function grade_name($val)
 echo "<br><code>회원직급 승급 조건   |   기준조건 :" . $pre_condition . "<br>";
 for ($i = 0; $i < $grade_cnt; $i++) {
     echo "<br>" . grade_name($i + 1);
-    echo  " -  [ 승급기준]  본인구매기준" . " P" . ($lvlimit_sales_level[$i]) . " 이상 / 추천산하매출(3대) " . Number_format($lvlimit_recom[$i] * $lvlimit_recom_val) . " 이상<br>";
+    echo  " -  [ 승급기준]  추천인수 합: " . ($lvlimit_cnt[$i]) . " 이상 / 추천산하매출(PV) " . Number_format($lvlimit_recom[$i] * $lvlimit_recom_val) . " 이상<br>";
 }
 echo "</code><br><br><br>";
 
@@ -147,13 +145,15 @@ echo "<div class='btn' onclick='bonus_url();'>돌아가기</div>";
     function return_down_manager($mb_id,$cnt=0){
         global $config,$g5,$mem_list;
 
-        $mb_result = sql_fetch("SELECT mb_id,mb_rate from g5_member WHERE mb_id = '{$mb_id}' ");
+        $mb_result = sql_fetch("SELECT mb_id,mb_rate,mb_pv,mb_save_point from g5_member WHERE mb_id = '{$mb_id}' ");
         
-        // 본인제외
-        // $list = [];
-        // $list['mb_id'] = $mb_result['mb_id'];
-        // $list['mb_rate'] = $mb_result['mb_rate'];
-        // $mem_list = [$list];
+        // 본인포함
+       /*  $list = [];
+        $list['mb_id'] = $mb_result['mb_id'];
+        $list['mb_rate'] = $mb_result['mb_rate'];
+        $list['mb_pv'] = $mb_result['mb_pv'];
+        $list['mb_save_point'] = $mb_result['mb_save_point'];
+        $mem_list = [$list]; */
 
         $result = recommend_downtree($mb_result['mb_id'],0,$cnt);
         return $result;
@@ -165,7 +165,7 @@ echo "<div class='btn' onclick='bonus_url();'>돌아가기</div>";
 
         if($cnt == 0 || ($cnt !=0 && $count < $cnt)){
             
-            $recommend_tree_result = sql_query("SELECT mb_id,mb_rate,mb_save_point from g5_member WHERE mb_recommend = '{$mb_id}' ");
+            $recommend_tree_result = sql_query("SELECT mb_id,mb_rate,mb_pv,mb_save_point from g5_member WHERE mb_recommend = '{$mb_id}' ");
             $recommend_tree_cnt = sql_num_rows($recommend_tree_result);
     
             if($recommend_tree_cnt > 0 ){
@@ -173,6 +173,7 @@ echo "<div class='btn' onclick='bonus_url();'>돌아가기</div>";
                 while($row = sql_fetch_array($recommend_tree_result)){
                     // $list['mb_rate'] = $row['mb_rate'];
                     $list['mb_id'] = $row['mb_id'];
+                    $list['mb_pv'] = $row['mb_pv'];
                     $list['mb_save_point'] = $row['mb_save_point'];
                     $list['depth'] = $count;
                     
@@ -367,7 +368,7 @@ echo "<div class='btn' onclick='bonus_url();'>돌아가기</div>";
         {
 
             global $g5, $search_condition, $admin_condition, $pre_condition;
-            global $bonus_day, $week_frdate, $week_todate, $grade_cnt, $code, $lvlimit_cnt, $lvlimit_sales_level, $lvlimit_recom, $lvlimit_recom_val, $lvlimit_pv;
+            global $bonus_day, $week_frdate, $week_todate, $grade_cnt, $code, $lvlimit_cnt,$bonus_rates, $lvlimit_sales_level, $lvlimit_recom, $lvlimit_recom_val, $lvlimit_pv;
             global $debug,$mem_list;
 
             for ($i = $grade_cnt - 1; $i > -1; $i--) {
@@ -379,8 +380,8 @@ echo "<div class='btn' onclick='bonus_url();'>돌아가기</div>";
 
                 $member_count  = $cnt_result['cnt'];
 
-                echo "<br><br><span class='title block'>" . $i . " STAR (" . $member_count . ")</span><br>";
-                echo  " -  [ 승급기준 ] 보유구매등급 : P" . ($lvlimit_sales_level[$i]) . " 이상 | 추천산하매출(3대) : " . Number_format($lvlimit_recom[$i]*$lvlimit_recom_val) . " 이상 ";
+                echo "<br><br><span class='title block'>" . ($i+1) . " STAR (" . $member_count . ")</span><br>";
+                echo  " -  [ 승급기준 ] 추천인수 합 : " . ($lvlimit_cnt[$i]) . " 이상 | 추천산하매출(PV) : " . Number_format($lvlimit_recom[$i]*$lvlimit_recom_val) . " 이상 ";
 
                 // 1STAR 예외
                 /* $lvlimit_recom_pv = 0;
@@ -389,6 +390,7 @@ echo "<div class='btn' onclick='bonus_url();'>돌아가기</div>";
                     $lvlimit_recom_pv = $lvlimit_pv;
                 } */
 
+                $bonus_rate = $bonus_rates[$i];
 
                 // 디버그 로그 
                 if ($debug) {
@@ -426,7 +428,7 @@ echo "<div class='btn' onclick='bonus_url();'>돌아가기</div>";
 
                     if ($member_count != 0) {
 
-                        /* // 직추천자수 
+                        // 직추천자수 
                         $mem_cnt_sql = "SELECT count(*) as cnt FROM g5_member where mb_recommend = '{$mb_id}' ";
                         $mem_cnt_result = sql_fetch($mem_cnt_sql);
                         $mem_cnt = $mem_cnt_result['cnt'];
@@ -436,7 +438,7 @@ echo "<div class='btn' onclick='bonus_url();'>돌아가기</div>";
                             $rank_cnt += 1;
                             $rank_option1 = 1;
                             echo "<span class='red'> == OK </span>";
-                        } */
+                        }
 
 
                         /* // 내 매출 
@@ -513,28 +515,28 @@ echo "<div class='btn' onclick='bonus_url();'>돌아가기</div>";
                         } */
 
                         // 내 구매등급  
-                        echo "<br>본인 아이템등급 : <span class='blue'>P" . Number_format($item_rank) . "</span>";
+                        /* echo "<br>본인 아이템등급 : <span class='blue'>P" . Number_format($item_rank) . "</span>";
                         if ($item_rank >= $lvlimit_sales_level[$i]) {
                             $rank_cnt += 1;
                             $rank_option1 = 1;
                             echo "<span class='red'> == OK </span>";
-                        }
+                        } */
 
-                        // 산하 추천 3대 매출 -  save_point 기준
-                        $mem_result = return_down_manager($mb_id,3);
-                        $recom_sales = array_index_sum($mem_result,'mb_save_point','int');
+                        // 산하 추천  매출 -  mb_pv 기준
+                        $mem_result = return_down_manager($mb_id);
+                        $recom_sales = array_index_sum($mem_result,'mb_pv','int');
                         $recom_id = array_index_sum($mem_result,'mb_id','text');
                         $recom_sales_value = Number_format($recom_sales);
                         
-                        echo "<br>산하추천(3대)매출 : <span class='blue'>" .$recom_sales_value. "</span>";
+                        echo "<br>산하추천(PV)매출 : <span class='blue'>" .$recom_sales_value. "</span>";
                         if( $recom_sales >= $lvlimit_recom[$i]*$lvlimit_recom_val){
                             $rank_cnt += 1;
                             $rank_option2 = 1;
                             echo "<span class='red'> == OK </span>";
                         }
-                        echo "<br><span class='desc'>└ 추천하부3대 : ";
+                        /* echo "<br><span class='desc'>└ 추천하부 : ";
                         echo ($recom_id);
-                        echo "</span>";
+                        echo "</span>"; */
                         
                         
                         /* if($recom_week_sales){
@@ -566,12 +568,13 @@ echo "<div class='btn' onclick='bonus_url();'>돌아가기</div>";
                         $rank_record_mem_sql .= "('{$row['mb_id']}',{$i},'{$mem_cnt}',{$rank_option1},'{$mem_pv}',{$rank_option2},'{$rank_grade}',{$rank_option3})"; */
 
                         $update_mem_rank = "UPDATE g5_member SET ";
-                        $update_mem_rank .= "mb_4 = '{$item_rank}',mb_5= '{$rank_option1}' ";
+                        $update_mem_rank .= "mb_4 = '{$mem_cnt}',mb_5= '{$rank_option1}' ";
                         $update_mem_rank .= ",mb_6 = '{$recom_sales}',mb_7= '{$rank_option2}' ";
                         $update_mem_rank .= "WHERE mb_id = '{$row['mb_id']}' ";
 
                         if ($debug) {
                             print_R($update_mem_rank);
+                            echo "<br>";
                             // sql_query($update_mem_rank);
                         } else {
                             sql_query($update_mem_rank);
@@ -581,19 +584,18 @@ echo "<div class='btn' onclick='bonus_url();'>돌아가기</div>";
                         if ($rank_cnt >= 2) {
                             $upgrade = ($grade + 1);
                             echo "<br><span class='red'> ▶▶ 직급 승급 => " . $upgrade . " STAR </span><br> ";
-                            $rec = $code . ' Update to ' . ($grade + 1) . ' STAR IN ' . $bonus_day;
+                            
+                            $benefit=$bonus_rate;
+                            $rec = $code . ' Promote to ' . ($grade + 1) . ' STAR IN ' . $bonus_day;
+                            $rec_adm= $rec;
 
+                            // 승급기록 
+                            $bonus_sql = " insert rank set rank_day='{$bonus_day}'";
+                            $bonus_sql .= " ,mb_id			= '{$mb_id}' ";
+                            $bonus_sql .= " ,old_level		= '{$grade}' ";
+                            $bonus_sql .= " ,rank      = {$upgrade}";
+                            $bonus_sql .= " ,rank_note	= '{$rec}'";
 
-                            //**** 수당이 있다면 함께 DB에 저장 한다.
-                            $bonus_sql = " insert rank set rank_day='" . $bonus_day . "'";
-                            $bonus_sql .= " ,mb_id			= '" . $mb_id . "'";
-                            $bonus_sql .= " ,old_level		= '" . $grade . "'";
-                            $bonus_sql .= " ,rank      = " . $upgrade;
-                            $bonus_sql .= " ,rank_note	= '" . $rec . "'";
-                            "'";
-
-
-                            // 디버그 로그
                             if ($debug) {
                                 echo "<br><code>";
                                 print_R($bonus_sql);
@@ -602,22 +604,31 @@ echo "<div class='btn' onclick='bonus_url();'>돌아가기</div>";
                                 sql_query($bonus_sql);
                             }
 
-                            $balance_up = "update g5_member set grade = {$upgrade} where mb_id = '" . $mb_id . "'";
+                            // 승급 수당지급
+                            echo "<span class=blue> ▶▶ 수당 지급 : ".Number_format($benefit)."</span><br>";
 
-                            // 디버그 로그
-                            if ($debug) {
-                                echo "<code>";
-                                print_R($balance_up);
-                                echo "</code>";
-                            } else {
-                                sql_query($balance_up);
+                            $record_result = soodang_record($mb_id, $code, $benefit,$rec,$rec_adm,$bonus_day);
+
+                            if($record_result){
+                                
+                                $balance_up = "update g5_member set mb_balance = mb_balance + {$benefit}, grade = {$upgrade}  where mb_id = '".$mb_id."'";
+
+                                // 디버그 로그
+                                if($debug){
+                                    echo "<code>";
+                                    print_R($balance_up);
+                                    echo "</code>";
+                                }else{
+                                    sql_query($balance_up);
+                                }
+                                
                             }
+
                         } // if $rank_cnt
 
                         $mem_list = array();
                     } // if else
                 } //while
-
 
                 $rec = '';
                 

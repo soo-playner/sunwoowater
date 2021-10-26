@@ -10,7 +10,8 @@ include_once(G5_ADMIN_PATH . '/admin.head.php');
 <link rel="stylesheet" href="/adm/css/switch.css">
 <style>
 	th{font-size:18px;font-family: 'Nanum-Gothic';letter-spacing: -0.5px;}
-	.desc{font-size:12px;font-weight:300;display:block;margin:5px 0;}
+	.desc{font-size:11px;font-weight:300;display:block;margin:5px 0;}
+	.red{color:red}
 </style>
 <div class="local_desc01 local_desc">
 	<p>
@@ -39,6 +40,7 @@ include_once(G5_ADMIN_PATH . '/admin.head.php');
 						<p style="padding:0;"><input type="checkbox" id="nw_member_reset" name="nw_member_reset" <?if($nw['nw_member_reset']=='Y' ) {echo "checked" ;}?>/><label for="nw_member_reset"><span class="ui"></span><span class="nw_member_reset_txt">사용 설정</span></label></p>
 					</td>
 				</tr>
+				<tr>
 					<th scope="row"><label for="nw_asset_reset"> 입출금 내역 초기화<strong class="sound_only"> 필수</strong></label>
 						<span class='desc' >※ 수당,마이닝 입출금</span>
 					</th>
@@ -55,16 +57,26 @@ include_once(G5_ADMIN_PATH . '/admin.head.php');
 						<p style="padding:0;"><input type="checkbox" id="nw_mining_reset" name="nw_mining_reset" <?if($nw['nw_mining_reset']=='Y' ) {echo "checked" ;}?>/><label for="nw_mining_reset"><span class="ui"></span><span class="nw_mining_reset_txt">사용 설정</span></label></p>
 					</td>
 				</tr>
+				<tr><td style="height:30px;"></td></tr>
+				<tr>
+					<th scope="row" ><label for="nw_brecommend_reset"> 후원조직도 초기화<strong class="sound_only"> 필수</strong></label>
+						<span class='desc red' >※ 관리자 제외 전체 후원인 초기화</span>
+					</th>
+					<td>
+						<p style="padding:0;"><input type="checkbox" id="nw_brecommend_reset" name="nw_brecommend_reset" <?if($nw['nw_brecommend_reset']=='Y' ) {echo "checked" ;}?>/><label for="nw_brecommend_reset"><span class="ui"></span><span class="nw_brecommend_reset_txt">사용 설정</span></label></p>
+					</td>
 
-				<!-- <tr>
-					<th scope="row"><label for="nw_data_test"> 테스트환경 생성 <strong class="sound_only"> 필수</strong></label></th>
+					<th scope="row"><label for="nw_data_test"> 테스트환경 생성 <strong class="sound_only"> 필수</strong></label>
+						<span class='desc red' >※ 관리자 제외 전체 잔고 500,000 지급</span>
+					</th>
 					<td>
 						<p style="padding:0;"><input type="checkbox" id="nw_data_test" name="nw_data_test" <?if($nw['nw_data_test']=='Y' ) {echo "checked" ;}?>/><label for="nw_data_test"><span class="ui"></span><span class="nw_data_test_txt">사용 설정</span></label></p>
 					</td>
-				</tr> -->
+				</tr>
 
 			</tbody>
 		</table>
+		
 	</div>
 
 	<div class="btn_confirm01 btn_confirm" style="margin-top:30px;">
@@ -99,14 +111,6 @@ include_once(G5_ADMIN_PATH . '/admin.head.php');
 			}
 		});
 
-		$('#nw_data_test').on('click', function() {
-			if ($('#nw_data_test').is(":checked")) {
-				$('.nw_data_test_txt').html('사용함');
-			} else {
-				$('.nw_data_test_txt').html('사용안함');
-			}
-		});
-
 		$('#nw_data_del').on('click', function() {
 			if ($('#nw_data_del').is(":checked")) {
 				$('.nw_data_del_txt').html('사용함');
@@ -122,23 +126,39 @@ include_once(G5_ADMIN_PATH . '/admin.head.php');
 				$('.nw_mining_del_txt').html('사용안함');
 			}
 		});
+
+
+		$('#nw_brecommend_reset').on('click', function() {
+			if ($('#nw_brecommend_reset').is(":checked")) {
+				$('.nw_brecommend_reset_txt').html('사용함');
+			} else {
+				$('.nw_brecommend_reset_txt').html('사용안함');
+			}
+		});
+		$('#nw_data_test').on('click', function() {
+			if ($('#nw_data_test').is(":checked")) {
+				$('.nw_data_test_txt').html('사용함');
+			} else {
+				$('.nw_data_test_txt').html('사용안함');
+			}
+		});
 	});
 
 
 	function frmnewwin_check(f) {
 		// console.log($('#nw_data_reset').is(":checked") + ' / ' + $('#nw_data_test').is(":checked"));
 
+		if ($('#nw_brecommend_reset').is(":checked")) {
+			if (confirm('후원조직도를 정말 초기화하겠습니까?')) {} else {
+				return false;
+			}
+		}
+/* 
 		if ($('#nw_data_test').is(":checked")) {
 			if (confirm('테스트 데이터를 생성 하시겠습니까?')) {} else {
 				return false;
 			}
-		}
-
-		if ($('#nw_data_del').is(":checked")) {
-			if (confirm('테스트용 회원 데이터를 생성 하시겠습니까? 되돌릴수없습니다.')) {} else {
-				return false;
-			}
-		}
+		} */
 	}
 </script>
 

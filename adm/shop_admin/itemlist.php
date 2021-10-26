@@ -1,5 +1,5 @@
 <?php
-$sub_menu = '600300';
+$sub_menu = '400300';
 include_once('./_common.php');
 include_once('../adm.wallet.php');
 
@@ -61,7 +61,7 @@ if ($page < 1) { $page = 1; } // 페이지가 없으면 첫 페이지 (1 페이�
 $from_record = ($page - 1) * $rows; // 시작 열을 구함
 
 if (!$sst) {
-    $sst  = "it_id";
+    $sst  = "it_order";
     $sod = "desc";
 }
 $sql_order = "order by $sst $sod";
@@ -224,7 +224,7 @@ $listall = '<a href="'.$_SERVER['SCRIPT_NAME'].'" class="ov_listall">전체목�
         <!--판매가격-->
         <td headers="th_pt" class="td_numbig td_input" id="it_cust_price">
             <label for="it_cust_price" class="sound_only">판매가격</label>
-            <button type='button' class='vat_calc' data-num = '<?=$i?>' >vat</button>
+            <!-- <button type='button' class='vat_calc' data-num = '<?=$i?>' >vat</button> -->
             <input type="text" name="it_cust_price[<?php echo $i; ?>]" value="<?=shift_auto($row['it_cust_price']) ?>" id="cust_price_<?php echo $i; ?>" class="frm_input sit_amt" size="5" style="width:100px;padding-right:5px;" inputmode = "numeric"> 원
         </td>
         
@@ -238,8 +238,8 @@ $listall = '<a href="'.$_SERVER['SCRIPT_NAME'].'" class="ov_listall">전체목�
 
         <!--판매가격-->
         <td headers="th_amt" class="td_numbig td_input">
-            <label for="price_<?php echo $i; ?>" class="sound_only">MP</label>
-            <input type="text" name="it_supply_point[<?php echo $i; ?>]" value="<?=$row['it_supply_point']; ?>" id="supply_<?php echo $i; ?>" class="frm_input sit_amt" size="7" style="width:100px;padding-right:5px;background:#f8e8ff !important"> mh/s
+            <label for="price_<?php echo $i; ?>" class="sound_only">HP</label>
+            <input type="text" name="it_supply_point[<?php echo $i; ?>]" value="<?=$row['it_supply_point']; ?>" id="supply_<?php echo $i; ?>" class="frm_input sit_amt" size="7" style="width:80px;padding-right:5px;background:#f8e8ff !important"> mh/s
         </td>
 
         

@@ -1,15 +1,16 @@
 <?php
 $sub_menu = "600200";
 include_once('./_common.php');
+// $debug=1;
 include_once('./bonus_inc.php');
 
 auth_check($auth[$sub_menu], 'r');
 
-// $debug=1;
+
 
 //회원 리스트를 읽어 온다.
 $sql_common = " FROM {$g5['bonus']} ";
-$sql_search=" WHERE allowance_name = 'direct' AND day = '{$bonus_day}' ";
+$sql_search=" WHERE allowance_name = 'binary' AND day = '{$bonus_day}' ";
 $sql_mgroup=' GROUP BY mb_id ORDER BY mb_no asc';
 
 $pre_sql = "select count(*) 
@@ -82,7 +83,11 @@ function  excute(){
 
         echo "<br><br><br><span class='block title' style='font-size:30px;'>".$comp."</span><br>";
 
-        while($history_cnt <= 3){   
+        while($history_cnt <= $bonus_layer){  
+            if($comp == 'admin'){
+                break;
+            }
+
             $sql = " SELECT mb_no, mb_id, mb_name,grade,mb_level, mb_balance, mb_recommend, mb_brecommend, mb_deposit_point,rank FROM g5_member WHERE mb_id= '{$comp}' ";
             // if($debug){echo "<code>".$sql."</code>";}
             $recommend = sql_fetch($sql);
@@ -102,6 +107,7 @@ function  excute(){
             }else{
                 $recom=$recommend['mb_brecommend'];
             }
+
     
             if( $history_cnt==0 ){ // 본인
                 $firstname=$mb_name;
@@ -110,21 +116,26 @@ function  excute(){
             }else{
                 $rank_cnt = 0;
                 $hist = $history_cnt-1;	
-                $bonus_rate = $bonus_rates[$hist];
+
+                if($hist > 5){
+                    $bonus_rate = $bonus_rates[5];
+                }else{
+                    $bonus_rate = $bonus_rates[$hist];
+                }
+                
 
                 $benefit=($today_sales*($bonus_rate * 0.01));// 매출자 * 수당비율
-
                 $benefit_limit = $benefit;
                 
                 echo "<br><br><span class='box'><strong class='subtitle'>".$mb_id."</strong> | ".$history_cnt." 단계 :: ".Number_format($today_sales).'*'.$bonus_rate.'% = '.Number_format($benefit)."</span>";
 
-                /* list($mb_balance,$balance_limit,$benefit_limit) = bonus_limit_check($mb_id,$benefit);
+                list($mb_balance,$balance_limit,$benefit_limit) = bonus_limit_check($mb_id,$benefit);
                 // 디버그 로그
                 
                 echo "<code>";
                 echo "현재수당 : ".Number_format($mb_balance)."  | 수당한계 :". Number_format($balance_limit).' | ';
                 echo "발생할수당: ".Number_format($benefit)." | 지급할수당 :".Number_format($benefit_limit);
-                echo "</code>"; */
+                echo "</code>";
                 
 
                 $rec=$code.' Bonus from '.$firstid.'('. $firstname.') :: step : '.$history_cnt.')';
@@ -192,7 +203,7 @@ function  excute(){
                 } */
 
                 /* 구매 아이템 등급 조건 */
-                $matching_lvl = $bonus_layer[$item_rank-1];
+                /* $matching_lvl = $bonus_layer[$item_rank-1];
                 echo " 보유상품등급: ".$item_rank." | 매칭레벨 : <span class='blue'>".$matching_lvl."</span> | 기준등급: <strong>".$history_cnt."</strong></span> ";
 
                 if($item_rank > 0 && $matching_lvl >= $history_cnt){
@@ -202,7 +213,9 @@ function  excute(){
                     $matching_lvl = 0;
                     echo "<span class='red'>:: 상품등급기준 미달 </span>";
                 } 
-                echo "<br><br>";
+                echo "<br><br>"; */
+
+                $matching_lvl = 1;
                 
 
                 if($matching_lvl > 0){
@@ -210,7 +223,7 @@ function  excute(){
 
                         $rec_adm .= "<span class=red> |  Bonus overflow :: ".Number_format($benefit_limit - $benefit)."</span>";
                         echo "<span class=blue> ▶▶ 수당 지급 : ".Number_format($benefit)."</span>";
-                        echo "<span class=red> ▶▶▶ 수당 초과 (한계까지만 지급) : ".Number_format($benefit_limit)." </span><br>";
+                        echo "<span class=purple> ▶▶▶ 수당 초과 (한계까지만 지급) : ".Number_format($benefit_limit)." </span><br>";
                     }else if($benefit != 0 && $balance_limit == 0 && $benefit_limit == 0){
                 
                         $rec_adm .= "<span class=red> | Sales zero :: ".Number_format($benefit_limit - $benefit)."</span>";
@@ -228,7 +241,7 @@ function  excute(){
                     echo "<span> ▶▶ 수당 미발생 </span>";
 
                     if(!$debug){
-                        soodang_extra($mb_id, $code, $benefit, $rec,$rec_adm,$bonus_day);
+                        // soodang_extra($mb_id, $code, $benefit, $rec,$rec_adm,$bonus_day);
                     }
                     
                 }
@@ -253,12 +266,12 @@ function  excute(){
             }
 
             $rec='';
-            $matching_lvl = 0;
+            // $matching_lvl = 0;
 
             /* admin 제외 */
-            if($recom == 'MASTER'){
+            /* if($recom == 'MASTER'){
                 $recom = 'admin';
-            }
+            } */
 
             $comp=$recom;
             $history_cnt++;

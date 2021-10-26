@@ -1,5 +1,5 @@
 <?php
-$sub_menu = "600400";
+$sub_menu = "400400";
 include_once('./_common.php');
 include_once(G5_PATH.'/util/package.php');
 
