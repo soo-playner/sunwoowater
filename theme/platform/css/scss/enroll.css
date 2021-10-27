@@ -27,12 +27,15 @@
   border: black solid 1px;
   border-radius: 3px;
 }
+
 #service_checkbox + label span, #private_checkbox + label span {
   position: absolute;
   display: block;
   font-weight: bold;
-  transform: translate(22px, -3px);
+  -webkit-transform: translate(22px, -3px);
+          transform: translate(22px, -3px);
 }
+
 #service_checkbox:checked + label, #private_checkbox:checked + label {
   background: url("/img/check_green.png") no-repeat center/17px 18px;
   background-repeat: no-repeat;
@@ -56,12 +59,21 @@
   margin-lefT: 0;
 }
 
-.enroll_wrap input[type=text], .enroll_wrap input[type=number], .enroll_wrap input[type=email] {
+.enroll_wrap input[type="text"], .enroll_wrap input[type="number"], .enroll_wrap input[type="email"] {
   margin-bottom: 0;
   margin-top: 15px;
 }
-.enroll_wrap input[type=text]:first-child, .enroll_wrap input[type=number]:first-child, .enroll_wrap input[type=email]:first-child {
+
+.enroll_wrap input[type="text"]:first-child, .enroll_wrap input[type="number"]:first-child, .enroll_wrap input[type="email"]:first-child {
   margin: 0;
+}
+
+.enroll_wrap .cabinet_inner {
+  width: 100%;
+  font-size: 11px;
+  padding-left: 10px;
+  color: #006df3;
+  display: none;
 }
 
 .enroll_wrap .in_btn_ly {

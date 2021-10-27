@@ -147,7 +147,7 @@ a:focus, a:active{color:inherit;}
 
 .input_addr{font-size: 10px;}
 ::placeholder{font-size:14px;}
-.row + .row{margin-top:10px;}
+.row + .row{margin-top:5px;}
 
 .mt10{margin-top:10px;}
 .mt20{margin-top:20px;}
@@ -534,8 +534,8 @@ a.more i{font-size:18px;font-weight:500;color:#555;vertical-align: bottom;}
 /*보너스박스*/
 .bonus_state_bg{width:100%;height:14px;margin-top:7px;display:block;background:#eee;border-radius:8px;box-shadow:inset 0px 1px 2px rgba(0,0,0,0.25)}
 .bonus_state_bar{float:left;position:relative;height:14px;display:block;transition: all .1s;border-top-left-radius:8px;border-bottom-left-radius:8px;box-shadow:inset 0px 1px 2px rgba(0,0,0,0.25)  ; }
-.bonus_state_bar{_background: linear-gradient(90deg, #23a6d5, #23d5ab, #e73c7e );background: linear-gradient(90deg, #e73c7e,#e73c7e);background-size: 300% 300%;}
-.bonus_state_bar.active{border:3px solid white; box-shadow:0px 0px 5px 2px steelblue;}
+.bonus_state_bar{_background: linear-gradient(90deg, #23a6d5, #23d5ab, #e73c7e );background: linear-gradient(90deg, #0fc872,#0f66f3);background-size: 300% 300%;}
+.bonus_state_bar.active{ box-shadow:0px 0px 5px 2px red;border:3px solid white;}
 
 .bonus_per.active{color:white;font-size:20px;transition: ALL 0.5s;}
 
@@ -544,10 +544,13 @@ a.more i{font-size:18px;font-weight:500;color:#555;vertical-align: bottom;}
 .exp_per .start{float:left;}
 .exp_per .end{float:right;}
 
-.deg25{background: linear-gradient(90deg, #e73c7e,#f8a731 ) !important;}
+/* .deg25{background: linear-gradient(90deg, #e73c7e,#f8a731 ) !important;}
 .deg50{background: linear-gradient(90deg, #f8a731, #23d5ab )!important;}
 .deg75{background: linear-gradient(90deg, #23d5ab, #23a6d5)!important;}
-.deg100{background: linear-gradient(90deg, #23a6d5, #23a6d5)!important; border-radius:8px;}
+.deg100{background: linear-gradient(90deg, #23a6d5, #23a6d5)!important; border-radius:8px;} */
+
+.deg25{background: linear-gradient(90deg, #0f98f3, #1926db)!important;}
+.deg60{background: linear-gradient(90deg, #e21593,#da2f29 ) !important;border-radius:8px;}
 
 
 /* profile */
