@@ -76,14 +76,11 @@ function move(bonus_per,main = 0) {
 			$('.bonus_per').addClass('active')
 		}
 
-		if(width >= 75){
-			$('#total_B_bar').addClass('deg75');
-		}
-		if(width >= 50){
-			$('#total_B_bar').addClass('deg50');
-		}
 		if(width >= 25){
 			$('#total_B_bar').addClass('deg25');
+		}
+		if(width >= 59){
+			$('#total_B_bar').addClass('deg60');
 		}
 
 		if (width >= total_bonus_point) {

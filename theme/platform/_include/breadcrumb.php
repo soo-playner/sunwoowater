@@ -138,20 +138,6 @@ $title = 'Dashboard';
 						</li>
 						
 
-						<!-- <li class="col-4">
-							<dt class="title" >수당한계</dt>
-							<dd class="value">
-								<div class='bonus_state_bg' data-per='<?=$bonus_per?>'>
-									<div class='bonus_state_bar' id='total_B_bar'></div>
-								</div>
-								
-								<div class='exp_per'>
-									<p class='start'>0%</p>
-									<p class='end'>250%</p>
-								</div>
-							</dd>
-						</li> -->
-
 						<li class="col-4">
 							<dt class="title"><span class='badge'>Mining : <?=Number_format($member['mb_rate'])?> mh/s</span></dt>
 							<dd class="value"><?=$mining_total?> <span style='font-size:12px;'><?=$minings[0]?></span></dd>
@@ -168,6 +154,26 @@ $title = 'Dashboard';
 					</ul>
 
 					<ul class="row">
+						<li class="col-4">
+							<dt class="title" >보너스한계</dt>
+						</li>
+
+						<li class="col-8" style="padding:10px 20px 10px">
+							<!-- <dt class="title" >보너스한계</dt> -->
+							<dd class="value">
+								<div class='bonus_state_bg' data-per='<?=$bonus_per?>'>
+									<div class='bonus_state_bar' id='total_B_bar'></div>
+								</div>
+								
+								<div class='exp_per'>
+									<p class='start'>0%</p>
+									<p class='end' style="margin-right:36px;">100%</p>
+								</div>
+							</dd>
+						</li>
+					</ul>
+
+					<ul class="row" style="margin-bottom:-20px;">
 						<li class="rank_title">승급조건달성</li>
 
 						<!-- <li class="col-4">
