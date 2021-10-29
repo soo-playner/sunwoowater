@@ -325,25 +325,21 @@ $stats_result = sql_fetch($stats_sql);
 	<colgroup>
 		<col width="40"/>
 		<col width="40" />
-		<col width="130" />
+		<col width="150" />
 		<col width="120" />
 		<col width="120" />
-		<col width="120" />
-		<col width="150" />
-		<col width="150" />
-		<col width="150" />
-		<col width="150" />
-		<col width="150" />
-		<col width="150" />
-		<col width="100" />
-		<col width="100" />
-		<col width="100" />
-		<col width="100" />
-		<col width="100" />
-		<col width="100" />
-		<col width="130" />
+		<col width="180" />
+		<col width="180" />
+		<col width="180" />
+		<col width="180" />
+		<col width="180" />
+		<col width="180" />
+		<col width="180" />
 		<col width="140" />
-		<col width="50" />
+		<col width="100" />
+		<col width="140" />
+		<col width="120" />
+		<col width="100" />
 	</colgroup>
 	<thead>
 	<tr>
@@ -371,7 +367,7 @@ $stats_result = sql_fetch($stats_sql);
 		<th scope="col" rowspan="2" id="" class="item_title">상위보유패키지</th>
 		<th scope="col" id="mb_list_authcheck" style='min-width:130px;' rowspan="2">상태/<?php echo subject_sort_link('mb_level', '', 'desc') ?>회원레벨</a></th>
 		<th scope="col" id="mb_list_member"><?php echo subject_sort_link('mb_today_login', '', 'desc') ?>최종접속</a></th>
-		<th scope="col" rowspan="3" id="mb_list_mng">관리</th>
+		<th scope="col" rowspan="2" id="mb_list_mng">관리</th>
 	</tr>
 
 	<tr>
@@ -520,7 +516,7 @@ $stats_result = sql_fetch($stats_sql);
 		<!-- <td headers="mb_list_auth" class="td_mbstat" rowspan="2"><?= shift_auto_zero($row['mb_save_point']) ?></td> -->
 		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><?= shift_auto_zero($row['mb_pv']) ?></td>
 		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><?= shift_auto_zero($row['mb_rate']) ?></td>
-		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"> <?=$bonus_per?></td>
+		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"> <?=$bonus_per?><?if($bonus_per != 0){echo "%";}?></td>
 		<td headers="mb_list_auth" class="td_mbstat text-center" rowspan="2"><span class='badge t_white color<?=$row['rank']?>'><?if($row['rank']){echo 'P'.$row['rank'];}?></span></td>
 		
 		<td headers="mb_list_member" class="td_mbgrade" rowspan="2">

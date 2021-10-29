@@ -124,7 +124,7 @@ function return_status_tx($val){
 						func : 'withrawal'
 					},
 					success: function(data) {
-						if(data.code =='0000'){
+						if(data.code =='0001'){
 							alert('변경되었습니다.');
 							location.reload();
 						}else{

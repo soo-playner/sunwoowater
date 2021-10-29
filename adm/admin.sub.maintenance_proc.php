@@ -20,7 +20,7 @@ $sql_common = "
 
 $sql = " update maintenance set $sql_common ";
 
-print_r("<br>".$sql);
+// print_r("<br>".$sql);
 sql_query($sql);
 
 

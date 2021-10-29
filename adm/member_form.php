@@ -367,9 +367,14 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 		<th scope="row">센터지정</th>
 		<td colspan="1">
 			<input type="checkbox" style='width:24px;height:24px' name="center_use" id="center_use" value=" <?=$mb['center_use']?> " class="frm_input" <? if($mb['center_use'] == '1') {echo "checked";}?> />
-			<?if($mb['center_use']>0){ $center_regist_class = 'active';}else{$center_regist = '';}?>
 			
-			<div id='mb_nick_regist'>
+			<?if($mb['center_use']>0){ 
+				$center_regist_class = 'active';
+			}else{
+				$center_regist = '';
+			}?>
+			
+			<div id='mb_nick_regist' class="<?=$center_regist_class?>">
 			| 센터명 : 
 			<input type="text" name="mb_nick" id="mb_nick_field" value="<?=$mb['mb_nick']?>" class="frm_input" />
 			</div>
@@ -430,10 +435,10 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 	<tr class="ly_up padding-box fund">
 
 		<th scope="row">누적 매출 합계 (PV)</th>
-		<td colspan="1"><span class='strong soodang'><?=shift_auto_zero($mb['mb_save_point'])?> <?=ASSETS_CURENCY?></span></td>
+		<td colspan="1"><span class='strong soodang'><?=ASSETS_CURENCY?> <?=shift_auto($mb['mb_save_point'])?> </span></td>
 
 		<th scope="row">총 받은보너스(수당)</th>
-		<td colspan="1"><span class='strong bonus'><?=shift_auto_zero($mb['mb_balance'])?> <?=ASSETS_CURENCY?></span> </td>
+		<td colspan="1"><span class='strong bonus'><?=ASSETS_CURENCY?> <?=shift_auto($mb['mb_balance'])?> </span> </td>
 
 	</tr>
 
@@ -447,7 +452,7 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 
 	<tr class="ly_up padding-box fund">
 		<th scope="row">출금총액</th>
-		<td colspan="1"><span class='strong amt'><?=shift_auto_zero($mb['mb_shift_amt'])?> <?=ASSETS_CURENCY?> </span>  ( <?=shift_auto_zero(($mb['mb_shift_amt']*$usd_price),WITHDRAW_CURENCY)?><?=WITHDRAW_CURENCY?> )</td>
+		<td colspan="1"><span class='strong amt'><?=ASSETS_CURENCY?> <?=shift_auto($mb['mb_shift_amt'])?>  </span>  ( <?=shift_auto(($mb['mb_shift_amt']*$usd_price),WITHDRAW_CURENCY)?><?=WITHDRAW_CURENCY?> )</td>
 
 		<th scope="row">마이닝출금액</th>
 		<td colspan="1"><span class='strong amt'><?=shift_auto($mb[$mining_amt_target],$minings[0])?> <?=strtoupper($minings[0])?></span></td>

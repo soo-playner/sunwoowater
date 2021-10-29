@@ -30,6 +30,9 @@
 							<button type='button' class='btn wd main_btn b_sub' onclick="go_to_url('mywallet');" data-i18n="dashboard.내 지갑"> MY WALLET</button>
 						</div>
 						<div class='col-lg-6 col-12'>
+							<button type='button' class='btn wd main_btn b_third' onclick="go_to_url('mining');" > 마이닝</button>
+						</div>
+						<div class='col-lg-6 col-12'>
 							<button type='button' class='btn wd main_btn b_main' onclick="go_to_url('upstairs');" data-i18n="dashboard.패키지구매">패키지구매</button>
 						</div>
 						<!-- <div class='col-lg-12 col-12'>

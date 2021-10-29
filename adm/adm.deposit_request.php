@@ -269,7 +269,7 @@ $result = sql_query($sql);
         <td ><?=$row['txhash']?></td>
         <td><?=Number_format($row['amt'],DEPOSIT_NUMBER_POINT)?></td>
         <td class='coin'><?=strtoupper($row['coin']);?></td>
-        <td><input type='text' class='reg_text input_amt_val <?=value_color($row['in_amt'])?>' style='font-weight:600;' value='<?=shift_auto($row['in_amt'],'$')?>' inputmode="numeric"></td>
+        <td><input type='text' class='reg_text input_amt_val <?=value_color($row['in_amt'])?>' style='font-weight:600;' value='<?=shift_auto_zero($row['in_amt'],'$')?>' inputmode="numeric"></td>
         
         <td>
             <!-- <?=status($row['status'])?> -->

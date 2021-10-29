@@ -104,7 +104,7 @@
                         <li class="row">
                             <div class="value col-10">
                                 <div class="value1" style="font-size:18px;line-height:42px;">
-                                    <?=$ordered_items[$i]['pv']?> Hp/s
+                                    <?=$ordered_items[$i]['od_rate']?> Hp/s
                                 </div>
                             </div>
                             <div class="col-2" style='padding:3px 0px 0px;text-align:right;padding-right:10px;'>
@@ -239,7 +239,7 @@
                         
                             <li class="col-12 mt10">
                                 <span class="col-6 nopadding"><i class="ri-survey-line"></i>process result</span>
-                                <span class="col-6 nopadding text-right result"><? string_shift_code($row['status']) ?></span>
+                                <span class="col-6 nopadding text-right result" style='display:inline-grid'><? string_shift_code($row['status']) ?></span>
                             </li>
                         </ul>
                     <?}?>
