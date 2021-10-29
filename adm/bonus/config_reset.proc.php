@@ -5,6 +5,8 @@ include_once('../../util/purchase_proc.php');
 
 $today = date("Y-m-d H:i:s",time());
 $todate = date("Y-m-d",time());
+// $debug=1;
+// $_POST['nw_member_reset'] = 'on';
 
 if($_GET['debug']) $debug = 1;
 
@@ -37,16 +39,17 @@ if($_POST['nw_member_reset'] == 'on'){
     
     $pack_cnt = sql_fetch("SELECT count(it_id) as cnt from g5_shop_item WHERE it_use > 0")['cnt'];
     $pack_name_sql = sql_fetch("SELECT it_maker from g5_shop_item WHERE it_use > 0 limit 0,1 ")['it_maker'];
-    $pack_name = substr($pack_name_sql,0,1);
-   
+    $pack_name = strtolower(substr($pack_name_sql,0,1));
+    
     for($i=0;$i<=$pack_cnt;$i++){
         $pack_where = "package_".$pack_name.$i;
-        sql_query(" TRUNCATE TABLE {$pack_where}; ");
+        $empty = " TRUNCATE TABLE {$pack_where};";
         
+        sql_query($empty);
     }
     $trunc15 = sql_query(" TRUNCATE TABLE `rank` ");
 
-    $member_update_sql = " UPDATE g5_member set  mb_deposit_point = 0, mb_deposit_calc=0, mb_balance = 0,mb_save_point=0, mb_rate=0,mb_pv = 0, sales_day='0000-00-00', rank_note='',rank='',mb_brecommend='',mb_brecommend_type='',mb_lr = 3 WHERE mb_level < 9 ";
+    $member_update_sql = " UPDATE g5_member set  mb_deposit_point = 0, mb_deposit_calc=0, mb_balance = 0,mb_save_point=0,mb_shift_amt =0, mb_rate=0,mb_pv = 0, sales_day='0000-00-00', rank_note='',rank='',mb_4 ='',mb_5='',mb_6='',mb_7='',bank_name='',bank_account='',account_name='' WHERE mb_level < 9 ";
     sql_query($member_update_sql);
 
     $sql_member_reset2 = " UPDATE g5_member set grade = 0, mb_level = 0 WHERE mb_no > 1 ";
@@ -78,7 +81,13 @@ if($_POST['nw_mining_reset'] == 'on'){
 }
 
 if($_POST['nw_brecommend_reset'] == 'on'){
-    $result = sql_query("UPDATE g5_member SET mb_memo ='', mb_bre_time ='', mb_brecommend ='', mb_brecommend_type ='', mb_lr = 3 WHERE mb_no > 1");
+    $trunc2 = sql_query(" TRUNCATE TABLE `g5_member_bclass` ");
+    $trunc2 = sql_query(" TRUNCATE TABLE `g5_member_bclass_chk` ");
+
+    $trunc2 = sql_query(" TRUNCATE TABLE `g5_member_class` ");
+    $trunc2 = sql_query(" TRUNCATE TABLE `g5_member_class_chk` ");
+
+    $result = sql_query("UPDATE g5_member SET mb_memo ='', mb_bre_time ='', mb_brecommend ='', mb_brecommend_type ='', mb_lr = 3,mb_child=0, mb_b_child=0 WHERE mb_no > 1");
     
 }
 

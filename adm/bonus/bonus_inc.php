@@ -359,10 +359,10 @@ function mining_limit_check($mb_id,$bonus){
     $mb_mining = $mem_result[$mining_target];
     $mb_pv = $mem_result['daily_mining'] * $bonus_limit;
     
-    if($mb_id == 'admin' || $mb_id == $config['cf_admin']){
+    /* if($mb_id == 'admin' || $mb_id == $config['cf_admin']){
         $mb_pv = 100000000000;
         $admin_cash = 1;
-    }
+    } */
 
     if($mb_pv > 0 ){
         if( ($mb_mining + $bonus) < $mb_pv){
