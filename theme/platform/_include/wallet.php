@@ -460,8 +460,8 @@ function shift_auto_zero($val,$coin = ASSETS_CURENCY){
 		return '-';
 	}else{
 		if($coin == '$'){
-			$result = explode('.',shift_doller($val));
-			return "<font class='value_font'>".$result[0].".</font><font class='point_font'>".$result[1]."</font>";
+			return shift_doller($val);
+		
 		}else if($coin == '원'){
 			return shift_kor($val);
 		}else{
