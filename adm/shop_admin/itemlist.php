@@ -225,21 +225,21 @@ $listall = '<a href="'.$_SERVER['SCRIPT_NAME'].'" class="ov_listall">전체목�
         <td headers="th_pt" class="td_numbig td_input" id="it_cust_price">
             <label for="it_cust_price" class="sound_only">판매가격</label>
             <!-- <button type='button' class='vat_calc' data-num = '<?=$i?>' >vat</button> -->
-            <input type="text" name="it_cust_price[<?php echo $i; ?>]" value="<?=shift_auto($row['it_cust_price']) ?>" id="cust_price_<?php echo $i; ?>" class="frm_input sit_amt" size="5" style="width:100px;padding-right:5px;" inputmode = "numeric"> 원
+            <input type="text" name="it_cust_price[<?php echo $i; ?>]" value="<?=shift_auto($row['it_cust_price']) ?>" id="cust_price_<?php echo $i; ?>" class="frm_input sit_amt" size="5" style="width:100px;padding-right:8px;" inputmode = "numeric"> 원
         </td>
         
 
         <!--판매가격-->
         <td headers="th_pt" class="td_numbig td_input" id="it_point">
             <label for="it_point" class="sound_only">판매실적(PV)</label>
-            <input type="text" name="it_point[<?php echo $i; ?>]" value="<?=shift_auto($row['it_point']) ?>" id="point_<?php echo $i; ?>" class="frm_input sit_amt" size="5" style="width:100px;padding-right:5px;background:#f4ffe8 !important" inputmode = "numeric">
+            <input type="text" name="it_point[<?php echo $i; ?>]" value="<?=shift_auto($row['it_point']) ?>" id="point_<?php echo $i; ?>" class="frm_input sit_amt" size="5" style="width:100px;padding-right:8px;background:#f4ffe8 !important" inputmode = "numeric">
         </td>
         
 
         <!--판매가격-->
         <td headers="th_amt" class="td_numbig td_input">
             <label for="price_<?php echo $i; ?>" class="sound_only">HP</label>
-            <input type="text" name="it_supply_point[<?php echo $i; ?>]" value="<?=$row['it_supply_point']; ?>" id="supply_<?php echo $i; ?>" class="frm_input sit_amt" size="7" style="width:80px;padding-right:5px;background:#f8e8ff !important"> mh/s
+            <input type="text" name="it_supply_point[<?php echo $i; ?>]" value="<?=$row['it_supply_point']; ?>" id="supply_<?php echo $i; ?>" class="frm_input sit_amt" size="7" style="width:80px;padding-right:8px;background:#f8e8ff !important"> mh/s
         </td>
 
         
