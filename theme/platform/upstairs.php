@@ -54,6 +54,13 @@ $result = sql_query($sql);
 .v-bottom{vertical-align: bottom;}
 .mining_product img{max-width:30px;max-height:30px;vertical-align: middle;}
 .iconbox + .text_wrap{margin-top:5px !important;}
+.hash{color:white;font-weight:300;font-size:18px;letter-spacing:-0.25px;margin:5px 0 -10px;font-family:"Helvetica Neue","Apple SD Gothic Neo",sans-serif;    font-family: "Helvetica Neue","Apple SD Gothic Neo",sans-serif;
+    background: rgba(0,0,0,0.2);
+    padding: 0px 15px 4px 10px;
+    border-radius: 10px;
+    box-shadow: inset 1px 1px 2px rgb(0 0 0 / 80%), 1px 1px 1px rgb(255 255 255 / 30%);
+    text-align: left;}
+.hash img{width:20px;height:20px;vertical-align: bottom;}
 </style>
 
 <?include_once(G5_THEME_PATH.'/_include/breadcrumb.php');?>
@@ -112,7 +119,17 @@ $result = sql_query($sql);
 									<div class="b_blue_bottom"></div>
 
 									<div class='mining_product'>
-										<?if($i != 0){?><div class="iconbox v-bottom"><?if($i > 1){?><img src='<?=G5_THEME_URL?>/img/mine_icon.png'><?}?></div><?}?>
+										<?if($i != 0){?>
+											<div class="iconbox v-bottom">
+												<?if($i > 1){?>
+													<div class='hash'>
+													<img src='<?=G5_THEME_URL?>/img/mine_icon_small.png'>
+														<?=$row[$i-1]['it_supply_point']?> <span class='f_small'>Hash P</span>
+													</div>
+												<?}?> 
+											</div>
+										<?}?>
+												
 										<div class="text_wrap ">
 											<div class="it_price">$ <?=Number_format($row[$i]['it_price'])?></div>
 											<div class='origin_price'>=￦<?=Number_format($row[$i]['it_cust_price'])?></div>
