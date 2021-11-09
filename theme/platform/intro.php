@@ -196,6 +196,7 @@ body{overflow-y: hidden;}
 
 	<div id="btnDiv" class="animate-bottom">
 		<div class='btn_ly'>
+		<?include_once(G5_THEME_PATH.'/_include/lang.html')?>
 	  		<a href="/bbs/login_pw.php" class="btn btn_wd btn_secondary login_btn">LOG IN</a>
 				<!-- <a href="javascript:auto_login()" class="btn btn_wd btn_primary login_btn">LOG IN</a> -->
 	  			<a href="/bbs/register_form.php" class="btn btn_wd btn_primary signup_btn">SIGN UP</a>

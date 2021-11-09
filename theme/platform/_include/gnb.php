@@ -7,6 +7,12 @@ if($_COOKIE['myLang'])
 }
 ?>
 
+<style>
+	#gnb_anguage{padding:10px}
+	.gnb_bottom{background:#f5f5f5}
+	.hidden{display:none;}
+</style>
+
 <script>
 $(document).ready(function(){
 
@@ -26,6 +32,7 @@ $(document).ready(function(){
 		$('body').i18n();
 	});
 
+/* 사용안함 - google로 대체
 	$('#lang').on('change', function(e) {
 		$.i18n.setLng($(this).val(), function(){
 			$('body').i18n();
@@ -35,7 +42,7 @@ $(document).ready(function(){
 		//localStorage.setItem('myLang',$(this).val());
 	});
 
-	$('#lang').val("<?=$myLang?>").change();
+	$('#lang').val("<?=$myLang?>").change(); */
 });
 </script>
 
@@ -72,41 +79,51 @@ $(document).ready(function(){
 		</div>
 		<div class="b_line3"></div>
 		<ul class="left_gnb">
-			<!-- <li class="dashboard_icon"><a href="/"><span data-i18n="">대쉬보드</span></a></li> -->
+			<!-- <li class="dashboard_icon"><a href="/"><span>대쉬보드</span></a></li> -->
+			
 
-			<li class="profile_icon"><a href="/page.php?id=profile"><span data-i18n="">개인정보&보안설정</span></a></li>
-			<li class="mywallet_icon"><a href="/page.php?id=mywallet"><span data-i18n="">입출금</span></a></li> 
-			<li class="mining_icon"><a href="/page.php?id=mining"><span data-i18n="">마이닝</span></a></li>
-			<li class="upstairs_icon"><a href="/page.php?id=upstairs"><span data-i18n="">패키지구매</span></a></li>
-			<li class="bonus_history_icon"><a href="/page.php?id=bonus_history"><span data-i18n="">보너스내역</span></a></li>
+			<li class="profile_icon"><a href="/page.php?id=profile"><span>개인정보&보안설정</span></a></li>
+			<li class="mywallet_icon"><a href="/page.php?id=mywallet"><span>입출금</span></a></li> 
+			<li class="mining_icon"><a href="/page.php?id=mining"><span>마이닝</span></a></li>
+			<li class="upstairs_icon"><a href="/page.php?id=upstairs"><span>패키지구매</span></a></li>
+			<li class="bonus_history_icon"><a href="/page.php?id=bonus_history"><span>보너스내역</span></a></li>
 			<?
 				if($member['center_use'] == 1){?>
 				<li class="center_page"><a href="/page.php?id=center_page"><i class="ri-team-line" style='font-size:26px;color:#435388'></i><span style='margin-left:22px;'>센터회원관리</span></a></li>
 				<?}
 			?>
-			<li class="recommend_icon"><a href="/page.php?id=structure"><span data-i18n="">추천조직도</span></a></li>
-			<li class="support_icon"><a href="/page.php?id=binary"><span data-i18n="">후원조직도</span></a></li>
+			<li class="recommend_icon"><a href="/page.php?id=structure"><span>추천조직도</span></a></li>
+			<li class="support_icon"><a href="/page.php?id=binary"><span>후원조직도</span></a></li>
 
-			<li class="notice_icon"><a href="/page.php?id=news"><span data-i18n="">공지사항</span></a></li>
-			<li class="question_icon"><a href="/page.php?id=support_center"><span data-i18n="">1:1문의사항</span></a></li>
-			<li class="reffer_icon"><a href="/page.php?id=referral_link"><span data-i18n="">추천인링크</span></a></li>
-			<!-- <li class="shopping_mall_icon"><a href="javascript:move_to_shop();"><span data-i18n="">쇼핑몰</span></a></li> -->
+			<li class="notice_icon"><a href="/page.php?id=news"><span>공지사항</span></a></li>
+			<li class="question_icon"><a href="/page.php?id=support_center"><span>1:1문의사항</span></a></li>
+			<li class="reffer_icon"><a href="/page.php?id=referral_link"><span>추천인링크</span></a></li>
+			<!-- <li class="shopping_mall_icon"><a href="javascript:move_to_shop();"><span>쇼핑몰</span></a></li> -->
 			<!-- <div class="b_line3"></div> -->
-			
-			<ul class="logout_wrap row">
-				<li class="logout_icon"><a href="javascript:void(0);" class="logout_pop_open"><span data-i18n="">로그아웃</span></a></li>
-				<li class="h_line"></li>
-				<li class="terms_icon"><a href="/page.php?id=member_term"><span data-i18n="">회원약관</span></a></li>
-			</ul>
-		</ul>		
+		</ul>	
+		<div class='gnb_bottom text-center hidden'><i class="ri-arrow-down-s-line" style='font-size:20px;vertical-align:top'></i></div>
+		<div id='gnb_language'>
+			<p class='f_small title'>언어선택</p>
+			<?include_once(G5_THEME_PATH.'/_include/lang.html')?>
+		</div>
+		
+		<div class="logout_wrap">
+			<a href="javascript:void(0);" class="logout_pop_open"><i class="ri-logout-box-r-line"></i><span>로그아웃</span></a>
+			<a href="/page.php?id=member_term"><i class="ri-git-repository-line"></i><span>회원약관</span></a>
+		</div>	
 	</nav>
 	<?}?>
 
 	<div class="top_title">
+		<!-- <div id="lang" style="float:right;z-index:100;position:absolute">
+			<?//include_once(G5_THEME_PATH.'/_include/lang.php')?>
+		</div> -->
+
 		<h3>
 			<a href="/"><img src= "<?=G5_THEME_URL?>/img/title.png" alt="logo"></a>
 			<?if($member['mb_level'] >= 9){?><button type="button" class='btn adm_btn' onclick="location.href= '<?=G5_ADMIN_URL?>'" ><i class="ri-user-settings-line"></i>Admin</button><?}?>
 		</h3>
+		
 	</div>
 
 	<!-- <div class="lang_selection user-drop-down-section">
@@ -119,7 +136,7 @@ $(document).ready(function(){
 			</select>
 		</div>
 	</div> -->
-
+	
 </header>
 
 <div id="loading" class="wrap-loading display-none"><img id="loading_img" src="/img/Spinner-1.5s-267px.gif" /></div>
@@ -134,6 +151,25 @@ $(document).ready(function(){
 	$( document ).ajaxStop(function() { 
 		$('.wrap-loading').addClass('display-none');
 	});
+
+	$(function(){
+		var left_gnb = $('.left_gnb');
+		if(left_gnb.height() < 400){
+			$(".gnb_bottom").css('display','block');
+
+			$(left_gnb).scroll(function () {
+				var gnb_height = $(left_gnb).scrollTop();
+				
+				if(gnb_height > 30){
+					$(".gnb_bottom i").attr('class','ri-arrow-up-s-line')
+				}else if(gnb_height < 30){
+					$(".gnb_bottom i").attr('class','ri-arrow-down-s-line')
+				}
+			}); 
+		}
+	});
+
+	
 
 	function move_to_shop(){
 		<?php if(strpos($_SERVER['HTTP_USER_AGENT'],'webview//1.0') == true){ ?>

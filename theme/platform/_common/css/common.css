@@ -223,7 +223,7 @@ i{font-style:italic; vertical-align: middle;} /*아이콘*/
 .badge{background:#29386b;border-radius:1rem;padding:5px 8px;font-size:80%;margin-left:5px;color:white}
 .caret{font-size:24px;vertical-align: top;}
 .caret i{vertical-align: inherit;color:rgba(0,0,0,0.6)}
-.desc{font-size:13px;letter-spacing:-1px;margin:0 10px; color:#565656;float:right}
+.desc{font-size:13px;letter-spacing:-1px;margin:0 10px; color:#565656;text-align:right}
 
 button.caret{background:transparent;border:0;margin-right:10px;width:40px;}
 button.caret:hover{background:rgba(0,0,0,0.2)}
