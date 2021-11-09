@@ -94,6 +94,8 @@ $result = sql_query($sql);
 	.local_ov .tit{color:black; font-weight:600;}
 	.local_ov a{margin-left:20px;}
 
+    .badge.eth{background:navy;color:white;font-weight:600;}
+
 </style>
 
 
@@ -230,10 +232,10 @@ $result = sql_query($sql);
         <th scope="col" width='5%'>no</th>
         <th scope="col" width='8%'>아이디</th>
         <th scope="col" width='8%'>추천인</th>
-        <th scope="col" width='10%'>입금자명</th>
-        <th scope="col" width='15%'>입금요청금액</th>
+        <th scope="col" width='auto'>입금자명(TX HASH)</th>
+        <th scope="col" width='5%'>입금요청금액</th>
         <th scope="col" width='5%'>입금종류</th>
-        <th scope="col" width='15%'>입금처리금액 (<?=ASSETS_CURENCY?>)</th>
+        <th scope="col" width='10%'>입금처리금액 (<?=ASSETS_CURENCY?>)</th>
         <th scope="col" width='10%'>승인여부</th>
         <th scope="col" width='10%'>요청시간</th>
         <th scope="col" width='15%'>상태변경일</th>
@@ -254,21 +256,29 @@ $result = sql_query($sql);
         $duplicate_sql ="select COUNT(*) as cnt from wallet_deposit_request WHERE mb_id='{$row['mb_id']}' ";
         $duplicate_result = sql_fetch($duplicate_sql);
         $duplicate = $duplicate_result['cnt'];
+
         if($duplicate > 1){$row_dup = 'row_dup';}else{$row_dup = '';}
 
         $member_sql = "SELECT A.mb_recommend,A.mb_sponsor,B.mb_brecommend from g5_member A, g5_member B WHERE A.mb_id = '{$row['mb_id']}' AND B.mb_id = A.mb_recommend";
         // echo $member_sql;
         $member_result = sql_fetch($member_sql);
         
+        $row_tx = $row['txhash'];
+        $row_coin = strtoupper($row['coin']);
+
+        if($row['coin'] == 'eth'){
+            $row_coin = "<span class='badge eth'>".$row_coin."<span>";
+            $row_tx = "<a href='https://etherscan.io/tx/".$row['txhash']."' target='_blank' style='text-decoration:underline'>".$row['txhash']."</a>";
+        }
     ?>
 
     <tr class=" <?=$row_dup?>">
         <td ><?php echo $row['uid'] ?></td>
         <td style='color:#333;font-weight:600'><a href='/adm/member_form.php?sst=&sod=&sfl=&stx=&page=&w=u&mb_id=<?=$row['mb_id']?>' target='_blank'><?=$row['mb_id'] ?></a></td>
         <td style='color:#666'><?=$member_result['mb_recommend']?></td>
-        <td ><?=$row['txhash']?></td>
+        <td ><?=$row_tx?></td>
         <td><?=Number_format($row['amt'],DEPOSIT_NUMBER_POINT)?></td>
-        <td class='coin'><?=strtoupper($row['coin']);?></td>
+        <td class='coin'><?=$row_coin?></td>
         <td><input type='text' class='reg_text input_amt_val <?=value_color($row['in_amt'])?>' style='font-weight:600;' value='<?=shift_auto_zero($row['in_amt'],'$')?>' inputmode="numeric"></td>
         
         <td>
