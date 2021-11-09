@@ -467,6 +467,7 @@ function shift_auto_zero($val,$coin = ASSETS_CURENCY){
 	}else{
 		if($coin == '$'){
 			return shift_doller($val);
+		
 		}else if($coin == '원'){
 			return shift_kor($val);
 		}else{
