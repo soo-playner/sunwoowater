@@ -484,8 +484,6 @@ if ($member['mb_org_num']){
 }
 $org_num     = 0;
 
-//(select mb_child from g5_member where mb_id=c.c_id) as c_child
-// $sql = "select c.c_id,c.c_class,(select grade from g5_member where mb_id=c.c_id) as grade,(select pool_level from g5_member where mb_id=c.c_id) as pool_level,(select mb_name from g5_member where mb_id=c.c_id) as c_name,(select count(*) from g5_member where mb_recommend=c.c_id) as c_child,(select mb_b_child from g5_member where mb_id=c.c_id) as b_child,(select mb_id from g5_member where mb_brecommend=c.c_id and mb_brecommend_type='L') as b_recomm,(select mb_id from g5_member where mb_brecommend=c.c_id and mb_brecommend_type='R') as b_recomm2,(select count(mb_no) from g5_member where ".$recommend_name."=c.c_id and mb_leave_date = '') as m_child, (select it_pool1 from g5_member where mb_id=c.c_id) as it_pool1, (select it_pool2 from g5_member where mb_id=c.c_id) as it_pool2, (select it_pool3 from g5_member where mb_id=c.c_id) as it_pool3, (select it_pool4 from g5_member where mb_id=c.c_id) as it_pool4, (select it_GPU from g5_member where mb_id=c.c_id) as it_GPU, (select mb_no from g5_member where mb_id=c.c_id) as m_no from g5_member m join ".$class_name." c on m.mb_id=c.mb_id where c.mb_id='{$tree_id}' order by m_no asc";
 $sql = "SELECT c.c_id,c.c_class,(
 	SELECT mb_level
 	FROM g5_member
@@ -512,6 +510,7 @@ $sql = "SELECT c.c_id,c.c_class,(
 	FROM g5_member
 	WHERE mb_id=c.c_id) AS m_no
 	,(select mb_rate FROM g5_member WHERE mb_id=c.c_id) AS mb_rate
+	,(select mb_pv FROM g5_member WHERE mb_id=c.c_id) AS mb_pv
 	,(select grade FROM g5_member WHERE mb_id=c.c_id) AS grade
 	,(SELECT mb_child FROM g5_member WHERE mb_id=c.c_id) AS mb_children
 	FROM g5_member m
@@ -595,9 +594,10 @@ if ($srow['b_recomm']){
 
 	$row6['tpv'] += $row8['tpv']; */
 
-	$left_sql = " SELECT mb_rate, (SELECT noo FROM brecom_bonus_noo WHERE mb_id ='{$srow['b_recomm']}' ) AS noo FROM g5_member WHERE mb_id = '{$srow['b_recomm']}' ";
+	$left_sql = " SELECT mb_pv, (SELECT noo FROM brecom_bonus_noo WHERE mb_id ='{$srow['b_recomm']}' ) AS noo FROM g5_member WHERE mb_id = '{$srow['b_recomm']}' ";
 	$mb_self_left_result = sql_fetch($left_sql);
-	$mb_self_left_acc = $mb_self_left_result['mb_rate'] + $mb_self_left_result['noo'];
+	
+	$mb_self_left_acc = $mb_self_left_result['mb_pv'] + $mb_self_left_result['noo'];
 	$row6['tpv'] = $mb_self_left_acc ;
 
 }else{
@@ -616,9 +616,9 @@ if ($srow['b_recomm2']){
 	$row9 = sql_fetch($sql);
 	$row7['tpv'] += $row9['tpv']; */
 
-	$right_sql = " SELECT mb_rate, (SELECT noo FROM brecom_bonus_noo WHERE mb_id ='{$srow['b_recomm2']}' ) AS noo FROM g5_member WHERE mb_id = '{$srow['b_recomm2']}' ";
+	$right_sql = " SELECT mb_pv, (SELECT noo FROM brecom_bonus_noo WHERE mb_id ='{$srow['b_recomm2']}' ) AS noo FROM g5_member WHERE mb_id = '{$srow['b_recomm2']}' ";
 	$mb_self_right_result = sql_fetch($right_sql);
-	$mb_self_right_acc = $mb_self_right_result['mb_rate'] + $mb_self_right_result['noo'];
+	$mb_self_right_acc = $mb_self_right_result['mb_pv'] + $mb_self_right_result['noo'];
 	$row7['tpv'] = $mb_self_right_acc ;
 
 }else{
@@ -655,6 +655,7 @@ if ($mrow['cc_run']==0){  //업데이트가 안되었으면
 
 if (!$srow['b_child']) $srow['b_child']=1;
 //if (!$srow['c_child']) $srow['c_child']=1;
+
 ?>
 		<ul id="org" style="display:none" >
 			<li>
@@ -668,9 +669,9 @@ if (!$srow['b_child']) $srow['b_child']=1;
 				|<?=number_format($row7['tpv']/$order_split)?>
 				|999
 				|<?=($srow['mb_children']-1)?>
-				|3
-				|<?=$srow['grade']?>
 				|<?=Number_format($srow['mb_rate'])?>
+				|<?=$srow['grade']?>
+				|<?=Number_format($srow['mb_pv'])?>
 				|<?=(strlen($srow['c_class'])/2)-1?>
 				|<?=($srow['c_child'])?>
 				|<?=($srow['b_child']-1)?>

@@ -611,7 +611,7 @@ echo "<div class='btn' onclick='bonus_url();'>돌아가기</div>";
 
                             if($record_result){
                                 
-                                $balance_up = "update g5_member set mb_balance = mb_balance + {$benefit}, grade = {$upgrade}  where mb_id = '".$mb_id."'";
+                                $balance_up = "update g5_member set mb_balance = mb_balance + {$benefit},mb_balance_ignore = mb_balance_ignore + {$benefit}, grade = {$upgrade}  where mb_id = '".$mb_id."'";
 
                                 // 디버그 로그
                                 if($debug){

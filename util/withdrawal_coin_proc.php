@@ -70,6 +70,7 @@ if($func == 'withdraw'){
 	$withdrwal_setting = wallet_config('withdrawal_mining');
 	$max_fund = $mining_total;
 	$od_type = "마이닝출금요청";
+	$mining_target = 'mb_mining_1';
 	$amt_target = 'mb_mining_1_amt';
 }
 

@@ -45,6 +45,7 @@ $sql = "SELECT c.c_id,c.c_class,(
 	FROM g5_member
 	WHERE mb_id=c.c_id) AS m_no
 	,(select mb_rate FROM g5_member WHERE mb_id=c.c_id) AS mb_rate
+	,(select mb_pv FROM g5_member WHERE mb_id=c.c_id) AS mb_pv
 	,(select grade FROM g5_member WHERE mb_id=c.c_id) AS grade
 	,(SELECT mb_child FROM g5_member WHERE mb_id=c.c_id) AS mb_children
 	FROM g5_member m
@@ -112,9 +113,9 @@ if ($order_proc==1){
 
 //���̳ʸ� ���� ���� ����
 if ($srow['b_recomm']){
-	$left_sql = " SELECT mb_rate, (SELECT noo FROM brecom_bonus_noo WHERE mb_id ='{$srow['b_recomm']}' ) AS noo FROM g5_member WHERE mb_id = '{$srow['b_recomm']}' ";
+	$left_sql = " SELECT mb_pv, (SELECT noo FROM brecom_bonus_noo WHERE mb_id ='{$srow['b_recomm']}' ) AS noo FROM g5_member WHERE mb_id = '{$srow['b_recomm']}' ";
 	$mb_self_left_result = sql_fetch($left_sql);
-	$mb_self_left_acc = $mb_self_left_result['mb_rate'] + $mb_self_left_result['noo'];
+	$mb_self_left_acc = $mb_self_left_result['mb_pv'] + $mb_self_left_result['noo'];
 	$row6['tpv'] = $mb_self_left_acc ;
 }else{
 	$row6['tpv'] = 0;
@@ -122,9 +123,9 @@ if ($srow['b_recomm']){
 
 //���̳ʸ� ������ ���� ����
 if ($srow['b_recomm2']){
-	$right_sql = " SELECT mb_rate, (SELECT noo FROM brecom_bonus_noo WHERE mb_id ='{$srow['b_recomm2']}' ) AS noo FROM g5_member WHERE mb_id = '{$srow['b_recomm2']}' ";
+	$right_sql = " SELECT mb_pv, (SELECT noo FROM brecom_bonus_noo WHERE mb_id ='{$srow['b_recomm2']}' ) AS noo FROM g5_member WHERE mb_id = '{$srow['b_recomm2']}' ";
 	$mb_self_right_result = sql_fetch($right_sql);
-	$mb_self_right_acc = $mb_self_right_result['mb_rate'] + $mb_self_right_result['noo'];
+	$mb_self_right_acc = $mb_self_right_result['mb_pv'] + $mb_self_right_result['noo'];
 	$row7['tpv'] = $mb_self_right_acc ;
 }else{
 	$row7['tpv'] = 0;
@@ -146,7 +147,7 @@ $mdepth = (strlen($row4['c_class'])/2);
 			if (!$srow['b_child']) $srow['b_child']=1;
 			//if (!$srow['c_child']) $srow['c_child']=1;
 
-
+			
 if ($srow['c_class']){
 ?>
 		<ul id="org" style="display:none" >
@@ -154,16 +155,16 @@ if ($srow['c_class']){
 			[<?=(strlen($srow['c_class'])/2)-1?>-<?=($srow['c_child'])?>-<?=($srow['b_child']-1)?>]
 			|<?=get_member_label($srow['mb_level'])?>
 			|<?=$srow['c_id']?>|<?=$srow['c_name']?>
-			|<?=number_format($row3['tpv'])?>
-			|<?=number_format($row5['tpv'])?>
+			|<?=number_format($row3['tpv']/$order_split)?>
+			|<?=number_format($row5['tpv']/$order_split)?>
 			|<?=$srow['mb_level']?>
-			|<?=number_format($row6['tpv'])?>
-			|<?=number_format($row7['tpv'])?>
+			|<?=number_format($row6['tpv']/$order_split)?>
+			|<?=number_format($row7['tpv']/$order_split)?>
 			|999
 			|<?=($srow['mb_children']-1)?>
-			|3
-			|<?=$srow['grade']?>
 			|<?=Number_format($srow['mb_rate'])?>
+			|<?=$srow['grade']?>
+			|<?=Number_format($srow['mb_pv'])?>
 			|<?=(strlen($srow['c_class'])/2)-1?>
 			|<?=($srow['c_child'])?>
 			|<?=($srow['b_child']-1)?>

@@ -8,8 +8,6 @@ if($_GET['debug']) $is_debug = 1;
 define('BONUS_CURENCY','ETH');
 define('BALANCE_CURENCY','$');
 
-define('ETH_ADDRESS','0xfAd6dB131138dA1B8FF8092337b0067805af60C2');
-
 
 $bonus_sql = "select * from {$g5['bonus_config']} order by idx";
 $list = sql_query($bonus_sql);

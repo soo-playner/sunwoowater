@@ -12,7 +12,7 @@ curl --request GET \
 define('X_API_KEY','UAK63a987b583b5a7156dfda3d4d070c6e1');
 
 /*ETH, USDT 코인시세 가져오기*/
-$url = 'https://web3api.io/api/v2/market/rankings?page=0&size=30';
+$url = 'https://web3api.io/api/v2/market/rankings?page=0&size=60';
 
 if ($argc > 1){
     $url = $url.$argv[1];

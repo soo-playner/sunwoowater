@@ -204,21 +204,27 @@ function bonus_per($mb_id ='',$mb_balance='', $mb_limit = ''){
 	global $member,$limited_per;
 
 	if($mb_id == ''){
+		
 		if($member['mb_pv'] != 0 && $member['mb_balance'] !=0 && $limited_per != 0){
-			$bonus_per = ($member['mb_balance']/($member['mb_pv'] * $limited_per));
+			$mb_balance_calc = ($member['mb_balance'] - $member['mb_balance_ignore']);
+			$bonus_per = ($mb_balance_calc/($member['mb_pv'] * $limited_per));
 		}else{
 			$bonus_per = 0;
 		}
 	}else{
+		$mb_sql = "SELECT * from g5_member WHERE mb_id  = '{$mb_id}' ";
+		$mb = sql_fetch($mb_sql);
+		$mb_balance_calc = ($mb['balance'] - $mb['mb_balance_ignore']);
+
 		if($mb_limit != 0 && $mb_balance !=0 && $limited_per != 0){
-			$bonus_per = ($mb_balance/($mb_limit * $limited_per));
+			$bonus_per = ($mb_balance_calc/($mb_limit * $limited_per));
 		}else{
 			$bonus_per = '-';
 		}
 	}
 
 	if($bonus_per != '-'){
-		return round($bonus_per).'%';
+		return round($bonus_per);
 	}else{
 		return $bonus_per;
 	}
@@ -460,8 +466,7 @@ function shift_auto_zero($val,$coin = ASSETS_CURENCY){
 		return '-';
 	}else{
 		if($coin == '$'){
-			$result = explode('.',shift_doller($val));
-			return "<font class='value_font'>".$result[0].".</font><font class='point_font'>".$result[1]."</font>";
+			return shift_doller($val);
 		}else if($coin == '원'){
 			return shift_kor($val);
 		}else{

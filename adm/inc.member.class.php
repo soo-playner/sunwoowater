@@ -343,9 +343,9 @@ function get_org_down($srow){
 
 					$row6['tpv'] += $row8['tpv']; */
 					
-					$left_sql = " SELECT mb_rate, (SELECT noo FROM brecom_bonus_noo WHERE mb_id ='{$row['b_recomm']}' ) AS noo FROM g5_member WHERE mb_id = '{$row['b_recomm']}' ";
+					$left_sql = " SELECT mb_pv, (SELECT noo FROM brecom_bonus_noo WHERE mb_id ='{$row['b_recomm']}' ) AS noo FROM g5_member WHERE mb_id = '{$row['b_recomm']}' ";
 					$mb_self_left_result = sql_fetch($left_sql);
-					$mb_self_left_acc = $mb_self_left_result['mb_rate'] + $mb_self_left_result['noo'];
+					$mb_self_left_acc = $mb_self_left_result['mb_pv'] + $mb_self_left_result['noo'];
 					$row6['tpv'] = $mb_self_left_acc ;
 
 				}else{
@@ -363,9 +363,9 @@ function get_org_down($srow){
 					$row9 = sql_fetch($sql);
 					$row7['tpv'] += $row9['tpv']; */
 
-					$right_sql = " SELECT mb_rate, (SELECT noo FROM brecom_bonus_noo WHERE mb_id ='{$row['b_recomm2']}' ) AS noo FROM g5_member WHERE mb_id = '{$row['b_recomm2']}' ";
+					$right_sql = " SELECT mb_pv, (SELECT noo FROM brecom_bonus_noo WHERE mb_id ='{$row['b_recomm2']}' ) AS noo FROM g5_member WHERE mb_id = '{$row['b_recomm2']}' ";
 					$mb_self_right_result = sql_fetch($right_sql);
-					$mb_self_right_acc = $mb_self_right_result['mb_rate'] + $mb_self_right_result['noo'];
+					$mb_self_right_acc = $mb_self_right_result['mb_pv'] + $mb_self_right_result['noo'];
 					$row7['tpv'] = $mb_self_right_acc ;
 
 				}else{
@@ -399,9 +399,9 @@ function get_org_down($srow){
 						|<?=number_format($row7['tpv'])?>
 						|999
 						|<?=($srow['mb_children']-1)?>
-						|3
-						|<?=$row['grade']?>
 						|<?=number_format($row['mb_rate'])?>
+						|<?=$row['grade']?>
+						|<?=number_format($row['mb_pv'])?>
 						|<?=(strlen($row['c_class'])/2)-1?>
 						|<?=($row['c_child'])?>
 						|<?=($row['b_child']-1)?>
