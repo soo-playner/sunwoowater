@@ -114,7 +114,7 @@
 		
 		public function getTransaction($request){
 			
-			return $this->request("GET","/eth/transaction/{$request['hash']}");
+			return $this->request2("GET","/eth/transactions/{$request['hash']}");
 		}
 	}
 ?>

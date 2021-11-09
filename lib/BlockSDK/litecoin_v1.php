@@ -4,7 +4,7 @@
 	
 	class Litecoin extends Base{
 		public function getBlockChain(){
-			return $this->request("GET","/ltc/info");
+			return $this->request("GET","/ltc/block");
 		}		
 		
 		public function getBlock($request){
@@ -13,12 +13,12 @@
 			$request['offset'] = isset($request['offset'])==false ?0:$request['offset'];
 			$request['limit'] = isset($request['limit'])==false ?10:$request['limit'];
 			
-			return $this->request("GET","/ltc/blocks/{$request['block']}",[
+			return $this->request("GET","/ltc/block/{$request['block']}",[
 				"rawtx" => $request['rawtx'],
 				"offset" => $request['offset'],
 				"limit" => $request['limit']
 			]);
-		}		
+		}
 		
 		public function getMemPool($request = array()){
 			$request['rawtx'] = isset($request['rawtx'])==false ?false:$request['rawtx'];
@@ -40,7 +40,7 @@
 			$request['offset'] = isset($request['offset'])==false ?0:$request['offset'];
 			$request['limit'] = isset($request['limit'])==false ?10:$request['limit'];
 			
-			return $this->request("GET","/ltc/addresses/{$request['address']}",[
+			return $this->request("GET","/ltc/address/{$request['address']}",[
 				"reverse" => $request['reverse'],
 				"rawtx" => $request['rawtx'],
 				"offset" => $request['offset'],
@@ -49,56 +49,51 @@
 		}
 		
 		public function getAddressBalance($request){
-			$result =  $this->request("GET","/ltc/addresses/{$request['address']}");
-            return $result['payload']['balance'];
+
+			return $this->request("GET","/ltc/wallets/{$request['address']}/balance");
 		}
 
 		
 		 
-		public function getWallets($request = null){
+		public function listWallet($request = null){
 			$request['offset'] = isset($request['offset'])==false ?0:$request['offset'];
 			$request['limit'] = isset($request['limit'])==false ?10:$request['limit'];
 			
-			return $this->request("GET","/ltc/wallets",[
+			return $this->request("GET","/ltc/wallet",[
 				"offset" => $request['offset'],
 				"limit" => $request['limit']
 			]);
-		}		
-		
-		public function getWallet($request){
-			
-			return $this->request("GET","/ltc/wallets/" . $request['wallet_id']);
 		}
 		
-		public function createHdWallet($request = null){
+		public function createWallet($request = null){
 			$request['name'] = isset($request['name'])==false ?null:$request['name'];
 			
-			return $this->request("POST","/ltc/wallets/hd",[
+			return $this->request("POST","/ltc/wallet",[
 				"name" => $request['name']
 			]);
 		}
 		
 		public function loadWallet($request){
 
-			return $this->request("POST","/ltc/wallets/{$request['wallet_id']}/load",[
-				"wif" => $request['wif'],
+			return $this->request("POST","/ltc/wallet/{$request['wallet_id']}/load",[
+				"seed_wif" => $request['seed_wif'],
 				"password" => $request['password']
 			]);
 		}
 		
-		public function unloadWallet($request){
+		public function unLoadWallet($request){
 			
-			return $this->request("POST","/ltc/wallets/{$request['wallet_id']}/unload");
+			return $this->request("POST","/ltc/wallet/{$request['wallet_id']}/unload");
 		}
 		
-		public function getWalletAddresses($request){
+		public function listWalletAddress($request){
 			$request['address'] = isset($request['address'])==false ?null:$request['address'];
 			$request['hdkeypath'] = isset($request['hdkeypath'])==false ?null:$request['hdkeypath'];
 			
 			$request['offset'] = isset($request['offset'])==false ?0:$request['offset'];
 			$request['limit'] = isset($request['limit'])==false ?10:$request['limit'];
 			
-			return $this->request("GET","/ltc/wallets/{$request['wallet_id']}/addresses",[
+			return $this->request("GET","/ltc/wallet/{$request['wallet_id']}/address",[
 				"address" => $request['address'],
 				"hdkeypath" => $request['hdkeypath'],
 				"offset" => $request['offset'],
@@ -107,30 +102,30 @@
 		}
 		
 		public function createWalletAddress($request){
-			$request['wif'] = isset($request['wif'])==false ?null:$request['wif'];
+			$request['seed_wif'] = isset($request['seed_wif'])==false ?null:$request['seed_wif'];
 			$request['password'] = isset($request['password'])==false ?null:$request['password'];
 			
-			return $this->request("POST","/ltc/wallets/{$request['wallet_id']}/addresses",[
-				"wif" => $request['wif'],
+			return $this->request("POST","/ltc/wallet/{$request['wallet_id']}/address",[
+				"seed_wif" => $request['seed_wif'],
 				"password" => $request['password']
 			]);
 		}		
 		
 		public function getWalletBalance($request){
 			
-			return $this->request("GET","/ltc/wallets/{$request['wallet_id']}/balance");
+			return $this->request("GET","/ltc/wallet/{$request['wallet_id']}/balance");
 		}
 				
 		
-		public function getWalletTransactions($request){
-			$request['type'] = isset($request['type'])==false ?'all':$request['type'];
+		public function getWalletTransaction($request){
+			$request['category'] = isset($request['category'])==false ?'all':$request['category'];
 			$request['order'] = isset($request['order'])==false ?'desc':$request['order'];
 			
 			$request['offset'] = isset($request['offset'])==false ?0:$request['offset'];
 			$request['limit'] = isset($request['limit'])==false ?10:$request['limit'];
 			
-			return $this->request("GET","/ltc/wallets/{$request['wallet_id']}/transaction",[
-				"type" => $request['type'],
+			return $this->request("GET","/ltc/wallet/{$request['wallet_id']}/transaction",[
+				"category" => $request['category'],
 				"order" => $request['order'],
 				"offset" => $request['offset'],
 				"limit" => $request['limit']
@@ -143,14 +138,14 @@
 				$request['kbfee'] = $blockChain['medium_fee_per_kb'];
 			}
 			
-			$request['wif'] = isset($request['wif'])==false ?null:$request['wif'];
+			$request['seed_wif'] = isset($request['seed_wif'])==false ?null:$request['seed_wif'];
 			$request['password'] = isset($request['password'])==false ?null:$request['password'];
 			$request['subtractfeefromamount'] = isset($request['subtractfeefromamount'])==false ?false:$request['subtractfeefromamount'];
 			
-			return $this->request("POST","/ltc/wallets/{$request['wallet_id']}/sendtoaddress",[
+			return $this->request("POST","/ltc/wallet/{$request['wallet_id']}/sendtoaddress",[
 				"address" => $request['address'],
 				"amount" => $request['amount'],
-				"wif" => $request['wif'],
+				"seed_wif" => $request['seed_wif'],
 				"password" => $request['password'],
 				"kbfee" => $request['kbfee'],
 				"subtractfeefromamount" => $request['subtractfeefromamount']
@@ -159,13 +154,13 @@
 		
 		public function sendMany($request){
 			
-			$request['wif'] = isset($request['wif'])==false ?null:$request['wif'];
+			$request['seed_wif'] = isset($request['seed_wif'])==false ?null:$request['seed_wif'];
 			$request['password'] = isset($request['password'])==false ?null:$request['password'];
 			$request['subtractfeefromamount'] = isset($request['subtractfeefromamount'])==false ?false:$request['subtractfeefromamount'];
 			
-			return $this->request("POST","/ltc/wallets/{$request['wallet_id']}/sendmany",[
+			return $this->request("POST","/ltc/wallet/{$request['wallet_id']}/sendmany",[
 				"to" => $request['to'],
-				"wif" => $request['wif'],
+				"seed_wif" => $request['seed_wif'],
 				"password" => $request['password'],
 				"subtractfeefromamount" => $request['subtractfeefromamount']
 			]);
@@ -173,14 +168,14 @@
 		
 		public function sendTransaction($request){
 			
-			return $this->request("POST","/ltc/transactions/send",[
-				"hex" => $request['hex']
+			return $this->request("POST","/ltc/transaction",[
+				"sign_hex" => $request['sign_hex']
 			]);
 		}		
 		
 		public function getTransaction($request){
 			
-			return $this->request("GET","/ltc/transactions/{$request['hash']}");
+			return $this->request("GET","/ltc/transaction/{$request['hash']}");
 		}
 	}
 ?>

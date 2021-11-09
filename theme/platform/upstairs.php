@@ -474,11 +474,14 @@ $(function(){
 
 	// 입금하기
 	$('#go_wallet_btn').click(function(e){
-		if(won_price > 0){
+		
+		if(it_price > 0){
 			if(price_calc < 0){
-				price_calc = price_calc * -1;
+				deposit_calc = price_calc * -1;
+			}else{
+				deposit_calc = it_price;
 			}
-			go_to_url('mywallet'+'&sel_price='+price_calc);
+			go_to_url('mywallet'+'&sel_price='+deposit_calc);
 		}else{
 			go_to_url('mywallet');
 		}

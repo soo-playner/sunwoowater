@@ -2,8 +2,10 @@
 include_once('./_common.php');
 include_once(G5_THEME_PATH . '/_include/wallet.php');
 include_once(G5_THEME_PATH . '/_include/gnb.php');
-// include_once(G5_LIB_PATH . '/blocksdk.lib.php');
-// include_once(G5_LIB_PATH.'/crypto.lib.php');
+
+// 지갑자동입금설정
+include_once(G5_LIB_PATH . '/blocksdk.lib.php');
+include_once(G5_LIB_PATH . '/crypto.lib.php');
 
 $title = 'Mywallet';
 
@@ -23,11 +25,11 @@ $withdrwal_max_limit = $withdrwal_setting['amt_maximum'];
 $withdrwal_day_limit = $withdrwal_setting['day_limit'];
 
 
-  // 수수료제외 실제 출금가능금액
-  $withdrwal_total = floor($total_withraw / (1 + $withdrwal_fee * 0.01));
-  if ($withdrwal_max_limit != 0 && ($total_withraw * $withdrwal_max_limit * 0.01) < $withdrwal_total) {
-    $withdrwal_total = $total_withraw * ($withdrwal_max_limit * 0.01);
-  }
+// 수수료제외 실제 출금가능금액
+$withdrwal_total = floor($total_withraw / (1 + $withdrwal_fee * 0.01));
+if ($withdrwal_max_limit != 0 && ($total_withraw * $withdrwal_max_limit * 0.01) < $withdrwal_total) {
+  $withdrwal_total = $total_withraw * ($withdrwal_max_limit * 0.01);
+}
 
 //계좌정보
 $bank_setting = wallet_config('bank_account');
@@ -61,47 +63,57 @@ if ($_GET['view'] == 'withdraw') {
 
 
 //지갑 생성
-/* $callback = G5_URL . "/plugin/blocksdk/point-callback.php";
-      $blocksdk_conf = Crypto::GetConfig();
+$callback = G5_URL . "/plugin/blocksdk/point-callback.php";
+$blocksdk_conf = Crypto::GetConfig();
 
-      if(empty($member['mb_9'])==true && $blocksdk_conf['de_eth_use'] == 1){
-        $address = Crypto::GetClient("eth")->createAddress([
-          "name" => "member_no_".$member['mb_no']
-        ]);
-        
-        Crypto::CreateWebHook($callback,"eth",$address['address']);
-        
-        // $update_sql .= empty($update_sql) ? "" : ","; 
-        $update_sql = "mb_9='{$address['address']}'";
-        $member['mb_9'] = $address['address'];
-        
-        $sql = "
-        insert into 
-        blocksdk_member_eth_addresses (id, address, private_key) 
-        values ('{$address['id']}', '{$address['address']}','{$address['private_key']}')
-        ";
-        sql_fetch($sql);
-      }
-
-      if(empty($update_sql) == false){
-        $sql = "UPDATE {$g5['member_table']} SET {$update_sql} WHERE mb_no={$member['mb_no']}";
-        sql_query($sql);
-      } */
-
-// $wallet_sql = "SELECT private_key FROM blocksdk_member_eth_addresses WHERE address = '{$member['mb_9']}'";
-// $wallet_row = sql_fetch($wallet_sql);
-// $private_key = $wallet_row['private_key'];
-// $mb_id = $member['mb_id'];
+$member_wallet_target = $wallet_code[0] . '_wallet';
+$member_wallet_target_id = $wallet_code[0] . '_wallet_id';
+$create_blocksdk_target = 'de_' . $wallet_code[0] . '_use';
 
 
-// if($member['eth_download'] == "0"){      
-//     include_once(G5_LIB_PATH."/download_key/set_private_key.php"); 
-// }
 
-// if($member['eth_download'] == "1"){
-//   include_once(G5_LIB_PATH."/download_key/get_private_key.php");
+if (empty($member[$member_wallet_target]) == true && $blocksdk_conf[$create_blocksdk_target] == 1) {
 
-// }
+  $address = Crypto::GetClient("eth")->createAddress([
+    "name" => $config['cf_title'] . "_test_member_" . $member['mb_no']
+  ]);
+
+  Crypto::CreateWebHook($callback, $wallet_code[0], $address['address']);
+
+  // $update_sql .= empty($update_sql) ? "" : ","; 
+  $update_sql = $member_wallet_target . " ='{$address['address']}' ";
+  $update_sql .= ','.$member_wallet_target_id . " ='{$address['id']}' ";
+
+  $member[$member_wallet_target] = $address['address'];
+
+  $sql = "
+  insert into 
+  blocksdk_member_key (id, address, private_key) 
+  values ('{$address['id']}', '{$address['address']}','{$address['private_key']}')
+  ";
+  sql_fetch($sql);
+
+  if (empty($update_sql) == false) {
+    $sql = "UPDATE {$g5['member_table']} SET {$update_sql} WHERE mb_no={$member['mb_no']}";
+    sql_query($sql);
+  }
+} 
+
+$wallet_sql = "SELECT private_key FROM blocksdk_member_key WHERE address = '{$member[$member_wallet_target]}'";
+$wallet_row = sql_fetch($wallet_sql);
+
+$my_wallet = $member[$member_wallet_target];
+$private_key = $wallet_row['private_key'];
+$mb_id = $member['mb_id'];
+
+
+if ($member['key_download'] == "0") {
+  include_once(G5_LIB_PATH . "/download_key/set_private_key.php");
+}
+
+if ($member['key_download'] == "1") {
+  include_once(G5_LIB_PATH . "/download_key/get_private_key.php");
+}
 
 
 
@@ -155,6 +167,13 @@ $from_record = ($page - 1) * $rows; // 시작 열
 
 $sql = " select * {$sql_common} {$sql_search} order by create_dt desc limit {$from_record}, {$rows} ";
 $result_withdraw = sql_query($sql);
+
+/** 코인가격 */
+if($sel_price > 0){
+  $coin_val = $eth_price / $sel_price;
+  $coin_price = floor($coin_val*10000)/10000;
+  $deposit_coin_price = $coin_price*1.005;
+}
 ?>
 
 
@@ -169,42 +188,151 @@ $result_withdraw = sql_query($sql);
     <div class="my_btn_wrap">
       <div class="row mywallet_btn">
         <div class='col-lg-6 col-12'>
-          <button type='button' class='btn wd main_btn b_darkblue round' onclick="switch_func('deposit')" data-i18n="deposit.대문자 입금"> DEPOSIT</button>
+          <button type='button' class='btn wd main_btn b_darkblue round' onclick="switch_func('deposit')"> 입금</button>
         </div>
         <div class='col-lg-6 col-12'>
-          <button type='button' class='btn wd main_btn b_skyblue round' onclick="switch_func('withdraw')" data-i18n="withdraw.대문자 출금">WITHDRAW</button>
+          <button type='button' class='btn wd main_btn b_skyblue round' onclick="switch_func('withdraw')">출금</button>
         </div>
       </div>
     </div>
 
 
+    <style>
+      .title_btn {
+        display: inline-block;
+        width: 50%;
+        float: left;
+        background: #fff;
+        padding: 20px 0 20px;
+        color: #3b86ff;
+        font-weight: 600;
+        border: 1px solid #fff;
+        border-bottom: 1px solid #e1e1e1;
+        cursor: pointer;
+      }
 
+      .title_btn.left {
+        border-top-left-radius: 10px;
+      }
+
+      .title_btn.left.active {
+        box-shadow: inset -1px 0px 0px rgb(0 0 0 / 25%);
+      }
+
+      .title_btn.right {
+        border-top-right-radius: 10px;
+      }
+      .title_btn.right.active {
+        box-shadow: inset 2px 0px 0px rgb(0 0 0 / 25%)
+      }
+
+      .title_btn i {
+        vertical-align: middle;
+        font-size: 24px;
+        padding-right: 5px;
+        font-weight: 300;
+      }
+
+      .title_btn.active {
+        color: #29386b;
+        background: #f5f5f5;
+        border: 1px solid #e1e1e1;
+        border-left: none;
+        
+      }
+
+      .mywallet .loadable .bank_info {
+        box-shadow: none;
+        margin-top: 1px;
+      }
+
+      .content-box.catehead {
+        padding: 0 15px 15px
+      }
+
+      .select_head {
+        margin: 0 -15px -12px;
+        text-align: left;
+      }
+
+      .deposit_stage {
+        display: none;
+        animation: slidein 0.5s ease-out;
+        -webkit-animation: slidein 0.5s ease-out
+      }
+
+      .deposit_stage.active {
+        display: block;
+      }
+
+      .bank_info{min-height:100px;display:inline-grid}
+
+      #wallet_address{color:#492191;font-size:15px;word-break:break-all;}
+
+      .deposit_requests{display:none;}
+      .deposit_requests.active{display:block;}
+
+      #wallet_address_qr img{max-width:max-content;max-height:max-content;}
+    </style>
     <!-- 입금 -->
     <section id='deposit' class='loadable'>
 
-      <div class="content-box round">
+      <div class="content-box catehead">
 
-        <h3 class="wallet_title" data-i18n="deposit.입금계좌">Deposit Account</h3>
-        <div class="row ">
-          <div class='col-12 text-center bank_info'>
-            <?= $bank_name ?> : <input type="text" id="bank_account" class="bank_account" value="<?= $bank_account ?>" title='bank_account' disabled />(<?= $account_name ?>)
-            <?if ($sel_price) { ?>
-              <div class='sel_price'>
-                입금액 : <span class='price'><?= ASSETS_CURENCY ?><?= Number_format($sel_price) ?></span><br>
-                <span class='small'>( =￦<?=Shift_auto($sel_price*$usd_price)?><?=DEPOSIT_CURENCY?> )</span>
+        <div class="select_head" style='text-align:center'>
+          <div class='title_btn left active' data-category="won"><i class="ri-bank-line"></i>원화 입금 계좌 </div>
+          <div class='title_btn right' data-category="coin"><i class="ri-wallet-3-line"></i>코인 입금 주소</div>
+        </div>
+
+
+        <section id='won' class='deposit_stage active'>
+          <div class="row ">
+            <div class='col-12 text-center bank_info'>
+              <?= $bank_name ?> : <input type="text" id="bank_account" class="bank_account" value="<?= $bank_account ?>" title='bank_account' disabled />(<?= $account_name ?>)
+              <? if ($sel_price) { ?>
+                <div class='sel_price'>
+                  입금액 : <span class='price'><?= ASSETS_CURENCY ?><?= Number_format($sel_price) ?></span><br>
+                  <span class='small'>( =￦<?= Shift_auto($sel_price * $usd_price) ?><?= DEPOSIT_CURENCY ?> )</span>
+                </div>
+              <? } ?>
+            </div>
+          </div>
+          <div class='col-12'>
+            <button class="btn wd line_btn " id="accountCopy" onclick="copyURL('#bank_account')">
+              <span> 계좌번호 복사 </span>
+            </button>
+          </div>
+        </section>
+
+
+
+        <section id='coin' class='deposit_stage'>
+          <div class="row ">
+            <div class='col-12 text-center bank_info'>
+              <div class="row" style='padding:15px;'>
+                <div class="col-4  eth_qr_img qr_img" id="wallet_address_qr"></div>
+                <div class="col-8 text-left">
+                  <span class='desc' style='line-height:26px;color:#777;margin:0;font-size:14px;'><?= strtoupper($wallet_code[0]) ?> 입금전용주소 :</span>
+                  <p class='' id='wallet_address'><?= $my_wallet ?></p></div>
               </div>
-            <?}?>
+              <?if ($sel_price){?>
+                  <div class='sel_price '>
+                    입금액 : <span class='price'><?= ASSETS_CURENCY ?><?= Number_format($sel_price) ?></span><br>
+                    <span class='small'>( = <?= shift_auto_zero($deposit_coin_price, $wallet_code[0]) ?> <?=strtoupper($wallet_code[0])?> )</span>
+                  </div>
+                <?}?>
+            </div>
           </div>
 
-        </div>
-        <div class='col-12'>
-          <button class="btn wd line_btn " id="accountCopy" onclick="copyURL('#bank_account')">
-            <span data-i18n="deposit.계좌복사"> Copy Address </span>
-          </button>
-        </div>
+          <div class='col-12'>
+            <button class="btn wd line_btn " id="AdressCopy" onclick="copyADREESS('#wallet_address')">
+              <span> 지갑주소 복사 </span>
+            </button>
+          </div>
+        </section>
 
-          <!-- 이더전용입금 -->
-          <!-- 
+        <!-- 이더전용입금 -->
+        <!-- 
             <div class="wallet qrBox col-3">
                 <div class="eth_qr_img qr_img" id="my_eth_qr"></div>
             </div> 
@@ -217,82 +345,91 @@ $result_withdraw = sql_query($sql);
           -->
       </div>
 
-  
 
-  <div class="col-sm-12 col-12 content-box round mt20" id="eth">
-    <h3 class="wallet_title" data-i18n="deposit.입금확인요청">입금확인요청 </h3> <span class='desc'> - 계좌입금후 1회만 요청해주세요</span>
 
-    <div class="row">
-      <div class="btn_ly qrBox_right "></div>
-      <div class="col-sm-12 col-12 withdraw mt20">
-        <input type="text" id="deposit_name" class='b_ghostwhite p15' placeholder="" data-i18n='[placeholder]deposit.입금자명을 입력해주세요'>
-
-        <input type="text" id="deposit_value" class='b_ghostwhite p15 cabinet' placeholder="입금액(숫자만)을 입력해주세요" inputmode="numeric">
-        <span class='cabinet_inner'>※입금하신 원화금액을 입력해주세요</span>
-        <span class='cabinet_outer'></span>
-        <label class='currency-right2'><?= DEPOSIT_CURENCY ?></label>
-        
-        <!-- <input type='button' class='btn input_right_btn' value='$'> -->
-        <!-- <input type='button' class='btn input_right_btn' value='원'> -->
-
-      </div>
-
-      <div class='col-sm-12 col-12 mt20'>
-        <button class="btn btn_wd font_white deposit_request" data-currency="원">
-          <span data-i18n="deposit.입금확인요청">입금확인요청</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <style>
-    /* .w70{width:70%;} */
-    .input_right_btn{width:45px;height:45px;}
-  </style>
-
-  <!-- 입금 요청 내역 -->
-  <div class="history_box content-box mt40">
-    <h3 class="hist_tit" data-i18n="deposit.입금 내역">입금 내역</h3>
-    <div class="b_line2"></div>
-    <? if (sql_num_rows($result_deposit) == 0) { ?>
-      <div class="no_data"> 입금내역이 존재하지 않습니다.</div>
-    <? } ?>
-
-    <? while ($row = sql_fetch_array($result_deposit)) { ?>
-     <div class='hist_con'>
-      <div class="hist_con_row1">
+      <div class="col-sm-12 col-12 content-box round mt20">
+        <section id="deposit_request_won"  class="deposit_requests active">
+        <h3 class="wallet_title">입금확인요청 </h3> <span class='desc'> - 계좌입금후 1회만 요청해주세요</span>
         <div class="row">
-          <span class="hist_date"><?= $row['create_dt'] ?></span>
-          <span class="hist_value">
-            <?=ASSETS_CURENCY?> <?= Number_format($row['in_amt']) ?><br>
-            <span class='small' style='color:#333'>= ￦<?= Number_format($row['amt']) ?><?= $row['coin'] ?></span>
-          </span>
-        </div>
 
-        <div class="row">
-          <span class='hist_name'>입금자 :<?= $row['txhash'] ?></span>
-          <span class="hist_value status"><? string_shift_code($row['status']) ?></span>
+          <div class="col-12 btn_ly qrBox_right "></div>
+          <div class="col-12 withdraw mt20">
+            <input type="text" id="deposit_name" class='b_ghostwhite p15 ' placeholder="입금자명을 입력해주세요">
+            <input type="text" id="deposit_value" class='b_ghostwhite p15 cabinet' placeholder="입금액(숫자만)을 입력해주세요" inputmode="numeric">
+            <span class='cabinet_inner'>※입금하신 원화금액을 입력해주세요</span>
+            <span class='cabinet_outer'></span>
+            <label class='currency-right2'><?= DEPOSIT_CURENCY ?></label>
+
+            <!-- <input type='button' class='btn input_right_btn' value='$'> -->
+            <!-- <input type='button' class='btn input_right_btn' value='원'> -->
+
+          </div>
+
+          <div class='col-sm-12 col-12 mt20'>
+            <button class="btn btn_wd font_white deposit_request" data-currency="원">
+              <span>입금확인요청</span>
+            </button>
+          </div>
         </div>
+        </section>
+
+        <section id ="deposit_request_coin" class="deposit_requests">
+          <h3 class="wallet_title" style="margin:5px;font-size:12px;">※ 입금 전용 <?=$wallet_code[0]?>주소로 코인입금시 자동 처리됩니다. </h3>
+        </section>
+
       </div>
-    </div>
-    <? } ?>
 
-    <?php
-    $pagelist = get_paging($config['cf_write_pages'], $page, $total_page_deposit, "{$_SERVER['SCRIPT_NAME']}?id=mywallet&$qstr&view=deposit");
-    echo $pagelist;
-    ?>
-  </div>
-  </section>
+      <style>
+        /* .w70{width:70%;} */
+        .input_right_btn {
+          width: 45px;
+          height: 45px;
+        }
+      </style>
+
+      <!-- 입금 요청 내역 -->
+      <div class="history_box content-box mt40">
+        <h3 class="hist_tit" data-i18n="deposit.입금 내역">입금 내역</h3>
+        <div class="b_line2"></div>
+        <? if (sql_num_rows($result_deposit) == 0) { ?>
+          <div class="no_data"> 입금내역이 존재하지 않습니다.</div>
+        <? } ?>
+
+        <? while ($row = sql_fetch_array($result_deposit)) { ?>
+          <div class='hist_con'>
+            <div class="hist_con_row1">
+              <div class="row">
+                <span class="hist_date"><?= $row['create_dt'] ?></span>
+                <span class="hist_value">
+                  <?= ASSETS_CURENCY ?> <?= Number_format($row['in_amt']) ?><br>
+                  <span class='small' style='color:#333'>= ￦<?= Number_format($row['amt']) ?><?= $row['coin'] ?></span>
+                </span>
+              </div>
+
+              <div class="row">
+                <span class='hist_name'>입금자 :<?= $row['txhash'] ?></span>
+                <span class="hist_value status"><? string_shift_code($row['status']) ?></span>
+              </div>
+            </div>
+          </div>
+        <? } ?>
+
+        <?php
+        $pagelist = get_paging($config['cf_write_pages'], $page, $total_page_deposit, "{$_SERVER['SCRIPT_NAME']}?id=mywallet&$qstr&view=deposit");
+        echo $pagelist;
+        ?>
+      </div>
+    </section>
 
 
 
 
-  <!-- 출금 -->
-  <section id='withdraw' class='loadable'>
-    <div class="col-sm-12 col-12 content-box round mt20">
-      <h3 class="wallet_title" data-i18n="withdraw.출금">출금</h3>
-      <span class="desc"> 총 출금 가능액 : <?= number_format($withdrwal_total) ?> <?= ASSETS_CURENCY ?></span>
-      <!-- 
+    <!-- 출금 -->
+    <section id='withdraw' class='loadable'>
+      <div class="col-sm-12 col-12 content-box round mt20">
+        <h3 class="wallet_title" data-i18n="withdraw.출금">출금</h3>
+        <span class="desc"> 총 출금 가능액 : <?= number_format($withdrwal_total) ?> <?= ASSETS_CURENCY ?></span>
+        <!-- 
       <div class="coin_select_wrap">
           <select class="form-control" name="" id="select_coin">
               <option value="eth" selected>ETH</option>
@@ -301,102 +438,101 @@ $result_withdraw = sql_query($sql);
       </div>   
       -->
 
-      <div class="row">
-        <div class='col-12'><label class="sub_title">- 출금계좌정보 (최초 1회입력))</label></div>
-        <div class='col-6'>
-          <input type="text" id="withdrawal_bank_name" class="b_ghostwhite " placeholder="은행명" value="<?= $member['bank_name'] ?>">
+        <div class="row">
+          <div class='col-12'><label class="sub_title">- 출금계좌정보 (최초 1회입력))</label></div>
+          <div class='col-6'>
+            <input type="text" id="withdrawal_bank_name" class="b_ghostwhite " placeholder="은행명" value="<?= $member['bank_name'] ?>">
+          </div>
+          <div class='col-6'>
+            <input type="text" id="withdrawal_account_name" class="b_ghostwhite " placeholder="예금주" value="<?= $member['account_name'] ?>">
+          </div>
+          <div class='col-12'>
+            <input type="text" id="withdrawal_bank_account" class="b_ghostwhite " placeholder="출금계좌" value="<?= $member['bank_account'] ?>">
+          </div>
         </div>
-        <div class='col-6'>
-          <input type="text" id="withdrawal_account_name" class="b_ghostwhite " placeholder="예금주" value="<?= $member['account_name'] ?>">
-        </div>
-        <div class='col-12'>
-          <input type="text" id="withdrawal_bank_account" class="b_ghostwhite " placeholder="출금계좌" value="<?= $member['bank_account'] ?>">
-        </div>
-      </div>
 
-      <div class="input_shift_value">
-        <label class="sub_title">- 출금금액 (수수료:<?= $withdrwal_fee ?>%)</label>
-        <span style='display:inline-block;float:right;'><button type='button' id='max_value' class='btn inline' value=''>max</button></span>
+        <div class="input_shift_value">
+          <label class="sub_title">- 출금금액 (수수료:<?= $withdrwal_fee ?>%)</label>
+          <span style='display:inline-block;float:right;'><button type='button' id='max_value' class='btn inline' value=''>max</button></span>
 
-        <input type="text" id="sendValue" class="send_coin b_ghostwhite p15 cabinet" placeholder="Enter Withdraw quantity" data-i18n='[placeholder]withdraw.출금 금액을 입력해주세요' inputmode="numeric">
-        <span class='cabinet_inner font_red'>※출금하실 달러금액을 입력해주세요</span>
-        <label class='currency-right2'><?= ASSETS_CURENCY ?></label>
+          <span class='cabinet_inner font_red'>※출금하실 달러금액을 입력해주세요</span>
+          <label class='currency-right2'><?= ASSETS_CURENCY ?></label>
 
-        <div class="row fee">         
+          <div class="row fee">
             <div class="col-5 text_left fee_left">
               <i class="ri-exchange-fill"></i>
               <span id="active_amt">0</span>
             </div>
 
-            <div class="col-7 text_right fee_right" >
+            <div class="col-7 text_right fee_right">
               <label class="fees">+ 수수료 :</label>
               <i class='ri-money-dollar-circle-line'></i>
               <span id="fee_val">0</span>
             </div>
+          </div>
+        </div>
+
+        <div class="b_line5 mt10 mb10" style='position:inherit'></div>
+        <div class="otp-auth-code-container mt20">
+          <div class="verifyContainerOTP">
+            <label class="sub_title" data-i18n="">- 출금 비밀번호</label>
+            <input type="password" id="pin_auth_with" class="b_ghostwhite" name="pin_auth_code" placeholder="Please enter 6-digits pin number" maxlength="6" data-i18n='[placeholder]withdraw.6 자리 핀코드를 입력해주세요'>
+
+          </div>
+        </div>
+
+        <div class="send-button-container row">
+          <div class="col-5">
+            <button id="pin_open" class="btn wd yellow form-send-button" data-i18n="withdraw.인증">인증</button>
+          </div>
+          <div class="col-7">
+            <button type="button" class="btn wd btn_wd form-send-button" id="Withdrawal_btn" data-toggle="modal" data-target="" data-i18n="withdraw.출금 신청" disabled>Withdrawal USDT</button>
+          </div>
         </div>
       </div>
 
-      <div class="b_line5 mt10 mb10" style='position:inherit'></div>
-      <div class="otp-auth-code-container mt20">
-        <div class="verifyContainerOTP">
-          <label class="sub_title" data-i18n="">- 출금 비밀번호</label>
-          <input type="password" id="pin_auth_with" class="b_ghostwhite" name="pin_auth_code" placeholder="Please enter 6-digits pin number" maxlength="6" data-i18n='[placeholder]withdraw.6 자리 핀코드를 입력해주세요'>
+      <!-- 출금내역 -->
+      <div class="history_box content-box mt40">
+        <h3 class="hist_tit" data-i18n='withdraw.출금 내역'>출금 내역</h3>
+        <div class="b_line2"></div>
 
-        </div>
+        <? if (sql_num_rows($result_withdraw) == 0) { ?>
+          <div class="no_data">출금내역이 존재하지 않습니다</div>
+        <? } ?>
+
+        <? while ($row = sql_fetch_array($result_withdraw)) { ?>
+          <div class='hist_con'>
+            <div class="hist_con_row1">
+              <div class="row">
+                <span class="hist_date"><?= $row['create_dt'] ?></span>
+                <span class="hist_value "><?= BALANCE_CURENCY ?> <?= shift_doller($row['amt_total']) ?></span>
+              </div>
+
+              <div class="row">
+                <span class="hist_withval"><?= BALANCE_CURENCY ?> <?= $row['amt'] ?> / <label>Fee : </label><?= BALANCE_CURENCY ?> <?= $row['fee'] ?></span>
+                <span class="hist_value status"><?= $row['out_amt'] ?> <?= $row['coin'] ?></span>
+              </div>
+
+              <div class="row">
+                <span class='hist_bank'><label>Address : </label><?= $row['addr'] ?></span>
+              </div>
+
+              <div class="row">
+                <span class="hist_withval f_small"><label>Result :</label> </span>
+                <span class="hist_value status"><? string_shift_code($row['status']) ?></span>
+              </div>
+
+
+            </div>
+          </div>
+        <? } ?>
+
+        <?php
+        $pagelist = get_paging($config['cf_write_pages'], $page, $total_page, "{$_SERVER['SCRIPT_NAME']}?id=mywallet&$qstr&view=withdraw");
+        echo $pagelist;
+        ?>
       </div>
-
-      <div class="send-button-container row">
-        <div class="col-5">
-          <button id="pin_open" class="btn wd yellow form-send-button" data-i18n="withdraw.인증">인증</button>
-        </div>
-        <div class="col-7">
-          <button type="button" class="btn wd btn_wd form-send-button" id="Withdrawal_btn" data-toggle="modal" data-target="" data-i18n="withdraw.출금 신청" disabled>Withdrawal USDT</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 출금내역 -->
-    <div class="history_box content-box mt40">
-      <h3 class="hist_tit" data-i18n='withdraw.출금 내역'>출금 내역</h3>
-      <div class="b_line2"></div>
-
-      <? if (sql_num_rows($result_withdraw) == 0) { ?>
-        <div class="no_data">출금내역이 존재하지 않습니다</div>
-      <? } ?>
-
-      <? while ($row = sql_fetch_array($result_withdraw)) { ?>
-        <div class='hist_con'>
-        <div class="hist_con_row1">
-          <div class="row">
-            <span class="hist_date"><?= $row['create_dt'] ?></span>
-            <span class="hist_value "><?= BALANCE_CURENCY ?> <?=shift_doller($row['amt_total']) ?></span>
-          </div>
-
-          <div class="row">
-            <span class="hist_withval"><?= BALANCE_CURENCY ?> <?= $row['amt'] ?> / <label>Fee : </label><?= BALANCE_CURENCY ?> <?= $row['fee'] ?></span>
-            <span class="hist_value status"><?=$row['out_amt']?> <?= $row['coin'] ?></span>
-          </div>
-
-          <div class="row">
-            <span class='hist_bank'><label>Address : </label><?=$row['addr']?></span>
-          </div>
-          
-          <div class="row">
-            <span class="hist_withval f_small"><label>Result :</label> </span>
-            <span class="hist_value status"><? string_shift_code($row['status']) ?></span>
-          </div>
-
-          
-        </div>
-      </div>
-      <? } ?>
-
-      <?php
-      $pagelist = get_paging($config['cf_write_pages'], $page, $total_page, "{$_SERVER['SCRIPT_NAME']}?id=mywallet&$qstr&view=withdraw");
-      echo $pagelist;
-      ?>
-    </div>
-  </section>
+    </section>
   </div>
 </main>
 
@@ -406,6 +542,7 @@ $result_withdraw = sql_query($sql);
 
 
 <!-- <script src="<?= G5_THEME_URL ?>/_common/js/timer.js"></script> -->
+<script type="text/javascript" src="./js/qrcode.js"></script>
 
 <script>
   window.onload = function() {
@@ -413,9 +550,26 @@ $result_withdraw = sql_query($sql);
     // move(<?= $bonus_per ?>); 
     // getTime("<?= $next_rate_time ?>");
   }
-  
+
   $(function() {
     $(".top_title h3").html("<span data-i18n=''>입출금</span>");
+
+    $(".title_btn").on('click', function() {
+      var value = $(this).data("category");
+      // console.log(value);
+
+      // 버튼
+      $(".title_btn").removeClass('active');
+      $(this).addClass('active');
+
+      // 스테이지
+      $(".deposit_stage").removeClass('active');
+      $("#" + value).addClass('active');
+
+      // 확인요청 
+      $(".deposit_requests").removeClass('active');
+      $("#deposit_request_"+ value).addClass('active');
+    });
 
     var debug = "<?= $is_debug ?>";
 
@@ -425,22 +579,21 @@ $result_withdraw = sql_query($sql);
     } */
 
     // 회사 지갑사용
-    // var eth_wallet_addr = '<?= ETH_ADDRESS ?>';
+    // var eth_wallet_addr = '';
     // if(eth_wallet_addr != ''){
     //     $('#eth_wallet_addr').val(eth_wallet_addr);
     //     generateQrCode("eth_qr_img",eth_wallet_addr, 80, 80);
     // }
 
     // 입금 전용 지갑사용
-    /* var my_eth_wallet = "<?= $member['mb_9'] ?>"
-    if(my_eth_wallet != ''){
-      $('#my_eth_wallet').val(my_eth_wallet);
-        generateQrCode("my_eth_qr",my_eth_wallet, 80, 80);
-    } */
+    if (<?= USE_WALLET ?>) {
+      var wallet_qrcode = generateQrCode("wallet_address_qr", <?= $my_wallet ?>, 80, 80);generateQrCode
+      $('#wallet_address_qr').val(wallet_qrcode);
+    }
 
 
     /* 출금*/
-    var usd_price = '<?=$usd_price?>';
+    var usd_price = '<?= $usd_price ?>';
     var WITHDRAW_CURENCY = '<?= WITHDRAW_CURENCY ?>';
     var mb_block = Number("<?= $member['mb_block'] ?>"); // 차단
 
@@ -456,20 +609,20 @@ $result_withdraw = sql_query($sql);
     // 최대출금가능금액
     var out_mb_max_limit = <?= $withdrwal_total ?>;
 
-    
+
     onlyNumber('pin_auth_with');
 
-    
+
     // 출금금액 변경 
     function input_change() {
-      
+
       var inputValue = $('#sendValue').val().replace(/,/g, '');
-      var fee_calc = Number(inputValue * out_fee)*Number(usd_price);
+      var fee_calc = Number(inputValue * out_fee) * Number(usd_price);
       result = parseFloat(fee_calc.toFixed());
       var fee_result = result.toLocaleString('ko-KR');
-      
+
       $('.fee').css('display', 'flex');
-      $('#active_amt').text( Price(inputValue*(usd_price))+ " <?= WITHDRAW_CURENCY ?>");
+      $('#active_amt').text(Price(inputValue * (usd_price)) + " <?= WITHDRAW_CURENCY ?>");
       $('#fee_val').text(fee_result + " <?= WITHDRAW_CURENCY ?>");
     }
 
@@ -534,7 +687,7 @@ $result_withdraw = sql_query($sql);
 
       var inputVal = $('#sendValue').val().replace(/,/g, '');
       console.log(` out_min_limit : ${out_min_limit}\n out_max_limit:${out_max_limit}\n out_day_limit:${out_day_limit}\n out_fee: ${out_fee}`);
-    
+
 
       // 출금계좌정보확인
       var withdrawal_bank_name = $('#withdrawal_bank_name').val();
@@ -583,7 +736,7 @@ $result_withdraw = sql_query($sql);
             mb_id: mb_id,
             func: 'withdraw',
             amt: inputVal,
-            select_coin : WITHDRAW_CURENCY,
+            select_coin: WITHDRAW_CURENCY,
             bank_name: withdrawal_bank_name,
             bank_account: withdrawal_bank_account,
             account_name: withdrawal_account_name
@@ -691,12 +844,12 @@ $result_withdraw = sql_query($sql);
         dialogModal('<p>입금 요청값 확인</p>', '<p>항목을 입력해주시고 다시시도해주세요.</p>', 'warning');
         return false;
       }
-      
-      if(in_min_limit > 0 &&  Number(d_price) < Number(in_min_limit) ){
-        dialogModal('<p>최소입금액 확인</p>', '<p>최소입금확인금액은 '+ Price(in_min_limit)+coin +' 입니다. </p>', 'warning');
+
+      if (in_min_limit > 0 && Number(d_price) < Number(in_min_limit)) {
+        dialogModal('<p>최소입금액 확인</p>', '<p>최소입금확인금액은 ' + Price(in_min_limit) + coin + ' 입니다. </p>', 'warning');
         return false;
       }
-      
+
 
       $.ajax({
         url: '/util/request_deposit.php',
@@ -730,7 +883,7 @@ $result_withdraw = sql_query($sql);
   });
 
 
-  
+
 
   function switch_func(n) {
     $('.loadable').removeClass('active');
@@ -752,15 +905,24 @@ $result_withdraw = sql_query($sql);
     temp.remove();
   }
 
-  /* QR코드
-  function generateQrCode(qrImg, text, width, height){
-      return new QRCode(document.getElementById(qrImg), {
-          text: text,
-          width: width,
-          height: height,
-          colorDark : "#000000",
-          colorLight : "#ffffff",
-          correctLevel : QRCode.CorrectLevel.H
-      });
-  } */
+  function copyADREESS(addr) {
+    alert("입금 지갑주소가 복사 되었습니다");
+    var temp = $("<input>");
+    $("body").append(temp);
+    temp.val($(addr).text()).select();
+    document.execCommand("copy");
+    temp.remove();
+  }
+
+  // QR코드
+  function generateQrCode(qrImg, text, width, height) {
+    return new QRCode(document.getElementById(qrImg), {
+      text: text,
+      width: width,
+      height: height,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H
+    });
+  }
 </script>

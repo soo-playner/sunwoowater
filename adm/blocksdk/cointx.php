@@ -19,6 +19,9 @@ $receiving_address = Crypto::GetReceivingAddress();
 
 <div class="pop_bg"></div>
 
+<style>
+	.tbl_input{width:90%;height:40px;}
+</style>
 <!-- 여기 아래부터 모든 HTML 요소 구성 시작 -->
 <div class="first-container">
 	<div class="submit_pop" id="popup">
@@ -71,7 +74,7 @@ $receiving_address = Crypto::GetReceivingAddress();
 			</tbody>
 		</table>
 		<div class="subrow">
-			<a href="https://blocksdk.com/" target="_blank"><u class="sdklink">https://blocksdk.com/</u> API 토큰 값을 받으세요!</a>
+			<a href="https://blocksdk.com/" target="_blank"><u class="sdklink">https://blocksdk.com/</u> API </a>
 		</div>
 	</div>
 
@@ -94,7 +97,7 @@ $receiving_address = Crypto::GetReceivingAddress();
 				</tbody>
 			</table>
 			<div class="subrow">
-				<a href="https://coinmarketcap.com/api/" target="_blank"><u class="sdklink">https://coinmarketcap.com/api/</u> API 토큰 값을 받으세요!</a>
+				<a href="https://coinmarketcap.com/api/" target="_blank"><u class="sdklink">https://coinmarketcap.com/api/</u> API </a>
 			</div>
 		</div>
 	</form>
@@ -183,9 +186,7 @@ $receiving_address = Crypto::GetReceivingAddress();
 						</tr>
 					</tbody>
 				</table>
-				<div class="subrow">
-					<a href="https://blocksdk.com/" target="_blank">도움이 필요하거나 제안 사항이 있으면 <u class="sdklink">웹 사이트</u> 의 라이브 채팅을 통해 문의하십시오.</a>
-				</div>
+				
 			</div>
 		</form>
 </div>

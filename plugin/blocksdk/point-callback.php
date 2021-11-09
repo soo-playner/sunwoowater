@@ -1,16 +1,33 @@
 <?php
 include_once("./_common.php");
+include_once(G5_THEME_PATH.'/_include/wallet.php');
 
-$json_text = get_text(json_encode($_POST));
+// $debug =1;
+
+$json_text = get_text(json_encode($_REQUEST));
 $sql = "insert into blocksdk_callback_log(`json`) values('{$json_text}')";
-sql_query($sql);
+if(!$debug){
+	sql_query($sql);
+}
 
 
-$coin      = $_POST["category"];
-$api_token = $_POST["api_token"];
-$event 	   = $_POST["event"];
-$tx_hash   = get_text($_POST["tx_hash"]);
-$inaddr    = get_text($_POST["address"]);
+
+$coin      = $_REQUEST["category"];
+$api_token = $_REQUEST["api_token"];
+$event 	   = $_REQUEST["event"];
+$tx_hash   = get_text($_REQUEST["tx_hash"]);
+$inaddr    = get_text($_REQUEST["address"]);
+
+
+if($debug){
+	$coin = 'eth';
+	$api_token = 'BsokFsOPhUSbtMVnmgTJYSNyP9VdrkoynMEb7ag9';
+	$event = 'confirmed';
+	$tx_hash = '0x79acdefb928f2054320512200e56c91360aec089a0e99d877ad2dba3b1eb1e6b';
+	$inaddr = '0xbb51cebac915a0f3df1ce73f653d2b2c2fd781c9';
+}
+
+
 
 if($api_token != Crypto::GetToken()){
 	//틀린 토큰값
@@ -42,21 +59,24 @@ if($api_token != Crypto::GetToken()){
 	));
 }
 
-sleep(30);
+
+// sleep(30);
 
 if($coin == 'btc')
-	$where_sql = "mb_6='{$inaddr}'";
+	$where_sql = "mb_10='{$inaddr}'";
 else if($coin == 'bch')
-	$where_sql = "mb_7='{$inaddr}'";
+	$where_sql = "mb_10='{$inaddr}'";
 else if($coin == 'ltc')
-	$where_sql = "mb_8='{$inaddr}'";
+	$where_sql = "ltc_wallet='{$inaddr}'";
 else if($coin == 'eth')
-	$where_sql = "mb_9='{$inaddr}'";
+	$where_sql = "eth_wallet='{$inaddr}'";
 else if($coin == 'dash')
 	$where_sql = "mb_10='{$inaddr}'";
 
 $sql = "SELECT * FROM {$g5['member_table']} WHERE {$where_sql}";
 $member_data = sql_fetch($sql);
+
+
 if(empty($member_data) == true){
 	echo "member !=";
 	exit_response(array(
@@ -70,30 +90,35 @@ $receiving_address = Crypto::GetReceivingAddress();
 
 $client = Crypto::GetClient($coin);
 
-$rawTx = $client->getTransaction([
+
+$rawTx_payload = $client->getTransaction([
 	"hash" => $tx_hash
 ]);
+$rawTx = $rawTx_payload['payload'];
+
+
 
 if($coin == 'eth'){
-	if($rawTx['from'] == $inaddr){
+	/* if($rawTx['from'] == $inaddr){
 		exit_response(array(
 			"code" => 400,
 			"data" => array()
 		));
-	}
+	}*/
 	
 	$ethinfo = Crypto::GetMemberEthAddress($inaddr);
 	$balance = $client->getAddressBalance([
 		"address" => $ethinfo['address']
 	]);
 	
-	if($balance['balance'] < 0.01){
+	/* if($balance['balance'] < 0.01){
 		exit_response(array(
 			"code" => 400,
 			"data" => array()
 		));
-	}
-
+	} */
+	
+	
 	$eth = $client->getBlockChain();
 	if($eth['high_gwei'] > 100){
 		$gwei = 100;
@@ -104,47 +129,47 @@ if($coin == 'eth'){
 	}
 	
 	$price = $gwei * 0.000000001;
+	$deposit_fee = $price * 21000;
 	
-	$tx = $client->sendToAddress([
-		"from" => $ethinfo['address'],
-		"to" => $receiving_address[$coin],
-		"amount" => $balance['balance'] - ($price * 21000),
-		"private_key" => $ethinfo['private_key'],
-		"gwei" => $gwei,
-		"gas_limit" => 21000
-	]);
-	
+	if($debug){
+		$balance['balance'] = 1;
+		echo "<br><br>";
+		echo "from :".$ethinfo['address'];
+		echo "<br>";
+		echo "to :".$receiving_address[$coin];
+		echo "<br>";
+		echo "amount :".($balance['balance'] - $deposit_fee);
+		echo "<br>";
+		echo "private_key :".$ethinfo['private_key'];
+		echo "<br>"."gwei : ".$gwei;
+		echo "<br><br>";
+	}else{
+		$tx = $client->sendToAddress([
+			"from" => $ethinfo['address'],
+			"to" => $receiving_address[$coin],
+			"amount" => $balance['balance'] - $deposit_fee,
+			"private_key" => $ethinfo['private_key'],
+			"gwei" => $gwei,
+			"gas_limit" => 21000
+		]);
+	}
+
 	// $amount = $rawTx['value'];
 	$amount = $balance['balance'];
+
+
 }
 
-// else{  //토큰부분 부정확해서 일단 주석처리
-// 	foreach($rawTx['vin'] as $in){
-// 		if($in['addresses'][0] == $inaddr){
-// 			exit_response(array(
-// 				"code" => 400,
-// 				"data" => array()
-// 			));
-// 		}
-// 	}
-	
-// 	$amount = 0;
-// 	foreach($rawTx['vout'] as $out){
-// 		if($out['addresses'][0] == $inaddr){
-// 			$amount += $out['value'] ;
-// 		}
-// 	}
-	
-// 	$tx = $client->sendToAddress([
-// 		"wallet_id" => $data[$coin . '_wallet_id'],
-// 		"seed_wif" => Crypto::GetSeefWif($coin),
-// 		"address" => $receiving_address[$coin],
-// 		"amount" => $amount,
-// 		"subtractfeefromamount" => 'true'
-// 	]);
-// }
 
-$point = Crypto::GetCoinToPrice($coin, $amount);
+// $point = Crypto::GetCoinToPrice($coin, 2);
+$point = $eth_price * $amount;
+
+if($debug){
+	echo "<br><br>";
+	echo "amount_point :: ".$point;
+	echo "<br><br>";
+}
+
 insert_point($member_data['mb_id'], $point, $coin.'-'.$tx_hash, '@passive', 'admin', $member_data['mb_id'].'-'.uniqid(''));
 
 $now_datetime = date('Y-m-d H:i:s');
@@ -159,16 +184,27 @@ Crypto::InsertReceiveTx([
 	"create_at" => $now_datetime
 ]);
 
-$sql = "INSERT INTO wallet_deposit_request(mb_id, txhash, create_dt,create_d,status,coin,in_amt)";
 
-if(!$tx['error']['message']){
-	$update_member_asset_sql = "UPDATE g5_member set mb_eth_point = mb_eth_point + {$amount} WHERE mb_id = '{$member_data['mb_id']}' ";
-	sql_query($update_member_asset_sql);
-
-	$sql .= " VALUES('{$member_data['mb_id']}','$tx_hash','$now_datetime','$now_date','$event','$coin', '$amount')";	
+if($event == "confirmed"){
+	$event_code = 1;
 }else{
-	$sql .= " VALUES('{$member_data['mb_id']}','$tx_hash','$now_datetime','$now_date','unconfirmed (수수료 부족)','$coin', '$amount')";	
+	$event_code = 2;
 }
 
-sql_query($sql);
+if(!$tx['error']['message']){
+	$update_member_asset_sql = "UPDATE g5_member set mb_deposit_point = mb_deposit_point + {$point} WHERE mb_id = '{$member_data['mb_id']}' ";
+	$update_result = sql_query($update_member_asset_sql);
+}else{
+	$event_code = 3;
+}
+
+$deposit_sql = "INSERT INTO wallet_deposit_request(mb_id, txhash, create_dt,create_d,status,coin,amt,in_amt)";
+$deposit_sql .= " VALUES('{$member_data['mb_id']}','$tx_hash','$now_datetime','$now_date','$event_code','$coin', '$amount','$point')";
+
+if($debug){
+	print_R($deposit_sql);
+}else{
+	sql_query($deposit_sql);
+}
+
 ?>

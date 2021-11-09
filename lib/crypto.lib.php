@@ -56,7 +56,7 @@ class Crypto{
 	}		
 	
 	static public function GetMemberEthAddress($address){
-		$sql = "select * from blocksdk_member_eth_addresses where address='{$address}' limit 0,1";
+		$sql = "select * from blocksdk_member_key where address='{$address}' limit 0,1";
 		return sql_fetch($sql);
 	}		
 	
@@ -69,7 +69,7 @@ class Crypto{
 		$sql = "
 			insert into
 			blocksdk_receive_txs(mb_no,tx_hash,symbol,address,value,create_at)
-			values({$data['mb_no']},'{$data['tx_hash']}','{$data['symbol']}','{$data['address']}',{$data['value']},{$data['create_at']})
+			values({$data['mb_no']},'{$data['tx_hash']}','{$data['symbol']}','{$data['address']}',{$data['value']},'{$data['create_at']}')
 		";
 		sql_query($sql);
 	}	
