@@ -75,7 +75,7 @@ $create_blocksdk_target = 'de_' . $wallet_code[0] . '_use';
 if (empty($member[$member_wallet_target]) == true && $blocksdk_conf[$create_blocksdk_target] == 1) {
 
   $address = Crypto::GetClient("eth")->createAddress([
-    "name" => $config['cf_title'] . "_test_member_" . $member['mb_no']
+    "name" => $wallet_create_code . "_mb_" . $member['mb_no']
   ]);
 
   Crypto::CreateWebHook($callback, $wallet_code[0], $address['address']);

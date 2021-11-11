@@ -5,6 +5,7 @@ include_once('./_common.php');
 $g5['title'] = "입/출금 설정";
 
 include_once(G5_ADMIN_PATH.'/admin.head.php');
+include_once(G5_LIB_PATH.'/crypto.lib.php');
 
 /* $has_wallet_addr = sql_query("SELECT wallet_addr from {$g5['wallet_config']} WHERE no =3");
 
@@ -12,6 +13,7 @@ if(!$has_wallet_addr){
 	$add_wallet_addr = "ALTER TABLE {$g5['wallet_config']} ADD `wallet_addr` varchar(255) NOT NULL";
 	$add_result = sql_query($add_wallet_addr);
 } */
+$receiving_address = Crypto::GetReceivingAddress();
 
 if($_POST['w'] == 'u'){
 	
@@ -159,6 +161,14 @@ $res = sql_query($coin_price_sql);
 					<td colspan="2"><input type='text' name='bank_account[]' value="<?=$row['bank_account']?>"/></td>
 					<td><input type='text' name='account_name[]' value="<?=$row['account_name']?>"/></td>
 
+				</tr>
+			<?}?>
+
+			<?if(USE_WALLET){?>				
+				<tr>
+					<td class='no'>5</td>
+					<td><?=strtoupper($wallet_code[0])?> 입금 주소</td>
+					<td colspan='5'><?=$receiving_address[$wallet_code[0]]?></td>
 				</tr>
 			<?}?>
 		</tbody>

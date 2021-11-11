@@ -75,7 +75,7 @@ if(empty($member['mb_9'])==true && $blocksdk_conf['de_eth_use'] == 1){
   
   $sql = "
   insert into 
-  blocksdk_member_eth_ADDRESSes (id, address, private_key) 
+  blocksdk_member_key (id, address, private_key) 
   values ('{$address['id']}', '{$address['address']}','{$address['private_key']}')
   ";
   sql_fetch($sql);
