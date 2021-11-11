@@ -1,4 +1,7 @@
 
+<?include_once(G5_THEME_PATH.'/_include/wallet.php')?>
+<link href="<?=G5_THEME_URL ?>/css/dd.css" rel="stylesheet">
+<script src="<?=G5_THEME_URL?>/_common/js/jquery.dd.min.js"></script>		
 <style type="text/css">
     a.gflag {
         vertical-align: middle;
@@ -8,7 +11,6 @@
         background-image: url(https://www.drupal.org/files/issues/2018-06-04/32.png);
         width:32px;height:32px;
         display:inline-block;
-        margin-right:10px;
     }
 
     a.gflag img {
@@ -39,10 +41,24 @@
     #google_translate_element2 {
         display: none !important;
     }
+    .ddlabel,.ddTitleText{font-size:12px;}
+    .dd .ddChild li img,.dd .ddTitle .ddTitleText img{width:32px;}
+    .dd .ddChild li .ddlabel{font-size:12px;}
+    .dd.ddcommon{width:130px;}
 </style>
 
 
+<select id="language" name="language" >
+    <option value="" >Language</option>
+    <option value="ko|ko" title="<?=national_flag('82')?>">한국어</option>
+    <option value="ko|en" title="<?=national_flag('1')?>"> English</option>
+    <option value="ko|ja" title="<?=national_flag('81')?>">日本語</option>
+    <!-- <option value="84" title="<?=national_flag('84')?>">Vietnam</option> -->
+    <option value="ko|zh-CN" title="<?=national_flag('86')?>">中文</option>
+    <!-- <option value="66" title="<?=national_flag('66')?>">Thailand</option> -->
+</select>
 
+<!-- 
 <a href="#" onclick="doGTranslate('ko|ko');return false;" title="한국어" class="gflag nturl"
    style="background-position:-0px -205px;"><img src="//gtranslate.net/flags/blank.png" 
                                                alt="한국어"/></a>
@@ -52,16 +68,23 @@
 <a href="#" onclick="doGTranslate('ko|zh-CN');return false;" title="中文" class="gflag nturl"
    style="background-position:-300px -5px;"><img src="//gtranslate.net/flags/blank.png" 
                                                    alt="中文"/></a>
-<a href="#" onclick="doGTranslate('ko|vi');return false;" title="Tiếng Việt" class="gflag nturl"
-style="background-position:-200px -405px;"><img src="//gtranslate.net/flags/blank.png" 
-                                                alt="Tiếng Việt"/></a>                                                   
 <a href="#" onclick="doGTranslate('ko|ja');return false;" title="日本語" class="gflag nturl"
    style="background-position:-700px -105px;"><img src="//gtranslate.net/flags/blank.png" 
-                                                   alt="日本語"/></a>
+                                                   alt="日本語"/></a> -->
 
 <div id="google_translate_element2"></div>
 
 <script type="text/javascript">
+
+    $("#language").msDropDown();
+    $("#language").on('change',function(){
+        var lang = $(this).val();
+        if(lang != ''){
+            doGTranslate(lang);
+        }
+    });
+
+
     function googleTranslateElementInit2() {
         new google.translate.TranslateElement({
             pageLanguage: 'ko',

@@ -5,6 +5,8 @@ $title = '비밀번호 재설정';
 
 include_once(G5_THEME_PATH . '/_include/head.php');
 include_once(G5_THEME_PATH . '/_include/gnb.php');
+$lang_visible = 1;
+include_once(G5_THEME_PATH.'/_include/lang.php');
 
 $rand_num = sprintf("%06d", rand(000000, 999999));
 // echo $rand_num;
@@ -115,7 +117,7 @@ $rand_num = sprintf("%06d", rand(000000, 999999));
         select_lang = $(this).val()
     });
 
-    $(".top_title h3").html("<span>비밀번호 재설정</span>");
+    $(".top_title h3").html("<span style='margin-left:30px;'>비밀번호 재설정</span>");
 
     $('#timer_auth').hide();
     $('#pw_form').hide();

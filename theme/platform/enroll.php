@@ -6,6 +6,7 @@ $phone_auth = 0;
 
 include_once(G5_THEME_PATH.'/_include/head.php');
 include_once(G5_THEME_PATH.'/_include/gnb.php');
+include_once(G5_THEME_PATH.'/_include/lang.php');
 include_once(G5_THEME_PATH.'/_include/wallet.php');
 
 
@@ -19,7 +20,9 @@ if ($_GET['recom_referral']){
 	$mb_recommend = $recom_result['mb_id'];
 }
 ?>
-
+<style>
+	.gflag{display:none !important;}
+</style>
 <link href="<?=G5_THEME_URL ?>/css/scss/enroll.css" rel="stylesheet">
 <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
 <link href="<?=G5_THEME_URL ?>/css/dd.css" rel="stylesheet">

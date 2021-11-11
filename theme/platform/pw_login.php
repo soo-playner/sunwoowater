@@ -1,4 +1,8 @@
-<? include_once(G5_THEME_PATH.'/_include/head.php'); ?>
+<? 
+include_once(G5_THEME_PATH.'/_include/head.php');
+include_once(G5_THEME_PATH.'/_include/lang.php');
+?>
+
 <style>
 #wrapper{background:#f5f5f5 ;}
 @media screen and (min-width:768px) {

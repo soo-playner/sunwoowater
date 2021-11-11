@@ -104,7 +104,7 @@ $(document).ready(function(){
 		<div class='gnb_bottom text-center hidden'><i class="ri-arrow-down-s-line" style='font-size:20px;vertical-align:top'></i></div>
 		<div id='gnb_language'>
 			<p class='f_small title'>언어선택</p>
-			<?include_once(G5_THEME_PATH.'/_include/lang.html')?>
+			<?include_once(G5_THEME_PATH.'/_include/lang.php')?>
 		</div>
 		
 		<div class="logout_wrap">

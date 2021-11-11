@@ -1,4 +1,6 @@
-<? include_once(G5_THEME_PATH.'/_include/head.php'); ?>
+<? 
+include_once(G5_THEME_PATH.'/_include/head.php');
+?>
 
 
 	<section id="wrapper" class="bg_white">
