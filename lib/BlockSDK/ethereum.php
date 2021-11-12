@@ -4,8 +4,8 @@
 	
 	class Ethereum extends Base{
 		public function getBlockChain(){
-			return $this->request("GET","/eth/block");
-		}		
+			return $this->request2("GET","/eth/info");
+		}	
 		
 		public function getBlock($request){
 			$request['rawtx'] = isset($request['rawtx'])==false?false:$request['rawtx'];
@@ -81,9 +81,9 @@
 		
 		public function getAddressBalance($request){
 			
-			return $this->request("GET","/eth/address/{$request['address']}/balance");
+			return $this->request2("GET","/eth/addresses/{$request['address']}/balance");
 		}
-		
+
 		public function sendToAddress($request){
 			if(isset($request['gwei']) == false){
 				$blockChain = $this->getBlockChain();
@@ -104,13 +104,36 @@
 			]);
 		}
 		
-		
-		public function sendTransaction($request){
+		public function sendToAddress2($request){
+			if(isset($request['gwei']) == false){
+				$blockChain = $this->getBlockChain();
+				$request['gwei'] = $blockChain['medium_gwei'];
+			}
+	
+			$request['private_key'] = isset($request['private_key'])==false ?null:$request['private_key'];
+			$request['password'] = isset($request['password'])==false ?null:$request['password'];
+			$request['gas_limit'] = isset($request['gas_limit'])==false ?null:$request['gas_limit'];
 			
-			return $this->request("POST","/eth/transaction",[
-				"sign_hex" => $request['sign_hex']
+			
+			$from_address = $request['from'];
+
+			return $this->request2("POST","/eth/addresses/{$from_address}/sendtoaddress",[
+				"to" => $request['to'],
+				"amount" => $request['amount'],
+				"private_key" => $request['private_key'],
+				"password" => $request['password'],
+				"gwei" => $request['gwei'],
+				"gas_limit" => $request['gas_limit']
 			]);
-		}	
+		}
+	
+	
+		public function sendTransaction($request){
+	
+			return $this->request2("POST","/eth/transactions/send",[
+				"hex" => $request['hex']
+			]);
+		}
 		
 		public function getTransaction($request){
 			

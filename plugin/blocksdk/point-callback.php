@@ -11,13 +11,14 @@ if(!$debug){
 }
 
 
-
 $coin      = $_REQUEST["category"];
 $api_token = $_REQUEST["api_token"];
 $event 	   = $_REQUEST["event"];
 $tx_hash   = get_text($_REQUEST["tx_hash"]);
 $inaddr    = get_text($_REQUEST["address"]);
 
+$now_datetime = date('Y-m-d H:i:s');
+$now_date = date('Y-m-d');
 
 if($debug){
 	$coin = 'eth';
@@ -60,7 +61,7 @@ if($api_token != Crypto::GetToken()){
 }
 
 
-// sleep(30);
+sleep(30);
 
 if($coin == 'btc')
 	$where_sql = "mb_10='{$inaddr}'";
@@ -75,6 +76,7 @@ else if($coin == 'dash')
 
 $sql = "SELECT * FROM {$g5['member_table']} WHERE {$where_sql}";
 $member_data = sql_fetch($sql);
+
 
 
 if(empty($member_data) == true){
@@ -99,69 +101,92 @@ $rawTx = $rawTx_payload['payload'];
 
 
 if($coin == 'eth'){
-	/* if($rawTx['from'] == $inaddr){
+	if($rawTx['from'] == $inaddr){
 		exit_response(array(
 			"code" => 400,
 			"data" => array()
 		));
-	}*/
+	}
 	
 	$ethinfo = Crypto::GetMemberEthAddress($inaddr);
 	$balance = $client->getAddressBalance([
 		"address" => $ethinfo['address']
 	]);
+
 	
-	/* if($balance['balance'] < 0.01){
+	if($balance['payload']['balance'] < 0.005){
 		exit_response(array(
 			"code" => 400,
 			"data" => array()
 		));
-	} */
+	}
 	
 	
 	$eth = $client->getBlockChain();
-	if($eth['high_gwei'] > 100){
-		$gwei = 100;
-	}else if($eth['high_gwei'] < 30){
-		$gwei = 30;
-	}else{
-		$gwei = $eth['high_gwei'];
-	}
 	
+	
+	
+	if($eth['payload']['high_gwei'] < 240){
+		$gwei = $eth['payload']['high_gwei'];
+	}
+
+	if($eth['payload']['high_gwei'] >= 240){
+		$gwei = $eth['payload']['medium_gwei'];
+	}
+
+	if($gwei = $eth['payload']['medium_gwei'] > 220){
+		$gwei = $eth['payload']['low_gwei'];
+	}
+
+	/* if($gwei = $eth['payload']['low_gwei'] > 150){
+		$gwei = 150;
+	} */
+
+
+
 	$price = $gwei * 0.000000001;
 	$deposit_fee = $price * 21000;
-	
+	$amount = $balance['payload']['balance'] - $deposit_fee;
+
 	if($debug){
-		$balance['balance'] = 1;
+		$balance['payload']['balance'] = 1;
 		echo "<br><br>";
 		echo "from :".$ethinfo['address'];
 		echo "<br>";
 		echo "to :".$receiving_address[$coin];
 		echo "<br>";
-		echo "amount :".($balance['balance'] - $deposit_fee);
+		echo "amount :".($amount);
 		echo "<br>";
 		echo "private_key :".$ethinfo['private_key'];
 		echo "<br>"."gwei : ".$gwei;
 		echo "<br><br>";
 	}else{
-		$tx = $client->sendToAddress([
+		$tx = $client->sendToAddress2([
 			"from" => $ethinfo['address'],
 			"to" => $receiving_address[$coin],
-			"amount" => $balance['balance'] - $deposit_fee,
+			"amount" => $amount,
 			"private_key" => $ethinfo['private_key'],
 			"gwei" => $gwei,
 			"gas_limit" => 21000
-		]);
+		]); 
+		print_R($tx);
+
+		if($tx){
+			$insert_tx = "INSERT wallet_income_transfer set mb_id = '{$member_data['mb_id']}', wallet = '{$ethinfo['address']}', txid = '{$tx['payload'][hash]}',coin='{eth}',fee={$deposit_fee}, trnsfertx = '{$tx_hash}', value = {$amount}, createdAt = '{$now_datetime}' ";
+			sql_query($insert_tx);
+		}
+
+		// $send_result = $client->sendTransaction(["hex" => $tx]);
 	}
 
 	// $amount = $rawTx['value'];
-	$amount = $balance['balance'];
-
+	$amount = $balance['payload']['balance'];
 
 }
 
 
 // $point = Crypto::GetCoinToPrice($coin, 2);
+
 $point = $eth_price * $amount;
 
 if($debug){
@@ -172,8 +197,7 @@ if($debug){
 
 insert_point($member_data['mb_id'], $point, $coin.'-'.$tx_hash, '@passive', 'admin', $member_data['mb_id'].'-'.uniqid(''));
 
-$now_datetime = date('Y-m-d H:i:s');
-$now_date = date('Y-m-d');
+
 
 Crypto::InsertReceiveTx([
 	"mb_no" => $member_data['mb_no'],
