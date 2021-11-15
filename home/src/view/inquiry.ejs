@@ -1,0 +1,38 @@
+<%- include ('./inc/header.ejs') -%>
+<div class="inquiry">
+    <div class="main_wrap">
+        <div class="title">
+            <span>1:1 문의하기</span>
+            <p>궁금한게 있으신가요?</p>
+        </div>
+        <div>
+            <form action="">
+                <ul>
+                    <li>
+                        <label for="">성함</label>
+                        <input type="text" name="name" id="name" placeholder="성함 입력" required>
+                        <!-- <span class="error">Error message</span> -->
+                    </li>
+                    <li>
+                        <label for="">연락처</label>
+                        <input type="text" name="phone" id="phone" placeholder="연락처 입력" required>
+                        <!-- <span class="error">Error message</span> -->
+                    </li>
+                    <li>
+                        <label for="">이메일</label>
+                        <input type="text" name="email" id="email" placeholder="이메일 입력" required>
+                        <!-- <span class="error">Error message</span> -->
+                    </li>
+                </ul>
+                <label for="">문의내용</label>
+                <textarea name="content" id="content" cols="30" rows="10" placeholder="문의내용 입력" required></textarea>
+                <button type="submit">보내기</button>
+            </form>
+        </div>
+    </div>
+</div>
+<footer class="inquiry_copyright">
+    Copyright 2021 © 1TERAPOWER. All Rights Reserved.
+</footer>
+
+<%- include ('./inc/footer.ejs') -%>

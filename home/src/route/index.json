@@ -1,0 +1,43 @@
+{
+    "domain" : "",
+    "routes" : [
+        {
+            "method": "get",
+            "route": "",
+            "render": "index"
+        },
+        {
+            "method": "get",
+            "route": "login",
+            "render": "login"
+        },
+        {
+            "method": "get",
+            "route": "main",
+            "controller": "MainController",
+            "action": "renderMain"
+        },
+        {
+            "method": "post",
+            "route": "user",
+            "controller": "MainController",
+            "action": "createUser"
+        },
+        {
+            "method": "get",
+            "route": "inquiry",
+            "render": "inquiry"
+        },
+        {
+            "method": "post",
+            "route": "mail",
+            "controller": "MainController",
+            "action": "sendMail"
+        },
+        {
+            "method": "get",
+            "route": "success_inquiry",
+            "render": "success_inquiry"
+        }
+    ]
+}
