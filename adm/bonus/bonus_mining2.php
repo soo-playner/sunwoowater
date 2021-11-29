@@ -22,6 +22,73 @@ if($_GET['view'] == 'all'){
     $page_view = 'all';
 }
 
+$pre_sql = "select * from {$g5['bonus_config']} where used = 2 order by no asc";
+$pre_list = sql_query($pre_sql);
+
+
+// 보너스검색 필터 
+$bonus_name_arr = [];
+
+$allowcnt=0;
+for ($i=0; $row=sql_fetch_array($pre_list); $i++) {
+    
+    $nnn="allowance_chk".$i;
+    $html.= "<input type='checkbox' class='search_item' name='".$nnn."' id='".$nnn."'";
+
+    if($$nnn !=''){
+        $html.=" checked='true' ";
+    }
+
+    $html.=" value='".$row['code']."'><label for='".$nnn."' class='allow_btn'>". $row['name']."보너스</label>";
+	array_push($bonus_name_arr,$row['name']);
+	if(${"allowance_chk".$i} !=''){
+		if($allowcnt==0){
+			$sql_search .= " and ( (allowance_name='".${"allowance_chk".$i}."')";
+		}else{
+			$sql_search .= "  or ( allowance_name='".${"allowance_chk".$i}."' )";
+		}
+		$qstr.='&'.$nnn.'='.$row['allowance_name'].${"allowance_chk".$i};
+
+		$allowcnt++;
+	}
+}
+if ($allowcnt>0) $sql_search .= ")";
+
+
+function bonus_name_tx($code,$return = ''){
+    global $bonus_name_arr;
+
+    if($code == 'mining_recommend'){
+        $value =1;
+    }else if($code == 'mining_sponsor'){
+        $value =2;
+    }else if($code == 'rank_bonus'){
+        $value =3;
+    }else{
+        $value =0;
+    }
+    if($return == 'name'){
+        return $bonus_name_arr[$value];
+    }else{
+        return $value;
+    }
+}
+
+/* 마이닝 시작일 체크 */
+$mining_check_sql = "SELECT * from g5_shop_order WHERE mine_rate != 0  AND mine_start_date != '0000-00-00' AND mine_start_date <= '{$now_date}' AND pay_count = 0 AND od_hope_date = '0000-00-00' ";
+$mining_check_result = sql_query($mining_check_sql);
+
+while($od_row = sql_fetch_array($mining_check_result)){
+    $od_rate = $od_row['mine_rate'];
+    $update_mb_mining_rate_sql = "UPDATE g5_member set mb_rate = mb_rate + {$od_rate} WHERE mb_id = '{$od_row['mb_id']}' ";
+    $up_result = sql_query($update_mb_mining_rate_sql);
+
+    if($up_result){
+        $refresh_sql = "UPDATE g5_shop_order set od_hope_date = '{$now_date}' WHERE no = {$od_row['no']} ";
+        $refresh_result = sql_query($refresh_sql);
+    }
+}
+
 /* 아이디 검색*/
 if ($stx) {
     $sql_search .= " and ( ";
@@ -67,7 +134,7 @@ if($start_dt){
 
 /* 마이닝현황 */
 if($func == 1){
-    $mine_ing_sql = " From g5_shop_order WHERE mine_table > 2 ".$sql_search;
+    $mine_ing_sql = " From g5_shop_order WHERE mine_table > -1 ".$sql_search;
     $sql = "SELECT count(*) as cnt ".$mine_ing_sql;
     $row = sql_fetch($sql);
     $total_count = $row['cnt'];
@@ -82,11 +149,16 @@ if($func == 1){
     
     $excel_sql = urlencode($sql);
     $result = sql_query($sql);
+    $qstr .= '&page_func=1';
+    if($_GET['view']){
+        $qstr .= '&view=all';
+    }
 
 }else if($func == 2){
     $mine_history_sql = " From soodang_mining WHERE 1=1";
 
     $sql = "SELECT count(*) as cnt ".$mine_history_sql.$sql_search;
+    
     $row = sql_fetch($sql);
     $total_count = $row['cnt'];
 
@@ -111,6 +183,8 @@ $qstr.='&stx='.$stx.'&sfl='.$sfl;
 function mining_kind($kind){
 	if($kind == 'mining'){
 		$color_class = 'green';
+	}else if($kind == 'rank_bonus'){
+		$color_class = 'blue';
 	}else{
 		$color_class = 'orange';
 	}
@@ -130,33 +204,17 @@ include_once(G5_PLUGIN_PATH.'/jquery-ui/datepicker.php');
 
 <link href="<?=G5_ADMIN_URL?>/css/scss/bonus/bonus_mining.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<style>
-    .divided{border-right:2px solid black;padding-right:10px;}
-    .text-center{text-align:center}
-    .strong{font-weight:600;}
-    /* .btn{padding: 0 5px;height: 24px;border: 0;color: #fff;font-size: 0.95em;vertical-align: middle;cursor: pointer;} */
-    .btn_list{text-align:right;}
-    .btn_list01 input.btn_submit {
-        background: #ff3061;
-        border:none;
-        color: #fff;
-        cursor: pointer;
-    }
-    .mining_excute{padding:5px 10px;border:1px solid #ccc;border-radius: 0;}
-    input[type='text'].frm_input{padding-left:5px;}
-    .btn-default.active{background:#333;border:1px solid #333; color:white}
-    .divide{width:1px;height:14px;vertical-align:text-bottom;background:black;display:inline-block;margin:0 5px;}
-    .func_btn.active{border:1px solid rgba(0,0,0,0.5);box-shadow: inset 1px 1px 3px rgba(0,0,0,0.6);}
-</style>
 
 
 <div class="local_desc01 local_desc">
     <p>
 		<strong>마이닝 현황 : </strong> 기준일 마이닝 보너스 지급대상자 확인 <span class='divide'></span>
         <strong>마이닝 지급 : </strong> 개별지급/ 전체선택후 선택지급 실행 <span class='divide'></span>
-        <strong>수정 : </strong> 선택항목 지급일 수정<span class='divide'></span>
+        <strong>수정 : </strong> 선택항목 지급일 수정<span class='divide'></span><br>
+        <strong>마이닝 추천롤업지급 : </strong> 추천롤업지급 <span class='divide'></span>
+        <strong>마이닝 후원롤업지급 : </strong> 후원롤업지급 <span class='divide'></span><br>
         <strong>마이닝 지급내역 : </strong> 기간별 지급한 내역 확인 (기본값 최근7일) <br>
-        현재설정된 지급량 : <strong><?=$mining_rate?></strong> / 1 <br>
+        ※ 현재설정된 마이닝 지급량 : <strong><?=$mining_rate?> <?=$minings[0]?></strong> / 1 <?=$mining_hash[0]?><br>
 	</p>
 </div>
 
@@ -168,12 +226,27 @@ include_once(G5_PLUGIN_PATH.'/jquery-ui/datepicker.php');
             기준일 : 
             <input type="text" name="to_date" value="<?php if($to_date){echo $to_date; }else{echo date("Ymd");} ?>" id="to_date" required class="required frm_input date_input" size="13" maxlength="10"> 
         </li>
+        <li class='outbox'>
+            <input type='button' name="act_button" value="마이닝 현황"  class="frm_input box_btn benefit func_btn <?=active_check(1, 'page_func')?>" data-id=1 >
+        </li>
+
+        <li class='outbox' >
+            <input type='button' name="act_button" value="마이닝 추천롤업 지급"  class="frm_input box_btn benefit exc_btn b1" data-id='mining_recommend' >
+            <input type='button' name="act_button" value="마이닝 추천롤업 지급기록"  class="frm_input box_btn view_btn"  data-id='mining_recommend' >
+        </li>
+
         <li class='outbox divided'>
-            <input type='button' name="act_button" value="마이닝 현황"  class="frm_input benefit func_btn <?=active_check(1, 'page_func')?>" data-id=1 >
+            <input type='button' name="act_button" value="마이닝 후원롤업 지급"  class="frm_input box_btn benefit exc_btn b2" data-id='mining_sponsor' >
+            <input type='button' name="act_button" value="마이닝 후원롤업 지급기록"  class="frm_input box_btn view_btn" data-id='mining_sponsor' >
+        </li>
+
+        <li class='outbox divided'>
+            <input type='button' name="act_button" value="승급 보너스 지급"  class="frm_input box_btn benefit exc_btn b3" data-id='rank_bonus' >
+            <input type='button' name="act_button" value="승급 보너스 지급기록"  class="frm_input box_btn view_btn" data-id='rank_bonus' >
         </li>
 
         <li class='outbox '>
-            <input type='button' name="act_button" value="마이닝 지급내역"  class="frm_input benefit func_btn <?=active_check(2, 'page_func')?>" data-id=2>
+            <input type='button' name="act_button" value="마이닝 지급내역"  class="frm_input box_btn benefit func_btn <?=active_check(2, 'page_func')?>" data-id=2>
         </li>
 
         <br>
@@ -189,7 +262,9 @@ include_once(G5_PLUGIN_PATH.'/jquery-ui/datepicker.php');
         <input type="text" name="stx" value="<?php echo $stx ?>" id="stx" class="frm_input">
         | 검색 기간 : <input type="text" name="start_dt" id="start_dt" placeholder="From" class="frm_input" value="<?=$fr_date?>" /> 
         ~ <input type="text" name="end_dt" id="end_dt" placeholder="To" class="frm_input" value="<?=$to_date?>"/>
-
+        <?if($page_func == 2){
+            print_R($html);
+        }?>
         <input type="submit" class="btn_submit search" value="검색"/>
         <!-- <input type="button" class="btn_submit excel" value="엑셀" onclick="document.location.href='/excel/benefit_list_excel_down.php?excel_sql=<?echo $excel_sql ?>&start_dt=<?=$_GET['start_dt']?>&end_dt=<?=$_GET['end_dt']?>'" />	 -->
         </li>
@@ -247,6 +322,7 @@ include_once(G5_PLUGIN_PATH.'/jquery-ui/datepicker.php');
                 $bg = 'bg'.($i%2);
                 $mining_value = $row['mine_rate']*$mining_rate;
                 $mining_sum += $mining_value;
+                $mining_acc += $row['mine_acc'];
                 $hash_sum +=  $row['mine_rate'];
             ?>
 
@@ -289,7 +365,9 @@ include_once(G5_PLUGIN_PATH.'/jquery-ui/datepicker.php');
                 <td><?=$i?>건</td>
                 <td></td>
                 <td><?=$hash_sum?></td>
-                <td colspan='5'></td>
+                <td colspan='3'></td>
+                <td><?=shift_auto($mining_acc,$minings[0])?></td>
+                <td></td>
                 <td width="150" class='bonus' style='color:red'><?=shift_auto($mining_sum,$minings[0])?></td>
                 <td></td>
             </tr>
@@ -309,6 +387,7 @@ include_once(G5_PLUGIN_PATH.'/jquery-ui/datepicker.php');
             <thead>
             <tr>
                 <th scope="col">회원아이디</th>
+                <th scope="col">보너스구분</th>
                 <th scope="col">지급일</th>
                 <th scope="col">보유해쉬</th>
                 <th scope="col">마이닝지급량 (<?=strtoupper($minings[0])?>)</th>
@@ -320,8 +399,7 @@ include_once(G5_PLUGIN_PATH.'/jquery-ui/datepicker.php');
             <?php
             for ($i=0; $row=sql_fetch_array($result); $i++) {
                 $bg = 'bg'.($i%2);
-                $mining_value = $row['mine_rate']*$mining_rate;
-                $mining_sum += $mining_value;
+                $mining_sum += $row['mining'];
                 $hash_sum +=  $row['rate'];
             ?>
 
@@ -330,10 +408,11 @@ include_once(G5_PLUGIN_PATH.'/jquery-ui/datepicker.php');
                 <td width="80" class='text-center strong'>
                     <a href='/adm/member_form.php?w=u&mb_id=<?=$row['mb_id']?>'><?=get_text($row['mb_id'])?></a>
                 </td>
+                <td width='50' class='text-center'><?=bonus_name_tx($row['allowance_name'],'name');?></td>
                 <td width='50' class='text-center'><?=$row['day'];?></td>
                 <td width='50' class='text-center'><?=$row['rate'];?></td>
-                <td width='80' class='text-center green strong'><?=shift_auto($row['mining'],$minings[0]) ?></td>
-                <td width='80' class='text-center'><?=$row['rec']?></td>
+                <td width='80' class='text-center strong bonus_<?=bonus_name_tx($row['allowance_name']);?>'><?=point_number($row['mining']) ?></td>
+                <td width='200' class='text-center'><?=$row['rec']?></td>
                
             </tr>
 
@@ -346,9 +425,10 @@ include_once(G5_PLUGIN_PATH.'/jquery-ui/datepicker.php');
             <tfoot>
             <tr class="<?php echo $bg; ?>">
                 <td></td>
+                <td></td>
                 <td><?=$i?>건</td>
                 <td><?=$hash_sum?></td>
-                <td width="150" class='bonus text-center' style='color:red'><?=shift_auto($mining_sum,$minings[0])?> </td>
+                <td width="150" class='bonus text-center' style='color:red'><?=point_number($mining_sum)?> </td>
                 <td></td>
             </tr>
             </tfoot>
@@ -389,14 +469,49 @@ $(function(){
 	$('.search_item:checked').each(function() {
 		$(this).addClass('active');
 	});
+
+    $('.search_item').on('click',function(){
+        if($(this).is(":checked")){
+            $(this).addClass('active');
+        }else{
+            $(this).removeClass('active');
+        }
+    });
+    
 	
     $('.func_btn').on('click',function(){
-        // console.log($(this).data('id'));
         var value = $(this).data('id');
-        // $('#page_func').val(value);
-        // $('#fsearch').submit();
         var to_date = $('#to_date').val();
         location.href="./bonus_mining2.php?page_func="+value+"&to_date="+to_date;
+    });
+
+    $('.view_btn').on('click',function(){
+        var value = $(this).data('id');
+        var to_date = $('#to_date').val();
+        var file_src = value+"_"+to_date+".html";
+        location.href=  g5_url+"/data/log/"+value+"/"+file_src ;
+    });
+
+    $('.exc_btn').on('click', function(){
+        var value = $(this).data('id');
+        var to_date = $('#to_date').val();
+        
+        if(value == 'mining_recommend'){
+            var vaue_tx = '추천롤업';
+        }else if(value == 'mining_sponsor'){
+            var vaue_tx = '후원롤업';
+        }else if(value == 'rank_bonus'){
+            var vaue_tx = '승급보너스';
+        }else{
+            var vaue_tx = '오류';
+        }
+
+        if (confirm(to_date + '일 '+vaue_tx+' 마이닝 수당을 지급하시겠습니까?')) {
+        } else {
+            return false;
+        }
+
+        location.href="./bonus."+value+".php?page_func="+value+"&to_date="+to_date;
     });
 
     $('.mining_excute').on('click',function(){

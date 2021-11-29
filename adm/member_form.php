@@ -517,13 +517,23 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 			/**/
 			$shop_item = get_shop_item(null,1);
 			$shop_item_cnt = count($shop_item);
-
 			$pack_array = package_have_return($mb['mb_id']);
 			
 			
 			for ($i = 0; $i < count($pack_array); $i++) {
-				
-			?>
+				$extra_price = $shop_item[$i]['it_extra']*$fil_price;
+				$it_price = $shop_item[$i]['it_price'] + $extra_price;
+				$coin_price = floor(($it_price/$fil_price)*10000)/10000;
+
+				if($shop_item[$i]['it_cust_price'] == 0){
+					$won_price = floor($it_price * $usd_price);
+				}else{
+					$won_price = $shop_item[$i]['it_cust_price'];
+				}
+				$shop_item[$i]['it_price'] = sprintf("%.2f",$it_price);
+				$shop_item[$i]['it_cust_price'] = $won_price;
+
+				?>
 				<button type='button' class='btn purchase_btn' value='' data-row='<?=json_encode($shop_item[$i],JSON_FORCE_OBJECT)?>'>
 					<span class='pack_title color<?=$i?>'><?= $shop_item[$i]['it_name'] ?></span>
 					<div class='pack_have'><span><?= $pack_array[$i] ?>
@@ -552,6 +562,7 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 
 		var total_fund = '<?=$mb['mb_deposit_point']+$mb['mb_deposit_calc']?>';
 		var mb_grade = '<?=$mb['grade']?>';
+		var fil_price = Number(<?=$fil_price?>);
 
 		//패키지구매처리
 		$('.purchase_btn').on('click',function(){
@@ -561,11 +572,14 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 			var mb_item_rank = '<?=$mb['rank_note']?>';
 			var item_num = item.it_maker.substr(1,1);
 
-			console.log(mb_item_rank);
-			console.log(item_num);
+			
+			console.log(`fil_price:${Number(fil_price)}\nit_cust_price:${Number(item.it_cust_price)}`);
+			console.log(`total:${total_fund}\nprice:${item.it_price}`);
 
-			console.log(`total:${total_fund}\nprice:${item.it_cust_price}`);
-			// console.log(`it_id:${item_id}\nit_sp:${item_supply_point}\ncoin:${select_coin}`);
+			/* var extra_price = Number(item.it_extra*fil_price);
+			var it_price = Number(item.it_price + extra_price);
+			var coin_price = ((it_price/fil_price)*10000)/10000;
+			*/
 			
 			/*멤버쉽 구매조건 있는경우*/
 			/* if(mb_item_rank == '' && item_num > 0){

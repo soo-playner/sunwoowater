@@ -6,21 +6,7 @@ include_once(G5_LIB_PATH.'/mailer.lib.php');
 
 include_once(G5_THEME_PATH.'/_include/wallet.php');
 
-/*
-mb_recommend: zeta
-mb_center_nick: admin
-mb_center: 슈퍼관리자
-mb_name: 한은수
-mb_id: arcthan
-mb_email: arcthan@naver.com
-mb_hp: 
-mb_password: zx235689
-mb_password_re: zx235689
-reg_tr_password: 235689
-reg_tr_password_re: 235689
-term: on
-term: on
-*/
+
 ?>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
@@ -126,9 +112,10 @@ $mb_addr_jibeon = preg_match("/^(N|R)$/", $mb_addr_jibeon) ? $mb_addr_jibeon : '
 
 $last_name        = trim($_POST['last_name']);
 $first_name       = trim($_POST['first_name']);
-$mb_mprecommend       = trim($_POST['mb_mprecommend']);
+
 $nation_number    = isset($_POST['nation_number'])            ? trim($_POST['nation_number'])          : 0;
 $reg_tr_password    = trim($_POST['reg_tr_password']);
+$reg_tr_password_re    = trim($_POST['reg_tr_password_re']);
 
 
 $pre_sql = "SELECT mb_no as recom_no, depth+1 as mb_depth FROM g5_member WHERE mb_id ='".$mb_recommend."'";
@@ -194,10 +181,7 @@ if ($w == '' || $w == 'u') {
 
 		if ($wx=="Y"){
 			/*
-			if ($mb_mprecommend) {
-				if (!exist_mp_mb_id($mb_mprecommend))
-					alert("MP가 존재하지 않습니다.");
-			}
+			
 			if ($mb_recommend) {
 				if (!exist_mb_id($mb_recommend))
 					alert("추천인이 존재하지 않습니다.");
@@ -349,9 +333,7 @@ if ($w == '') {
 					 depth = '{$depth}',
 					 last_name = '{$last_name}',
 					 first_name = '{$first_name}',
-					 mb_mprecommend = '{$mb_mprecommend}',
-					 nation_number = '{$nation_number}',
-					 mb_week_dividend = 1
+					 nation_number = '{$nation_number}'
 					 {$sql_certify} ";
 
 	// 이 Email Verification을 사용하지 않는다면 이Email Verification시간을 바로 넣는다

@@ -61,6 +61,8 @@ $result = sql_query($sql);
     box-shadow: inset 1px 1px 2px rgb(0 0 0 / 80%), 1px 1px 1px rgb(255 255 255 / 30%);
     text-align: left;}
 .hash img{width:20px;height:20px;vertical-align: bottom;}
+.origin_price{margin-top:-5px;font-size:11px;color:rgba(255,255,255,0.75)}
+.coin_price{font-size:14px;margin-top:5px;padding-top:5px;border-top:1px solid rgba(255,255,255,0.25)}
 </style>
 
 <?include_once(G5_THEME_PATH.'/_include/breadcrumb.php');?>
@@ -86,16 +88,28 @@ $result = sql_query($sql);
 						
 							for($i=0; $i < count($row); $i++){
 
-							$origin_price = $usd_price * $row[$i]['it_price'];
 							$sign = "원";
+							$extra_price = $row[$i]['it_extra']*$fil_price;
+							$it_price = $row[$i]['it_price'] + $extra_price;
+							$coin_price = floor(($it_price/$fil_price)*10000)/10000;
+
+							if($row[$i]['it_cust_price'] == 0){
+								$won_price = floor($it_price * $usd_price);
+							}else{
+								$won_price = $row[$i]['it_cust_price'];
+							}
+
+							$row[$i]['it_coin_price'] = $coin_price;
+	
 
 							$data_arr = array();
 							array_push($data_arr, array(
 								"it_id"=>$row[$i]['it_id'],
 								"it_name"=>$row[$i]['it_name'],
-								"it_price"=>$row[$i]['it_price'],
+								"it_price"=>sprintf("%.2f",$it_price),
 								"it_point"=>$row[$i]['it_point'],
-								"it_cust_price"=>$row[$i]['it_cust_price'],
+								"it_coin_price"=>$coin_price,
+								"it_cust_price"=>$won_price,
 								"it_maker"=>$row[$i]['it_maker'],
 								"it_supply_point"=>$row[$i]['it_supply_point'],
 								"it_option_subject"=>$row[$i]['it_option_subject'],
@@ -104,7 +118,7 @@ $result = sql_query($sql);
 							));
 
 							if($i == 0){
-								$row_col = 'col-12 col-lg-12';
+								$row_col = 'col-6 col-lg-4';
 							}else{
 								$row_col = 'col-6 col-lg-4';
 							}
@@ -119,20 +133,19 @@ $result = sql_query($sql);
 									<div class="b_blue_bottom"></div>
 
 									<div class='mining_product'>
-										<?if($i != 0){?>
-											<div class="iconbox v-bottom">
-												<?if($i > 1){?>
-													<div class='hash'>
-													<img src='<?=G5_THEME_URL?>/img/mine_icon_small.png'>
-														<?=$row[$i-1]['it_supply_point']?> <span class='f_small'>Hash P</span>
-													</div>
-												<?}?> 
+										<?if($row[$i]['it_supply_point'] > 0){?>
+										<div class="iconbox v-bottom">
+											<div class='hash'>
+											<img src='<?=G5_THEME_URL?>/img/mine_icon_small.png'>
+												<?=$row[$i]['it_supply_point']?> <span class='f_small'><?=$mining_hash[0]?></span>
 											</div>
+										</div>
 										<?}?>
 												
 										<div class="text_wrap ">
-											<div class="it_price">$ <?=Number_format($row[$i]['it_price'])?></div>
-											<div class='origin_price'>=￦<?=Number_format($row[$i]['it_cust_price'])?></div>
+											<div class="it_price">$ <?=Number_format($it_price,2)?></div>
+											<div class='origin_price'>(=￦<?=Number_format($won_price)?>)</div>
+											<div class='coin_price'><i class="ri-coin-line"></i> <?=Number_format($row[$i]['it_coin_price'],4)?> <?=$minings[0]?></div>
 										</div>
 									</div>
 								</div>
@@ -324,9 +337,10 @@ $(function(){
 
 	var mb_id = "<?=$member['mb_id']?>";
 	var mb_no = "<?=$member['mb_no']?>";
-
+	var total_fund = Number(<?=$available_fund?>);
 	// 시세
 	var usd_price = '<?=$usd_price?>';
+	var fil_price = Number(<?=$fil_price?>);
 	var purchase_curency = '<?=PURCHASE_CURENCY?>';
 	
 	// 패키지
@@ -355,7 +369,7 @@ $(function(){
 		it_supply_point = data[0].it_supply_point; //MP 
 		won_price = data[0].it_cust_price;
 		func = "new";
-		origin_bal = '<?=$available_fund?>';
+		origin_bal = total_fund;
 		price_calc = origin_bal - it_price ;
 		change_coin = purchase_curency;
 
@@ -384,8 +398,8 @@ $(function(){
 
 	function change_coin_status(){
 		$('#trade_total').val( purchase_curency + Price(it_price) );
-		$('#shift_won').text( '￦' + Price(won_price) + '원' );
-		$('#shift_dollor').val( Price(price_calc) );
+		$('#shift_won').text( '￦' + Price(won_price.toFixed()) + '원' );
+		$('#shift_dollor').val( Price(price_calc.toFixed(2)) );
 		
 		// 상품구매로 이동
 		var scrollPosition = $('#pakage_sale').offset().top;
@@ -424,8 +438,12 @@ $(function(){
 			} 
 		*/
 
+		console.log(`fil_price:${Number(fil_price)}\nit_cust_price:${Number(won_price)}`);
+		console.log(`total:${total_fund}\nprice:${it_price}`);
 		
 		dialogModal('Package 상품구매 확인','<strong>'+ it_name + '팩을 구매 하시겠습니까?</strong>','confirm');
+
+		
 
 		$('#modal_confirm').on('click',function(){
 			dimHide();

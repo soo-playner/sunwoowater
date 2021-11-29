@@ -39,12 +39,14 @@ if ($_POST['act_button'] == "선택수정") {
         $it_price = conv_number($_POST['it_price'][$k]);
         $it_point = conv_number($_POST['it_point'][$k]);
         $it_cust_price = conv_number($_POST['it_cust_price'][$k]);
+        $it_extra = conv_number($_POST['it_extra'][$k]);
                  
         $sql = "update {$g5['g5_shop_item_table']}
         set ca_id          = '10',
             it_name        = '{$_POST['it_name'][$k]}',
             it_option_subject       = '{$_POST['it_option_subject'][$k]}',
             it_price       = '{$it_price}',
+            it_extra       = '{$it_extra}',
             it_cust_price  = '{$it_cust_price}',
             it_supply_point       = '{$_POST['it_supply_point'][$k]}',
             it_point       = '{$it_point}',

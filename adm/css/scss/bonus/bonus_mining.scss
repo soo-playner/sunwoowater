@@ -6,14 +6,41 @@
 .local_ov li{list-style: none;margin-right:10px;display:inline-block;vertical-align:top}
 .local_ov01{position:inherit;}
 
-.benefit{color:white;border:0;height:40px;cursor:pointer;text-align:center;padding:5px 20px;width:100%;}
 
+.box_btn{color:white;border:0;height:40px;cursor:pointer;text-align:center;padding:5px 20px;width:100%;}
 
-
+.divided{border-right:2px solid black;padding-right:10px;}
+.text-center{text-align:center}
+.strong{font-weight:600;}
+/* .btn{padding: 0 5px;height: 24px;border: 0;color: #fff;font-size: 0.95em;vertical-align: middle;cursor: pointer;} */
+.btn_list{text-align:right;}
+.btn_list01 input.btn_submit {
+    background: #ff3061;
+    border:none;
+    color: #fff;
+    cursor: pointer;
+}
+.mining_excute{padding:5px 10px;border:1px solid #ccc;border-radius: 0;}
+input[type='text'].frm_input{padding-left:5px;}
+.btn-default.active{background:#333;border:1px solid #333; color:white}
+.divide{width:1px;height:14px;vertical-align:text-bottom;background:black;display:inline-block;margin:0 5px;}
+.func_btn.active{border:1px solid rgba(0,0,0,0.5);box-shadow: inset 1px 1px 3px rgba(0,0,0,0.6);}
+.view_btn{display:block;background:#ccc;margin-top:5px;color:black}
+.view_btn:hover {
+    background: #f9a62e;
+    cursor: pointer;
+}
 
 .outbox:nth-child(2) .benefit{background:green}
 .outbox:nth-child(3) .benefit{background:orangered}
-.outbox:nth-child(4) .benefit{background:#ef21fd}
+.outbox:nth-child(4) .benefit{background:blueviolet}
+.outbox:nth-child(5) .benefit{background:dodgerblue}
+.outbox:nth-child(6) .benefit{background:slategrey}
+
+.bonus_0{color:green}
+.bonus_1{color:orangered}
+.bonus_2{color:blueviolet}
+.bonus_3{color:dodgerblue}
 /* 
 .outbox:nth-child(2) .benefit{background:royalblue}
 .outbox:nth-child(3) .benefit{background:cornflowerblue}

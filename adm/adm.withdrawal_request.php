@@ -3,16 +3,17 @@ $sub_menu = "700300";
 include_once('./_common.php');
 include_once(G5_THEME_PATH.'/_include/wallet.php');
 
-$g5['title'] = "수당(원화) 출금 요청 내역";
+$withdraw_curency = WITHDRAW_CURENCY;
+
+$g5['title'] = "수당(".$withdraw_curency.") 출금 요청 내역";
 include_once('./adm.header.php');
 
-$withdraw_curency = WITHDRAW_CURENCY;
 
 function short_code($string, $char = 8){
 	return substr($string,0,$char)." ... ".substr($string,-8);
 }
 
-$sql_condition = "and coin = '{$withdraw_curency}' " ;
+$sql_condition = " and od_type = '수당출금요청' " ;
 
 if($_GET['fr_id']){
 	$sql_condition .= " and A.mb_id = '{$_GET['fr_id']}' ";
@@ -57,7 +58,7 @@ echo "<br><br>"; */
 
 
 
-$rows = 10;
+$rows = 30;
 $total_page  = ceil($total_count / $rows);  // 전체 페이지 계산
 if ($page < 1) $page = 1; // 페이지가 없으면 첫 페이지 (1 페이지)
 $from_record = ($page - 1) * $rows; // 시작 열을 구함
@@ -161,38 +162,17 @@ function return_status_tx($val){
 		$("#create_dt_fr,#create_dt_to, #update_dt").datepicker({ changeMonth: true, changeYear: true, dateFormat: "yy-mm-dd", showButtonPanel: true, yearRange: "c-99:c+99", maxDate: "+0d" });
 	});
 
-$(function(){
-		
-});
-
 </script>
 
-<!-- 
-<form name="fsearch" id="fsearch" class="local_sch01 local_sch" action="./withdrawal_batch.php" method="GET">
+<style>
+	table.regTb td.withdrwal{line-height:13px;padding:0 5px;}
+	.withdrwal_info{font-weight:600;font-size:13px;}
+	.withdrwal_info.coin_tx{font-size:11px;font-weight:300;word-break: break-all;}
+</style>
 
-	아이디검색 
-	<input type="text" name="id" placeholder="id" class="frm_input" value="<?=$_GET['id']?>" />
 
-	| 상태값 검색 : 
-	<select name="status" id="status" style="width:100px;">
-		<option value="">전체</option>
-		<option <?=$_GET['status'] == '0' ? 'selected':'';?> value="0">요청</option>
-		<option <?=$_GET['status'] == '1'? 'selected':'';?> value="1">승인</option>
-		<option <?=$_GET['status'] == '2'? 'selected':'';?> value="2">대기</option>
-		<option <?=$_GET['status'] == '3'? 'selected':'';?> value="3">불가</option>
-		<option <?=$_GET['status'] == '4'? 'selected':'';?> value="4">취소</option>
-	</select>
-	
-	| 요청일시 :
-	<input type="text" name="create_dt_fr" id="create_dt_fr" placeholder="요청일시" class="frm_input" value="<?=$_GET['create_dt_fr']?>" />
-	<input type="text" name="create_dt_to" id="create_dt_to" placeholder="요청일시" class="frm_input" value="<?=$_GET['create_dt_to']?>" />
 
-	| 승인일시 :
-	<input type="text" name="update_dt" id="update_dt" placeholder="승인일시" class="frm_input" value="<?=$_GET['update_dt']?>" />
-	<input type="submit" class="btn_submit" value="검색" style="width:100px;"/>
-</form>
-<br><br> -->
- <input type="button" class="btn_submit excel" value="엑셀 다운로드" onclick="window.location.href='../excel/withdrawal_request_excel_down.php?excel_sql=<?=urlencode($excel_query)?>'" />	  
+<input type="button" class="btn_submit excel" value="엑셀 다운로드" onclick="window.location.href='../excel/withdrawal_request_excel_down.php?excel_sql=<?=urlencode($excel_query)?>'" />	  
 <div class="local_ov01 local_ov">
 	<a href="./adm.withdrawal_request.php?<?=$qstr?>" class="ov_listall"> 결과통계 <?=$total_count?> 건 = <strong><?=shift_auto($total_out)?> <?=WITHDRAW_CURENCY?> </strong></a> 
 	<?
@@ -234,12 +214,12 @@ $ord_rev = $ord_array[($ord_key+1)%2]; // 내림차순→오름차순, 오름차
 			<th style="width:5%;">아이디 </th>
 			<!-- <th style="width:5%;">하부추천인</th> -->
 			<th style="width:auto">출금정보</th>
-
+			<th style="width:7%">출금정보복사</th>
 			<th style="width:6%;">출금단위</th>
 			<th style="width:6%;">출금전잔고(<?=ASSETS_CURENCY?>)</th>
 			<th style="width:7%;">출금요청액(<?=ASSETS_CURENCY?>)</th>
 			<th style="width:5%;">수수료(<?=ASSETS_CURENCY?>)</th>
-			<th style="width:6%;">출금계산액(<?=ASSETS_CURENCY?>)</th>
+			<!-- <th style="width:6%;">출금계산액(<?=ASSETS_CURENCY?>)</th> -->
 			<th style="width:6%;">출금시세</th>
 
 			<th style="width:8%;">실출금액 <span style='color:red'>(<?=WITHDRAW_CURENCY?>)</span></th>
@@ -260,6 +240,8 @@ $ord_rev = $ord_array[($ord_key+1)%2]; // 내림차순→오름차순, 오름차
 			}else{
 				$coin_class = 'font_green';
 			}
+
+			
 		?>
 	
 			<tr class="<?php echo $bg; ?>">
@@ -270,16 +252,19 @@ $ord_rev = $ord_array[($ord_key+1)%2]; // 내림차순→오름차순, 오름차
 				<input type="hidden" value="<?=$row['mb_id']?>" name="mb_id[]">
 				<!-- <td><?=$mb['mb_child']?></td> -->
 				
-				<td>
-				
-					<?=$row['bank_name']?> | <span id="bank_account" style='font-weight:600;font-size:13px;'><?=$row['bank_account']?></span>(<?=$row['account_name']?>)
-					<button type="button" class="btn inline_btn copybutton" style='margin-right:10px;'>계좌복사</button>	 
-						
+				<td class='withdrwal'>
+					<?if($row['coin'] == '원' || $row['coin'] == '$'){?>
+						<?=$row['bank_name']?> | <span class='withdrwal_info' ><?=$row['bank_account']?></span>(<?=$row['account_name']?>)	 
+					<?}else{?>	
+						<input type="hidden" value="<?=$row['addr']?>" name="addr[]">
+						<span class='withdrwal_info coin_tx'><?=retrun_tx_func($row['addr'],$row['coin'])?></span>
+					<?}?>
 				</td>
 
-				<input type="hidden" value="<?=$row['addr']?>" name="addr[]">
+				<td><button type="button" class="btn inline_btn copybutton" style='font-size:11px !important;margin-right:10px;'>정보복사</button></td>
+				
 				<td class="td_amt"><input type="hidden" value="<?=$row['coin']?>" name="coin[]" class='coin'>
-					<?=$row['coin']?> <?if($row['coin'] == $minings[0]){echo "<br><span class='badge'>MININNG</span>";}?>
+					<?=retrun_coin($row['coin'])?> 
 				</td>
 				
 				<!-- 출금전잔고 -->
@@ -294,11 +279,11 @@ $ord_rev = $ord_array[($ord_key+1)%2]; // 내림차순→오름차순, 오름차
 				</td>
 
 				<!-- 출금계산 -->
-				<td class="gray" style='line-height:18px;'>
-					<input type="hidden" value="<?=shift_auto($row['amt'],ASSETS_CURENCY)?>" name="amt[]">
-					<!-- 계산액 -->
+				<input type="hidden" value="<?=shift_auto($row['amt'],ASSETS_CURENCY)?>" name="amt[]">
+
+				<!-- <td class="gray" style='line-height:18px;'>
 					<?=shift_auto($row['amt'],ASSETS_CURENCY)?> 
-				</td>
+				</td> -->
 
 				
 				
@@ -365,11 +350,11 @@ $(function() {
 	$('.copybutton').on('click',function(){
 		//commonModal("Address copy",'Your Wallet address is copied!',100);
 
-		console.log( $(this).parent().find('#bank_account').text() );
+		console.log( $(this).parent().parent().find('.withdrwal_info').text() );
 
 		var $temp = $("<input>");
 			$("body").append($temp);
-		$temp.val($(this).parent().find('#bank_account').text()).select();
+		$temp.val($(this).parent().parent().find('.withdrwal_info').text()).select();
 			document.execCommand("copy");
 		$temp.remove();
 

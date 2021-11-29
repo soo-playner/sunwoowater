@@ -2,6 +2,7 @@
 $sub_menu = "600900";
 include_once('./_common.php');
 // $debug=1;
+
 include_once('./bonus_inc.php');
 
 auth_check($auth[$sub_menu], 'r');
@@ -33,7 +34,7 @@ ob_start();
 
 
 // 설정로그 
-echo "<strong>".strtoupper($code)." 지급비율 : ". $bonus_row['rate']."%   </strong> |    지급조건 :".$pre_condition.' | '.$bonus_condition_tx." | ".$bonus_layer_tx." | ".$bonus_limit_tx."<br>";
+echo "<strong>".strtoupper($code)." 지급비율 : ". $bonus_row['rate']."%   </strong> |    지급조건 :".$pre_condition.' | '.$bonus_source_tx." | ".$bonus_layer_tx." | ".$bonus_limit_tx."<br>";
 echo "<strong>".$bonus_day."</strong><br>";
 echo "<br><span class='red'> 기준대상자 : ".$result_cnt." (관리자제외) </span><br><br>";
 echo "<div class='btn' onclick='bonus_url();'>돌아가기</div>";
@@ -81,9 +82,10 @@ function habu_sales_calc($gubun, $recom, $deep){
     global $bonus_day,$min30,$debug;
     $deep++; // 대수
 
-    //$od_time = "date_format(od_time,'%Y-%m-%d')";
     $res_sql = "select * from g5_member where mb_".$gubun."recommend='".$recom."' ";
     $res= sql_query($res_sql);
+
+    $noo = $today = $mysales = 0;
 
     for ($j=0; $rrr=sql_fetch_array($res); $j++) { 
 	
@@ -93,12 +95,6 @@ function habu_sales_calc($gubun, $recom, $deep){
 		$sql1= sql_fetch("select sum(upstair)as hap from g5_shop_order where mb_id='".$recom."' AND od_date <= '{$bonus_day}'  ");
         $noo +=$sql1['hap'];
         
-        //월간매출
-        /*
-		$mon_search = " and od_date >='$min30' and od_date <='$bonus_day'";
-        $sql2= sql_fetch("select sum(upstair)as hap from g5_shop_order where mb_id='".$recom."' $mon_search");
-        $mon+=$sql2['hap'];
-        */
         
         //일일매출
 		$day_search = " and od_date ='$bonus_day'";
@@ -118,63 +114,61 @@ function habu_sales_calc($gubun, $recom, $deep){
         }
 
         $noo_r += $mysales;
-		//$mon_r+=$mysales;
 		$today_r += $mysales;
 
         $noo+=$noo_r;
-        //$mon+=$mon_r;  
         $today+=$today_r; 
 
 
-			if( ($noo>0) && ($noo_r>0)) {
-				if($j==0){
-					$rec=$noo;
-				}else{
-					$rec=$noo_r;	
-                }
-
-                if($j == count($rrr)) {
-					$rec=$rec;
-				}else{
-					$rec=$noo_r;
-				}
-                
-                $inbnoo = "insert ".$gubun."recom_bonus_noo SET noo=".$rec.", mb_id='".$recom."',  day = '".$bonus_day."'";
-                
-                // 디버그 로그
-                if($debug){
-                    echo " | noo: ".$rec;
-                    sql_query($inbnoo);
-                }else{
-                    sql_query($inbnoo);	
-                }
-			}
-			
-			
-			if(($today>0) && ($today_r>0)) {
-				if($j==0){
-					$rec=$today;
-				}else{
-					$rec=$today_r;
-                }
-                
-                if($j == count($rrr)) {
-					$rec=$rec;
-				}else{
-					$rec=$today_r;
-				}
-
-                $intoday = "insert ".$gubun."recom_bonus_today SET today=".$rec.", mb_id='".$recom."',  day = '".$bonus_day."'";
-                
-                // 디버그 로그
-                if($debug){
-                    echo " | today: ".$rec."</code>";
-                    sql_query($intoday);
-                }else{
-                    sql_query($intoday);
-                }
-               
+        if( ($noo>0) && ($noo_r>0)) {
+            if($j==0){
+                $rec=$noo;
+            }else{
+                $rec=$noo_r;	
             }
+
+            if($j == count($rrr)) {
+                $rec=$rec;
+            }else{
+                $rec=$noo_r;
+            }
+            
+            $inbnoo = "insert ".$gubun."recom_bonus_noo SET noo=".$rec.", mb_id='".$recom."',  day = '".$bonus_day."'";
+            
+            // 디버그 로그
+            if($debug){
+                echo " | noo: ".$rec;
+                sql_query($inbnoo);
+            }else{
+                sql_query($inbnoo);	
+            }
+        }
+			
+			
+        if(($today>0) && ($today_r>0)) {
+            if($j==0){
+                $rec=$today;
+            }else{
+                $rec=$today_r;
+            }
+            
+            if($j == count($rrr)) {
+                $rec=$rec;
+            }else{
+                $rec=$today_r;
+            }
+
+            $intoday = "insert ".$gubun."recom_bonus_today SET today=".$rec.", mb_id='".$recom."',  day = '".$bonus_day."'";
+            
+            // 디버그 로그
+            if($debug){
+                echo " | today: ".$rec."</code>";
+                sql_query($intoday);
+            }else{
+                sql_query($intoday);
+            }
+            
+        }
         echo "</code>";
     }
 	return array($noo,$today);
@@ -192,7 +186,7 @@ function habu_sales_calc($gubun, $recom, $deep){
         $mb_balance=$member['mb_balance'];
         $grade=$member['grade'];
         $recom=$member['mb_recommend'];
-        $mb_rate = $member['mb_rate'];
+        $mb_pv = $member['mb_pv'];
         $mb_sales = $member['mb_save_point'];
 
         
@@ -214,6 +208,7 @@ function habu_sales_calc($gubun, $recom, $deep){
 
         echo '<br>▶ 실적 계산 기준  :: ' .$id1.'---'.$hap1.' // '.$id2.'---'.$hap2.' || 수당한계 : <span >'.$limit_point.'</span><br>';
         
+
         $note='Binary Bonus from member';
         $firstname=$mb_name;
         $firstid=$mb_id;
@@ -360,6 +355,7 @@ function today_sales($mb_id, $day){
 	return $hap;
 }
 
+
 // 하부매출
 function btoday_select($mb_id,$day){
 	$res= sql_fetch("select today from brecom_bonus_today where mb_id='".$mb_id."' and day='".$day."'");
@@ -424,68 +420,94 @@ function iwol_process($bonus_day,$mb_brecommend, $mb_id, $mb_name, $kind, $pv, $
         $pv = $pv * -1;
     }
 
-		$temp_sql1 = " insert iwol set iwolday='".$bonus_day."'";
-		$temp_sql1 .= " ,mb_id		= '".$mb_id."'";
-		$temp_sql1 .= " ,mb_name		= '".$mb_name."'";
-		$temp_sql1 .= " ,kind		= '".$kind."'";
-		$temp_sql1 .= " ,pv		= '".$pv."'";
-		$temp_sql1 .= " ,note		= '".$note."'";
-        $temp_sql1 .= " ,mb_brecommend		= '".$mb_brecommend."'";
+    $temp_sql1 = " insert iwol set iwolday='".$bonus_day."'";
+    $temp_sql1 .= " ,mb_id		= '".$mb_id."'";
+    $temp_sql1 .= " ,mb_name		= '".$mb_name."'";
+    $temp_sql1 .= " ,kind		= '".$kind."'";
+    $temp_sql1 .= " ,pv		= '".$pv."'";
+    $temp_sql1 .= " ,note		= '".$note."'";
+    $temp_sql1 .= " ,mb_brecommend		= '".$mb_brecommend."'";
 
-		
-		if($pv == '0'){
-			echo '<br><span class=black> ▶▶▶ 이월금소멸 : '.Number_format($pv).'</span> <span style=margin-left:20px>['.$note.']</span>';
-		}else{
-			echo '<br><span class=blue> ▶▶▶ 이월금 : '.Number_format($pv).'</span> <span style=margin-left:20px>['.$note.']</span>';
-        }
+    
+    if($pv == '0'){
+        echo '<br><span class=black> ▶▶▶▶ 이월금소멸 : '.Number_format($pv).'</span> <span style=margin-left:20px>['.$note.']</span>';
+    }else{
+        echo '<br><span class=blue> ▶▶▶▶ 이월금 : '.Number_format($pv).'</span> <span style=margin-left:20px>['.$note.']</span>';
+    }
 
-        if($debug){
-            echo "<code>";
-            print_R($temp_sql1);
-            sql_query($temp_sql1);
-            echo "</code>";
-        }else{
-            sql_query($temp_sql1);
-        }
+    if($debug){
+        echo "<code>";
+        print_R($temp_sql1);
+        sql_query($temp_sql1);
+        echo "</code>";
+    }else{
+        sql_query($temp_sql1);
+    }
 	
 }
-
 
 function save_benefit($bonus_day, $mb_no, $mb_id, $mb_name, $grade, $mb_level, $recom, $today_sales,$rec_adm, $rec,$mb_balance,$mb_deposit){
     global $g5, $debug, $code,$bonus_rate, $bonus_limit;
     
     $benefit = $today_sales;
 
-    list($mb_balance,$balance_limit,$benefit_limit) = bonus_limit_check($mb_id,$benefit);
+    list($mb_balance,$balance_limit,$benefit_limit,$mb_pv,$direct_LR) = bonus_limit_check($mb_id,$benefit,1);
     
 
     // 디버그 로그
     
         echo "<code>";
-        echo "현재수당 : ".$mb_balance."  | 수당한계 :". $balance_limit.' | ';
+        echo "현재수당 : ".$mb_balance."  | 수당한계 :". $balance_limit.' | PV :'.$mb_pv.' | ';
         echo "발생할수당: ".$benefit." | 지급할수당 :".$benefit_limit;
-        echo "</code><br>";
+        echo "</code>";
     
 
     // 수당제한
     // echo $mb_id." | ".Number_format($benefit).'*'.$bonus_rate;
 
-    if($benefit > $benefit_limit && $balance_limit != 0 ){
 
-        $rec_adm .= " | benefit overflow";
-        echo "<span class=blue> ▶▶ 수당 지급 : ".Number_format($benefit)."</span>";
-        echo "<span class=red> ▶▶▶ 수당 초과 (한계까지만 지급) : ".Number_format($benefit_limit)." </span><br>";
-    }else if($benefit != 0 && $balance_limit == 0 && $benefit_limit == 0){
+    // 직추천인조건
+    if($direct_LR < 1){
+        list($L_recomm_count,$R_recomm_count) = brecom_recomm($mb_id);
+        echo "<br><span>▶▶▶ 후원 산하 직추천인 :: ";
+        echo "L : ".$L_recomm_count.' / R :'.$R_recomm_count;
 
-        $rec_adm .= " | Sales zero";
-        echo "<span class=blue> ▶▶ 수당 지급 : ".Number_format($benefit)."</span>";
-        echo "<span class=red> ▶▶▶ 수당 초과 (기준매출없음) : ".Number_format($benefit_limit)." </span><br>";
-
-    }else if($benefit == 0){
-        echo "<span class=blue> ▶▶ 수당 미발생 </span>";
-
+        if($L_recomm_count > 0 && $R_recomm_count > 0){
+            $recomm_condition = 1;
+            echo "<span class='red'> === OK</span><br><br>";
+        }else{
+            $recomm_condition = 0;    
+        }
     }else{
-        echo "<span class=blue> ▶▶ 수당 지급 : ".Number_format($benefit)."</span><br>";
+        $recomm_condition = 1;
+    }
+
+    if($recomm_condition > 0){
+        if(($benefit > $benefit_limit && $balance_limit != 0) ){
+            $rec_adm .= " | benefit overflow";
+            echo "<span class=blue> ▶▶▶ 수당 지급 : ".Number_format($benefit)."</span>";
+            echo "<span class=red> ▶▶▶ 수당 초과 (한계까지만 지급) : ".Number_format($benefit_limit)." </span><br>";
+        }else if($mb_pv < $benefit){
+            $rec_adm .= " | benefit overflow PV";
+            echo "<span class=blue> ▶▶▶ 수당 지급 : ".Number_format($benefit)."</span>";
+            $benefit_limit = $mb_pv;
+            echo "<span class=red> ▶▶▶ PV 초과(일 상한제한) (한계까지만 지급) : ".Number_format($benefit_limit)." </span><br>";
+        }else if($benefit != 0 && $balance_limit == 0 && $benefit_limit == 0){
+
+            $rec_adm .= " | Sales zero";
+            echo "<span class=blue> ▶▶▶ 수당 지급 : ".Number_format($benefit)."</span>";
+            echo "<span class=red> ▶▶▶ 수당 초과 (기준매출없음) : ".Number_format($benefit_limit)." </span><br>";
+
+        }else if($benefit == 0){
+            echo "<span class=blue> ▶▶▶ 수당 미발생 </span>";
+
+        }else{
+            
+            echo "<span class=blue> ▶▶▶ 수당 지급 : ".Number_format($benefit)."</span><br>";
+        }
+    }else{
+        echo "<span class=red> ▶▶▶ 직추천수 미달 : ".Number_format($benefit)."</span><br><br>";
+        $benefit_limit = 0;
     }
 
     if($benefit > 0 && $benefit_limit > 0){
@@ -493,7 +515,7 @@ function save_benefit($bonus_day, $mb_no, $mb_id, $mb_name, $grade, $mb_level, $
         $record_result = soodang_record($mb_id, $code, $benefit_limit,$rec,$rec_adm,$bonus_day,$mb_no,$mb_level);
 
         if($record_result){
-            $balance_up = "update g5_member set mb_balance = mb_balance + {$benefit_limit}  where mb_id = '".$mb_id."'";
+            $balance_up = "update g5_member set mb_balance = mb_balance + {$benefit_limit}, mb_3 = 1  where mb_id = '".$mb_id."'";
 
             // 디버그 로그
             if($debug){
@@ -505,31 +527,123 @@ function save_benefit($bonus_day, $mb_no, $mb_id, $mb_name, $grade, $mb_level, $
             }
         }
     }
+}
 
-        /* if($benefit_limit >= $balance_limit){
-            $rec_adm = "benefit overflow";
-            echo " <span class=red> ▶▶ 수당 초과 (한계까지만 지급)".$benefit_limit.' | '.$balance_limit." </span><br>"; 
-            $benefit = $balance_limit - $benefit_limit;
-        }else{
-            $benefit = $today_sales;
-        }
-	
-        $record_result = soodang_record($mb_id, $code, $benefit,$rec,$rec_adm,$bonus_day,$mb_no,$mb_level);
-                    
-        if($record_result){
-            echo " <span class=red> ▶▶▶ 수당 지급 ".$benefit." </span><br>";
-            $balance_up = "update g5_member set mb_balance = ".$benefit_limit."  where mb_id = '".$mb_id."'";
-        } */
+
+
+$brcomm_arr = [];
+
+function brecom_recomm($mb_id,$grade_condition = 0,$sales_condition = 0){
+    global $config,$brcomm_arr,$debug;
+	$origin = $mb_id;
+
+    // 후원 하부 L,R 구분
+    list($leg_list,$cnt) = brecommend_direct($mb_id);
+
+    if($cnt == 2){
         
-        // 디버그 로그
-        /* if($debug){
-            echo "<code>";
-            print_R($balance_up);
-            echo "</code>";
-        }else{
-            sql_query($balance_up);
-        } */
+        $L_member = $leg_list[0]['mb_id'];
+        $R_member = $leg_list[1]['mb_id'];
+        
+        $brcomm_arr = [];
+        array_push($brcomm_arr, $leg_list[0]);
+        $manager_list_L = brecommend_array($L_member, 0);
+        // echo "<br><br> L ::<br>";print_R($manager_list_L);
+    
+        $brcomm_arr = [];
+        array_push($brcomm_arr, $leg_list[1]);
+        $manager_list_R = brecommend_array($R_member, 0);
+        // echo "<br><br> R ::<br>";print_R($manager_list_R);
 
+       
+        /* 하부 직추천인 확인 */
+        // echo "<br><span>▶▶▶ 직추천인 :: ";
+        list($L_recomm_array, $L_recomm_count) = array_Match_sort($manager_list_L,'mb_recommend',$origin);
+        list($R_recomm_array, $R_recomm_count) = array_Match_sort($manager_list_R,'mb_recommend',$origin);
+
+        return array($L_recomm_count,$R_recomm_count);
+        
+
+    }else if($cnt < 2){
+        echo "<span>후원 L,R 라인 없음</span>";
+    }else{
+        echo "<span>후원인 초과</span>";
+    }
+
+}
+
+
+
+// 후원인 하부 회원 
+function brecommend_array($brecom_id, $count)
+{
+	global $brcomm_arr;
+
+	// $new_arr = array();
+	$b_recom_sql = "SELECT mb_id,grade,mb_rate,mb_save_point,mb_recommend,mb_brecommend_type from g5_member WHERE mb_brecommend='{$brecom_id}' ";
+	$b_recom_result = sql_query($b_recom_sql);
+	$cnt = sql_num_rows($b_recom_result);
+
+	if ($cnt < 1) {
+		// 마지막
+	} else {
+		++$count;
+		while ($row = sql_fetch_array($b_recom_result)) {
+			brecommend_array($row['mb_id'], $count);
+            // print_R($count.' :: '.$row['mb_id'].' | type ::'.$row['grade']);
+            // $brcomm_arr[$count]['id'] = $brecom_id;
+            array_push($brcomm_arr, $row);
+		}
+	}
+	return $brcomm_arr;
+}
+
+
+function brecommend_direct($mb_id){
+   
+    $down_leg = array();
+    $sql = "SELECT mb_id,grade,mb_rate,mb_save_point,mb_recommend,mb_brecommend_type FROM g5_member where mb_brecommend = '{$mb_id}' AND mb_brecommend != '' ORDER BY mb_brecommend_type ASC ";
+    $sql_result = sql_query($sql);
+    $cnt = sql_num_rows($sql_result);
+
+    while($result = sql_fetch_array($sql_result) ){
+        array_push($down_leg,$result);
+    } 
+    return array($down_leg,$cnt);
+}
+
+
+
+// 배열정렬 + 지정값 이상 카운팅
+function array_index_sort($list,$key,$average)
+{
+    $count = 0;
+    $a = array_count_values(array_column($list,$key));
+
+    foreach($a as $key => $value) {
+        
+        if($key >= $average){
+            $count += intval($value);
+        }
+    }
+    return array($a, $count);
+}
+
+
+
+// 배열정렬 + 지정값 매칭 카운팅
+function array_Match_sort($list,$key,$Matchvalue)
+{
+    $count = 0;
+    $a = array_count_values(array_column($list,$key));
+
+    foreach($a as $key => $value) {
+        
+        if($key == $Matchvalue){
+            $count = intval($value);
+        }
+    }
+    return array($a, $count);
 }
 ?>
 

@@ -119,8 +119,7 @@ $sql_common = "  mb_name = '{$_POST['mb_name']}',
 				 account_name = '{$account_name}',
 				 center_use = '{$center_use}',
 				 mb_center = '{$mb_center}',
-				 mb_block = '{$mb_block}',
-				 mb_week_dividend = '{$mb_week_dividend}' ";
+				 mb_block = '{$mb_block}'";
 
 if ($w == '')
 {

@@ -1,38 +1,17 @@
 <?php
-$sub_menu = "600200";
+$sub_menu = "600299";
 include_once('./_common.php');
 
 // $debug=1;
-include_once('./bonus_inc.php');
-auth_check($auth[$sub_menu], 'r');
 $category = 'mining';
 
-if(!$debug){
-    $dupl_check_sql = "select mb_id from {$g5['mining']} where day='".$bonus_day."' and allowance_name = '{$code}' ";
-    $get_today = sql_fetch( $dupl_check_sql);
-
-    if($get_today['mb_id']){
-        alert($bonus_day.' '.$code." 수당은 이미 지급되었습니다.");
-        die;
-    }
-}
-
-if( !function_exists( 'array_column' ) ):
-    
-    function array_column( array $input, $column_key, $index_key = null ) {
-    
-        $result = array();
-        foreach( $input as $k => $v )
-            $result[ $index_key ? $v[ $index_key ] : $k ] = $v[ $column_key ];
-        
-        return $result;
-    }
-endif;
+include_once('./bonus_inc.php');
+auth_check($auth[$sub_menu], 'r');
 
 
 //회원 리스트를 읽어 온다.
 $sql_common = " FROM g5_member";
-$sql_search=" WHERE rank > 1 AND mb_level < 7";
+$sql_search=" WHERE mb_level > 0 AND mb_level < 7";
 $sql_mgroup=" ORDER BY mb_no asc";
 
 $pre_sql = "select * 
@@ -61,7 +40,7 @@ ob_start();
 // 설정로그 
 echo "<span class ='title' style='font-size:20px;'>".$bonus_row['name']." 수당 정산</span><br>";
 echo "<span style='border:1px solid black;padding:10px 20px;display:block;font-weight:600;'> MINING 지급비율 : ". $mining_rate." mh/s  </span><br>";
-echo "<strong>".strtoupper($code)." 수당 지급비율 : <span class='red'>". $bonus_row['rate']."% </span> </strong> |    지급조건 -".$pre_condition.' | '.$bonus_condition_tx." | ".$bonus_layer_tx." | ".$bonus_limit_tx."<br>";
+echo "<strong>".strtoupper($code)." 수당 지급비율 : <span class='red'>". $bonus_row['rate']."% </span> </strong> |    지급조건 -".$pre_condition.' | '.$bonus_source_tx." | ".$bonus_layer_tx." | ".$bonus_limit_tx."<br>";
 echo "<strong>".$bonus_day."</strong><br>";
 echo "<br><span class='red'> 기준대상자(매출발생자) : ".$result_cnt."</span><br><br>";
 echo "<div class='btn' onclick=bonus_url('".$category."')>돌아가기</div>";
@@ -196,7 +175,7 @@ function  excute(){
 
     global $result;
     global $g5, $bonus_day, $bonus_condition, $code, $bonus_rates, $bonus_rate,$pre_condition_in,$bonus_limit,$bonus_layer;
-    global $minings,$mining_target,$mining_amt_target,$mem_list,$mining_rate,$mining;
+    global $minings,$mining_target,$mining_amt_target,$mem_list,$mining_rate,$mining,$mining_hash;
     global $debug;
     
     for ($i=0; $row=sql_fetch_array($result); $i++) {   
@@ -207,7 +186,8 @@ function  excute(){
         $item_rank = $row['rank'];
         $bonus_rates = $bonus_rate;
 
-        $matching_lvl = $bonus_layer[$item_rank-1];
+        // $matching_lvl = $bonus_layer[$item_rank-1];
+        $matching_lvl = $bonus_layer;
 
         echo "<br><br><span class='title block gold' style='font-size:30px;'>".$mb_id."</span><br>";
         
@@ -222,13 +202,13 @@ function  excute(){
         echo "<br>";
         echo "▶ 보유상품등급: <strong>".$item_rank."</strong> | 매칭레벨 : <span class='blue'>".$matching_lvl."</span><br> ";
         echo "▶▶후원라인 하부 <span class='blue'>".$matching_lvl."대</span> 해쉬파워/채굴량 :: ";
-        echo "<span class='blue'>".$mining_matching_hash." MH/s</span>";
+        echo "<span class='blue'>".$mining_matching_hash.' '.$mining_hash[0]." </span>";
         echo "<br>";
 
         // $hash_power = shift_auto(($mb_rate/$tp[0]),2);
         
         // 계산식
-        echo "▶▶▶데일리 마이닝지급량  : mh :: <span class='blue'>".$mining_rate."</span><br>";
+        echo "▶▶▶데일리 마이닝지급량  : ".' '.$mining_hash[0]." :: <span class='blue'>".$mining_rate."</span><br>";
         echo "▶▶▶▶매칭수당지급량 : ".$bonus_rates.' '.$minings[0];
         echo "<br><br>";
 
@@ -252,24 +232,24 @@ function  excute(){
         if($benefit > $benefit_limit && $balance_limit != 0 ){
 
             $rec_adm .= "<span class=red> |  Bonus overflow :: ".shift_auto($benefit_limit - $benefit)."</span>";
-            echo "<span class=blue> ▶▶ 수당 지급 : ".shift_auto($benefit,COIN_NUMBER_POINT)."</span>";
+            echo "<span class=blue> ▶▶ 수당 지급 : ".point_number($benefit)."</span>";
             echo "<span class=red> ▶▶▶ 수당 초과 (한계까지만 지급) : ".shift_auto($benefit_limit,COIN_NUMBER_POINT)." </span><br>";
         }else if($benefit != 0 && $balance_limit == 0 && $benefit_limit == 0){
-
+            
             $rec_adm .= "<span class=red> | Sales zero :: ".shift_auto(($benefit_limit - $benefit),COIN_NUMBER_POINT)."</span>";
-            echo "<span class=blue> ▶▶ 수당 지급 : ".shift_auto($benefit)."</span>";
+            echo "<span class=blue> ▶▶ 수당 지급 : ".point_number($benefit)."</span>";
             echo "<span class=red> ▶▶▶ 수당 초과 (기준매출없음) : ".shift_auto($benefit_limit,COIN_NUMBER_POINT)." </span><br>";
         }else if($benefit == 0){
 
             echo "<span class=blue> ▶▶ 수당 미발생 </span>";
         }else{
-            echo "<span class=blue> ▶▶ 수당 지급 : ".shift_auto($benefit,COIN_NUMBER_POINT)."</span><br>";
+            echo "<span class=blue> ▶▶ 수당 지급 : ".point_number($benefit)."</span><br>";
         }
 
 
         if($benefit > 0 && $benefit_limit > 0){
-            $rec=$code.' Bonus By '.$bonus_layer.' step | '.$mining_matching_hash.' MH :: '.$benefit_limit.' '.$minings[0];
-            $rec_adm =  $mining_matching_hash.' * '.$mining_rate.' * '.$bonus_rates.' = '.$benefit_limit;
+            $rec=$code.' Bonus By '.$bonus_layer.' step | '.$mining_matching_hash.' '.$mining_hash[0].' :: '.point_number($benefit_limit).' '.$minings[0];
+            $rec_adm =  $mining_matching_hash.' * '.$mining_rate.' * '.$bonus_rates.' = '.point_number($benefit_limit);
 
             $record_result = mining_record($mb_id, $code, $benefit_limit,$bonus_rates,$minings[0], $rec, $rec_adm, $bonus_day);
 

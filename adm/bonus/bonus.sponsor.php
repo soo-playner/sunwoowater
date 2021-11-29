@@ -1,5 +1,5 @@
 <?php
-$sub_menu = "600200";
+$sub_menu = "600299";
 include_once('./_common.php');
 // $debug=1;
 include_once('./bonus_inc.php');
@@ -23,7 +23,7 @@ $result_cnt = sql_num_rows($pre_result);
 ob_start();
 
 // 설정로그 
-echo "<strong>".strtoupper($code)." 지급비율 : ". $bonus_row['rate']."%   </strong> |    지급조건 :".$pre_condition.' | '.$bonus_condition_tx." | ".$bonus_layer_tx."<br>";
+echo "<strong>".strtoupper($code)." 지급비율 : ". $bonus_row['rate']."%   </strong> |   지급조건 :".$pre_condition.' | '.$bonus_source_tx." | ".$bonus_layer_tx."<br>";
 echo "<strong>".$bonus_day."</strong><br>";
 echo "<br><span class='red'> 기준대상자(매출발생자) : ".$result_cnt."</span><br><br>";
 echo "<div class='btn' onclick='bonus_url();'>돌아가기</div>";
@@ -67,8 +67,10 @@ if($result_cnt > 0){
 function  excute(){
 
     global $result,$history_cnt;
-    global $g5, $bonus_day, $bonus_condition, $code, $bonus_rate,$bonus_rates,$pre_condition_in,$bonus_limit,$bonus_layer,$lvlimit_cnt ;
+    global $g5, $bonus_day, $bonus_source,$bonus_condition, $code, $bonus_rate,$bonus_rates,$bonus_limit,$bonus_layer,$lvlimit_cnt ;
     global $debug,$config;
+
+
 
     for ($i=0; $row=sql_fetch_array($result); $i++) {   
 
@@ -102,7 +104,7 @@ function  excute(){
             $grade=$recommend['grade'];
 
             // 추천, 후원 조건
-            if($bonus_condition < 2){
+            if($bonus_source < 2){
                 $recom=$recommend['mb_recommend'];
             }else{
                 $recom=$recommend['mb_brecommend'];
@@ -129,7 +131,7 @@ function  excute(){
                 
                 echo "<br><br><span class='box'><strong class='subtitle'>".$mb_id."</strong> | ".$history_cnt." 단계 :: ".Number_format($today_sales).'*'.$bonus_rate.'% = '.Number_format($benefit)."</span>";
 
-                list($mb_balance,$balance_limit,$benefit_limit) = bonus_limit_check($mb_id,$benefit);
+                list($mb_balance,$balance_limit,$benefit_limit,$mb_pv) = bonus_limit_check($mb_id,$benefit);
                 // 디버그 로그
                 
                 echo "<code>";
@@ -202,9 +204,10 @@ function  excute(){
                     echo "<span >".$mem_cnt."</span> / <span class='blue'>".$lvlimit_cnt[$history_cnt-1]."</span>";
                 } */
 
+
                 /* 구매 아이템 등급 조건 */
-                /* $matching_lvl = $bonus_layer[$item_rank-1];
-                echo " 보유상품등급: ".$item_rank." | 매칭레벨 : <span class='blue'>".$matching_lvl."</span> | 기준등급: <strong>".$history_cnt."</strong></span> ";
+                $matching_lvl = $bonus_condition[$item_rank];
+                echo " 보유상품등급: P".$item_rank." | 매칭레벨 : <span class='blue'>".$matching_lvl."</span> | 기준등급: <strong>".$history_cnt."</strong></span> ";
 
                 if($item_rank > 0 && $matching_lvl >= $history_cnt){
                     $matching_lvl = 1;
@@ -213,9 +216,8 @@ function  excute(){
                     $matching_lvl = 0;
                     echo "<span class='red'>:: 상품등급기준 미달 </span>";
                 } 
-                echo "<br><br>"; */
+                echo "<br><br>";
 
-                $matching_lvl = 1;
                 
 
                 if($matching_lvl > 0){
@@ -224,6 +226,11 @@ function  excute(){
                         $rec_adm .= "<span class=red> |  Bonus overflow :: ".Number_format($benefit_limit - $benefit)."</span>";
                         echo "<span class=blue> ▶▶ 수당 지급 : ".Number_format($benefit)."</span>";
                         echo "<span class=purple> ▶▶▶ 수당 초과 (한계까지만 지급) : ".Number_format($benefit_limit)." </span><br>";
+                    }else if($mb_pv < $benefit){
+                        $rec_adm .= " | benefit overflow PV";
+                        echo "<span class=blue> ▶▶▶ 수당 지급 : ".Number_format($benefit)."</span>";
+                        $benefit_limit = $mb_pv;
+                        echo "<span class=red> ▶▶▶ PV 초과(일 상한제한) (한계까지만 지급) : ".Number_format($benefit_limit)." </span><br>";
                     }else if($benefit != 0 && $balance_limit == 0 && $benefit_limit == 0){
                 
                         $rec_adm .= "<span class=red> | Sales zero :: ".Number_format($benefit_limit - $benefit)."</span>";

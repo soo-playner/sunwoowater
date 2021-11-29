@@ -2,6 +2,7 @@
 $sub_menu = "700600";
 include_once('./_common.php');
 include_once(G5_THEME_PATH.'/_include/wallet.php');
+include_once(G5_LIB_PATH.'/api/filecoin/filecoin.infura.php');
 
 auth_check($auth[$sub_menu], 'r');
 
@@ -94,12 +95,18 @@ $result = sql_query($sql);
 	.local_ov .tit{color:black; font-weight:600;}
 	.local_ov a{margin-left:20px;}
 
-    .badge.eth{background:navy;color:white;font-weight:600;}
+    
 
+    .btn.in_btn{background:#2b72db;color:white;padding:4px 10px;box-shadow:0px 2px 3px rgba(0,0,0,0.25)}
+    .btn.in_btn:hover{background:gold;color:black;}
 </style>
 
 
 <script>
+    function fil_update(){
+        location.href = "/lib/api/filecoin/filecoin.php";
+    }
+
 	$(function(){
 
 		$('.regTb [name=status]').on('change',function(e){
@@ -123,26 +130,6 @@ $result = sql_query($sql);
 			}
 
             console.log( `id : ${$(this).attr('uid')} / coin : ${coin} / amt_val : ${amt} / refund : ${refund}`);
-
-			/* $.post( "/adm/adm.request_proc.php", {
-				uid : $(this).attr('uid'),
-				status : $(this).val(),
-                refund : refund,
-                coin : coin,
-                amt : amt,
-                func : 'deposit'
-			}, function(data) {
-				if(data.result =='success'){
-                    if(data.code == 0001 || data.code == 0002){
-                        alert('변경되었습니다.');
-                    }else{
-					    alert('변경되었습니다.');
-                    }
-					location.reload();
-				}else{
-					alert("처리되지 않았습니다.");
-				}
-			},'json'); */
 
             $.ajax({
                 url: '/adm/adm.request_proc.php',
@@ -171,6 +158,9 @@ $result = sql_query($sql);
             });
 		});
 
+        $('').on('click',function(e){
+
+        });
 
 		$.datepicker.regional["ko"] = {
 			closeText: "close",
@@ -220,10 +210,12 @@ $result = sql_query($sql);
 <div class="local_desc01 local_desc">
     <p>
         <strong>- 요청확인중 :</strong> 기본값 | <strong>승인 :</strong> 입금금액 포인트 반영 | <strong>대기 :</strong> 확인처리중 | <strong>불가 :</strong> 입금자, 입금액 불일치 - 입금액변경하여 처리가능 | <strong>취소 :</strong> 미승인처리<br>
-        - 상태값 승인 => 입금액 반영시에만 회원에게 포인트 지급처리
+        - 상태값 승인 => 입금액 반영시에만 회원에게 포인트 지급처리<br>
+        - <button type='button' class='btn in_btn' onclick="fil_update()">FIL 입금정보 가져오기</button> : 파일코인 TX코드 조회하여 입금요청금액 자동 업데이트
 	</p>
 </div>
 
+<form 
 <div class="tbl_head01 tbl_wrap">
     <table class='regTb'>
     <caption><?php echo $g5['title']; ?> 목록</caption>
@@ -233,7 +225,7 @@ $result = sql_query($sql);
         <th scope="col" width='8%'>아이디</th>
         <th scope="col" width='8%'>추천인</th>
         <th scope="col" width='auto'>입금자명(TX HASH)</th>
-        <th scope="col" width='5%'>입금요청금액</th>
+        <th scope="col" width='8%'>입금요청금액</th>
         <th scope="col" width='5%'>입금종류</th>
         <th scope="col" width='10%'>입금처리금액 (<?=ASSETS_CURENCY?>)</th>
         <th scope="col" width='10%'>승인여부</th>
@@ -251,6 +243,21 @@ $result = sql_query($sql);
         }
     }
 
+    
+
+
+    function retrun_value_func($value,$coin){
+        if(strtolower($coin) == 'eth'){
+            return shift_auto_zero($value,'eth');
+        }else if(strtolower($coin) =='fil'){
+            return shift_auto_zero($value);
+        }else if(strtolower($coin) =='$'){
+            return shift_auto_zero($value);
+        }else{
+            return shift_auto_zero($value,'원');
+        }
+    }
+
     for ($i=0; $row=sql_fetch_array($result); $i++) {
         $bg = 'bg'.($i%2);
         $duplicate_sql ="select COUNT(*) as cnt from wallet_deposit_request WHERE mb_id='{$row['mb_id']}' ";
@@ -260,25 +267,21 @@ $result = sql_query($sql);
         if($duplicate > 1){$row_dup = 'row_dup';}else{$row_dup = '';}
 
         $member_sql = "SELECT A.mb_recommend,A.mb_sponsor,B.mb_brecommend from g5_member A, g5_member B WHERE A.mb_id = '{$row['mb_id']}' AND B.mb_id = A.mb_recommend";
-        // echo $member_sql;
         $member_result = sql_fetch($member_sql);
         
-        $row_tx = $row['txhash'];
-        $row_coin = strtoupper($row['coin']);
-
-        if($row['coin'] == 'eth'){
-            $row_coin = "<span class='badge eth'>".$row_coin."<span>";
-            $row_tx = "<a href='https://etherscan.io/tx/".$row['txhash']."' target='_blank' style='text-decoration:underline'>".$row['txhash']."</a>";
-        }
     ?>
 
     <tr class=" <?=$row_dup?>">
         <td ><?php echo $row['uid'] ?></td>
         <td style='color:#333;font-weight:600'><a href='/adm/member_form.php?sst=&sod=&sfl=&stx=&page=&w=u&mb_id=<?=$row['mb_id']?>' target='_blank'><?=$row['mb_id'] ?></a></td>
         <td style='color:#666'><?=$member_result['mb_recommend']?></td>
-        <td ><?=$row_tx?></td>
-        <td><?=Number_format($row['amt'],DEPOSIT_NUMBER_POINT)?></td>
-        <td class='coin'><?=$row_coin?></td>
+        <td>
+            <?=retrun_tx_func($row['txhash'],$row['coin']);?>
+        </td>
+        <td style="text-align:right;padding-right:10px">
+            <?=retrun_value_func($row['amt'],$row['coin']);?>
+        </td>
+        <td class='coin'><?=retrun_coin($row['coin'])?></td>
         <td><input type='text' class='reg_text input_amt_val <?=value_color($row['in_amt'])?>' style='font-weight:600;' value='<?=shift_auto_zero($row['in_amt'],'$')?>' inputmode="numeric"></td>
         
         <td>

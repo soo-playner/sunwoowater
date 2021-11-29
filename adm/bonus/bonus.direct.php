@@ -1,11 +1,10 @@
 <?php
-$sub_menu = "600200";
+$sub_menu = "600299";
 include_once('./_common.php');
 // $debug = 1;
 include_once('./bonus_inc.php');
 
 auth_check($auth[$sub_menu], 'r');
-
 
 
 //회원 리스트를 읽어 온다.
@@ -32,7 +31,7 @@ ob_start();
 
 // 설정로그 
 echo "<span class ='title' style='font-size:20px;'>".$bonus_row['name']." 수당 정산</span><br>";
-echo "<strong>".strtoupper($code)." 수당 지급비율 : ". $bonus_row['rate']."%   </strong> |    지급조건 -".$pre_condition.' | '.$bonus_condition_tx." | ".$bonus_layer_tx." | ".$bonus_limit_tx."<br>";
+echo "<strong>".strtoupper($code)." 수당 지급비율 : ". $bonus_row['rate']."%   </strong> |    지급조건 -".$pre_condition.' | '.$bonus_source_tx." | ".$bonus_layer_tx." | ".$bonus_limit_tx."<br>";
 echo "<strong>".$bonus_day."</strong><br>";
 echo "<br><span class='red'> 기준대상자(매출발생자) : ".$result_cnt."</span><br><br>";
 echo "<div class='btn' onclick='bonus_url();'>돌아가기</div>";
@@ -65,9 +64,15 @@ excute();
 function  excute(){
 
     global $result;
-    global $g5, $bonus_day, $bonus_condition, $code, $bonus_rates, $bonus_rate,$pre_condition_in,$bonus_limit ;
+    global $g5, $bonus_day, $bonus_condition,$bonus_source, $code, $bonus_rates, $bonus_rate,$pre_condition_in,$bonus_limit ;
     global $debug;
 
+    // 추천, 후원 조건
+    if($bonus_source < 2){
+        $recom= 'mb_recommend';
+    }else{
+        $recom= 'mb_brecommend';
+    }
 
     for ($i=0; $row=sql_fetch_array($result); $i++) {   
 
@@ -78,12 +83,6 @@ function  excute(){
 
         echo "<br><br><span class='title block' style='font-size:30px;'>".$mb_id."</span><br>";
 
-        // 추천, 후원 조건
-        if($bonus_condition < 2){
-            $recom= 'mb_recommend';
-        }else{
-            $recom= 'mb_brecommend';
-        }
         
          /* $sql = "SELECT mb_no, mb_id, mb_name,grade,mb_level, mb_balance, mb_recommend, mb_brecommend, mb_deposit_point,
         (SELECT od_cart_price  FROM g5_shop_order WHERE A.mb_id = mb_id AND od_date = '{$bonus_day}') AS today_sale FROM g5_member AS A WHERE {$recom} = '{$mb_id}' "; */

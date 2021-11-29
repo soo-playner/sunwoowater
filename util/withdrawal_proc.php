@@ -9,25 +9,29 @@ $now_datetime = date('Y-m-d H:i:s');
 $now_date = date('Y-m-d');
 
 
-/* 코인출금시 */
-/* $wallet_addr	= trim($_POST['wallet_addr']);
-$select_coin    = trim($_POST['select_coin']);  */
+$select_coin 		= $_POST['select_coin'];
 $func				= trim($_POST['func']);
 $mb_id			= trim($_POST['mb_id']);
 $amt		= trim($_POST['amt']);
-$select_coin 		= $_POST['select_coin'];
 
-/* 원화계좌출금*/
-$bank_name = trim($_POST['bank_name']);
-$bank_account = trim($_POST['bank_account']);
-$account_name = trim($_POST['account_name']);
+if($select_coin == '원' || $select_coin == '$'){
+	/* 원화계좌출금*/
+	$bank_name = trim($_POST['dataset']['bank_name']);
+	$bank_account = trim($_POST['dataset']['bank_account']);
+	$account_name = trim($_POST['dataset']['account_name']);
+}else{
+
+	/* 코인출금시 */
+	$withdraw_wallet	= trim($_POST['dataset']['withdrawal_wallet_addr']);
+}
 
 
 if($debug){
-	$mb_id = 'test1';
+	$mb_id = 'test5';
 	$func = 'withdraw';
-	$amt = 100;
+	$amt = 95;
 	$select_coin = '$';
+
 	$bank_name = '농협';
 	$account_name = '로그컴퍼니';
 	$bank_account = '123-456789-012';
@@ -117,17 +121,17 @@ if($total_row['total_sum'] != ""){
 
 
 // 출금주소 확인
-/* if(!$wallet_addr){
+/* if(!$withdraw_wallet){
 	echo (json_encode(array("result" => "Failed", "code" => "0003","sql"=>"Please Input Your Etherium Wallet Address")));
 	return false;
 } */
 
-$out_amt = $amt*$usd_price;
+$out_amt = shift_auto($amt/$fil_price,'fil');
 
 //출금 처리
 $proc_receipt = "insert {$g5['withdrawal']} set
 mb_id ='{$mb_id}'
-, addr = ''
+, addr = '{$withdraw_wallet}'
 , bank_name = '{$bank_name}'
 , bank_account = '{$bank_account}'
 , account_name = '{$account_name}'
@@ -138,10 +142,10 @@ mb_id ='{$mb_id}'
 , amt_total = {$in_amt}
 , coin = '{$select_coin}'
 , status = '0'
-, create_dt = '".$now_datetime."'
-, cost = '{$usd_price}'
+, create_dt = '{$now_datetime}'
+, cost = '{$fil_price}'
 , out_amt = '{$out_amt}'
-, od_type = '출금요청' ";
+, od_type = '수당출금요청' ";
 
 
 if($debug){ 
@@ -158,6 +162,7 @@ if($rst){
 	bank_name = '{$bank_name}'
 	, bank_account = '{$bank_account}'
 	, account_name = '{$account_name}'
+	, withdraw_wallet = '{$withdraw_wallet}'
 	, mb_deposit_calc = mb_deposit_calc - {$in_amt}
 	, mb_shift_amt = mb_shift_amt + {$in_amt}
 	where mb_id = '{$mb_id}' ";
@@ -176,3 +181,5 @@ if($rst && $amt_result){
 }else{
 	echo (json_encode(array("result" => "Failed", "code" => "0001","sql"=>"Please retry again")));
 }
+
+?>

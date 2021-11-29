@@ -187,7 +187,7 @@ if($coin == 'eth'){
 
 // $point = Crypto::GetCoinToPrice($coin, 2);
 
-$point = $eth_price * $amount;
+$point = $fil_price * $amount;
 
 if($debug){
 	echo "<br><br>";

@@ -38,8 +38,6 @@ if($bonus_rate_array_cnt > 0){
 
 $bonus_rate = explode(',',$bonus_row['rate']);
 
-$bonus_condition = $bonus_row['source'];
-$bonus_condition_tx = bonus_condition_tx($bonus_condition);
 $bonus_layer = $bonus_row['layer'];
 $bonus_layer_tx = bonus_layer_tx($bonus_layer);
 
@@ -81,7 +79,7 @@ if($debug){
 ob_start();
 
 // 설정로그 
-echo "<strong>".strtoupper($code)." 지급비율 : ". $bonus_row['rate']."%   </strong> |    지급조건 :".$pre_condition.' | '.$bonus_condition_tx." | ".$bonus_layer_tx."<br>";
+echo "<strong>".strtoupper($code)." 지급비율 : ". $bonus_row['rate']."%   </strong> |    지급조건 :".$pre_condition.' | '.$bonus_source_tx." | ".$bonus_layer_tx."<br>";
 echo "<br><strong> 현재일 : ".$bonus_day." |  ".$half."(지급산정기준) : <span class='red'>".$half_frdate."~".$half_todate."</span> | 지난주 매출 합계 : <span class='blue big'>".$total_order."</span></strong><br>";
 echo "<br><br>기준대상자(직급 0 이상) : ";
 

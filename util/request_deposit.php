@@ -14,12 +14,13 @@ $mb_id = $_POST['mb_id'];
 $txhash = $_POST['hash'];
 $coin = $_POST['coin'];
 $d_price = $_POST['d_price'];
-
+   
 if($debug){
   $mb_id ='admin';
-  $coin ='$';
-  $txhash ='한은수';
-  $d_price ='3000';
+  $coin ='FIL';
+  $txhash ='bafy2bzacedadg6yufns42ibfuxm6qcqzsb4u2ykqbv5br2y7d2zbbkcwtyipq';
+  $d_price ='0';
+
 }
 
 if(DEPOSIT_CURENCY != ASSETS_CURENCY){
@@ -35,6 +36,7 @@ if($pre_result['cnt'] < 1){
   VALUES('$mb_id','$txhash','$now_datetime','$now_date',0,'$coin', '$d_price','$in_price')";
   
   if($debug){
+    echo "<br><br>";
     print_R($sql);
     $result = 1;
   }else{

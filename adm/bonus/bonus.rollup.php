@@ -17,8 +17,6 @@ $bonus_row = bonus_pick($code);
 $bonus_limit = $bonus_row['limited']/100;
 $bonus_rate = $bonus_row['rate']*0.01;
 
-$bonus_condition = $bonus_row['source'];
-$bonus_condition_tx = bonus_condition_tx($bonus_condition);
 
 $bonus_layer = $bonus_row['layer'];
 $bonus_layer_tx = bonus_layer_tx($bonus_layer);
@@ -41,7 +39,7 @@ $result_cnt = sql_num_rows($pre_result);
 ob_start();
 
 // 설정로그 
-echo "<strong>".strtoupper($code)." 지급비율 : ". $bonus_row['rate']."%   </strong> |    지급조건 :".$pre_condition.' | '.$bonus_condition_tx." | ".$bonus_layer_tx."<br>";
+echo "<strong>".strtoupper($code)." 지급비율 : ". $bonus_row['rate']."%   </strong> |    지급조건 :".$pre_condition.' | '.$bonus_source_tx." | ".$bonus_layer_tx."<br>";
 echo "<strong>".$bonus_day."</strong><br>";
 echo "<br><span class='red'> 기준대상자(매출발생자) : ".$result_cnt."</span><br><br>";
 echo "<div class='btn' onclick='bonus_url();'>돌아가기</div>";
@@ -121,7 +119,7 @@ for ($i=0; $row=sql_fetch_array($result); $i++) {
 
 
         // 추천, 후원 조건
-        if($bonus_condition < 2){
+        if($bonus_source < 2){
             $recom=$recommend['mb_recommend'];
         }else{
             $recom=$recommend['mb_brecommend'];

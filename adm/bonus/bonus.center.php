@@ -1,6 +1,6 @@
 <?php
 
-$sub_menu = "600200";
+$sub_menu = "600299";
 include_once('./_common.php');
 include_once('./bonus_inc.php');
 
@@ -9,14 +9,16 @@ auth_check($auth[$sub_menu], 'r');
 // $debug =1;
 
 // 지난주 대비 날짜 구하기 
-/* $today=$bonus_day;
+$today=$bonus_day;
 $timestr        = strtotime($today);
-$week           = date('w', strtotime($todate));
+
+$week           = date('w', strtotime($today));
 $weekfr         = $timestr - ($week * 86400);
 $weekla         = $weekfr + (6 * 86400);
-$week_frdate    = date('Y-m-d', $weekfr - (86400 * 3)); // 지난주 시작일자
-$week_todate    = date('Y-m-d', $weekla - (86400 * 3)); // 지난주 종료일자
- */
+
+$week_frdate    = date('Y-m-d', $weekfr - (86400 * 14)); // 지난주 시작일자
+$week_todate    = date('Y-m-d', $weekla - (86400 * 14)); // 지난주 종료일자
+
 $day = date('d', $timestr);
 $lastday = date('t', $timestr);
 
@@ -34,11 +36,6 @@ if($day > 13 && $day <= 20){
 
 
 // $bonus_rate = explode(',',$bonus_row['rate']);
-
-$bonus_condition = $bonus_row['source'];
-$bonus_condition_tx = bonus_condition_tx($bonus_condition);
-$bonus_layer = $bonus_row['layer'];
-$bonus_layer_tx = bonus_layer_tx($bonus_layer);
 
 
 //보름간 매출 합계 
@@ -80,8 +77,8 @@ if($debug){
 ob_start();
 
 // 설정로그 
-echo "<strong>센터 지급비율 : ". $bonus_row['rate']."%   </strong> |    지급조건 :".$pre_condition.' | '.$bonus_condition_tx." | ".$bonus_layer_tx."<br>";
-echo "<br><strong> 현재일 : ".$bonus_day." |  ".($week-1)."주 (지급산정기준) : <span class='red'>".$week_frdate."~".$week_todate."</span><br>";
+echo "<strong>센터 지급비율 : ". $bonus_row['rate']."%   </strong> |    지급조건 :".$pre_condition.' | '.$bonus_source_tx." | ".$bonus_layer_tx."<br>";
+echo "<br><strong> 현재일 : ".$bonus_day." |  ".($week-2)."주 (지급산정기준) : <span class='red'>".$week_frdate."~".$week_todate."</span><br>";
 
 echo "<br><br>기준대상자(센터회원) : <span class='red'>".$result_cnt."</span>";
 echo "</span><br><br>";
@@ -125,7 +122,7 @@ excute();
 function  excute(){
 
     global $result;
-    global $g5, $bonus_day, $bonus_condition, $code, $bonus_rate,$pre_condition_in,$bonus_limit,$week_frdate,$week_todate,$half_frdate,$half_todate;
+    global $g5, $bonus_day, $bonus_source, $code, $bonus_rate,$pre_condition_in,$bonus_limit,$week_frdate,$week_todate,$half_frdate,$half_todate;
     global $debug,$log_sql;
     
 
@@ -173,7 +170,7 @@ function  excute(){
 
         $benefit = $recom_week_total * $bonus_rate;
         
-        echo "<br><br><span class='title box'> ".$mb_id."  - 지난주 하부 총매출 : <span class='blue'>".Number_format($recom_week_total)."</span>";
+        echo "<br><br><span class='title box'> ".$mb_id."  - 해당기간 센터 하부 총매출 : <span class='blue'>".Number_format($recom_week_total)."</span>";
         echo " | 센터수당 : <span class='blue'>".Number_format($benefit)." (".($bonus_rate*100)."%)</span></span><br>";
         
         list($mb_balance,$balance_limit,$benefit_limit) = bonus_limit_check($recom_id,$benefit);
@@ -185,7 +182,7 @@ function  excute(){
         echo "발생할수당: ".Number_format($benefit)." | 지급할수당 :".Number_format($benefit_limit);
         echo "</code><br>";
         
-        $rec=$code.' Bonus By Center:'.$mb_id;
+        $rec=$code.' Bonus By '.$mb_id.' : '.$week_frdate.' ~ '.$week_todate;
         $rec_adm= 'CENTER | '.$recom_week_total.'*'.$bonus_rate.'='.$benefit;
 
 
@@ -203,7 +200,7 @@ function  excute(){
             echo "<span class=blue> ▶▶ 수당 지급 : ".Number_format($benefit)."</span>";
             echo "<span class=red> ▶▶▶ 수당 초과 (기준매출없음) : ".Number_format($benefit_limit)." </span><br>";
         }else if($benefit == 0){
-            echo "<span class=blue> ▶▶ 수당 미발생 </span>";
+            echo "<span class=red> ▶▶ 수당 미발생 </span>";
         }else{
             echo "<span class=blue> ▶▶ 수당 지급 : ".Number_format($benefit)."</span><br>";
         }

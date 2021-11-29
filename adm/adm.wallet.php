@@ -19,31 +19,58 @@ if($limited > 0){
 	$limited_per =0;
 }
 
-$mbm_price = coin_price('mbm');
-$eth_price = coin_price('eth');
-$usd_price = coin_price('usd');
 
-function coin_price($income){
-	global $g5;
+$usd_price = coin_prices('usdt') * 1000;
+$fil_price = coin_prices('fil');
 
-	$currency_sql = " SELECT * from {$g5['coin_price']} where symbol = '{$income}' ";
+
+function coin_prices($income, $category = 'cost')
+{
+	global $g5, $usdt_rate;
+
+	$currency_sql = " SELECT * from {$g5['coin_price']} where symbol LIKE '{$income}' OR name LIKE '{$income}' ";
 	$result = sql_fetch($currency_sql);
 
-	if($result['manual_use'] == 1){
-		return $result['manual_cost'];
-	}else{
-		return $result['current_cost'];
+	$symbol = strtoupper($result['symbol']);
+
+	if ($result['changepricedaily'] > 0) {
+		$daily =  "<span class='font_red'>▲" . number_format(str_replace("-", "", $result['changepricedaily']), 2) . "% </span>";
+	} else {
+		$daily = "<span class='font_blue'>▼" . number_format($result['changepricedaily'], 2) . "% </span>";
+	}
+
+	if ($result['manual_use'] == 1) {
+		$cost =  $result['manual_cost'];
+	} else {
+		$cost = $result['current_cost'];
+	}
+
+	$dollor = $cost * $usdt_rate;
+	$chart = $result['chart'];
+	$icon = $result['icon'];
+
+	if ($category == 'daily') {
+		return $daily;
+	} else if ($category == 'symbol') {
+		return $symbol;
+	}else if ($category == 'name') {
+		return $result['name'];
+	} else if ($category == 'dollor') {
+		return 	$dollor;
+	} else if ($category == 'chart') {
+		return $chart;
+	} else if ($category == 'daily') {
+		return $daily;
+	} else if ($category == 'icon') {
+		return $icon;
+	} else if ($category == 'currency_point') {
+		return $result['currency_point'];
+	} else if ($category == 'all') {
+		return array($symbol, $cost, $dollor, $daily, $chart, $icon);
+	} else {
+		return $cost;
 	}
 }
-
-/* 
-function shift_price($income,$val = 1, $outcome){
-	$in_price = coin_price($income);
-	$out_price = coin_price($outcome);
-	
-	return $in_price * $val / $out_price;
-}
- */
 
 // 예치금/수당 퍼센트
 function bonus_state($mb_id){

@@ -9,12 +9,13 @@ include_once(G5_PATH.'/util/recommend.php');
 function purchase_package($mb_id,$pack_id,$return = 0){
 
     global $g5,$debug,$now_date,$now_datetime,$orderid;
-
+    
     /* 주문 상품 기록 생성 */
     $pack_sql = "SELECT * FROM g5_shop_item WHERE it_id = {$pack_id} ";
     $pack_result = sql_fetch($pack_sql);
 
     $pack_purpose = $pack_result['it_maker'];
+    
     $pack_target = explode('+',$pack_purpose);
 
     if(count($pack_target) > 0){
@@ -34,7 +35,7 @@ function purchase_package($mb_id,$pack_id,$return = 0){
             
             $it_name = $pack_table_code."_".$mb_id."_".$count_item_cnt;
 
-            $pack_result_sql = "INSERT {$pack_table} SET mb_id = '{$mb_id}', idx= {$count_colum_cnt},it_name='{$it_name}', nth = {$count_item_cnt}, pdate='0000-00-00', cdate = '{$now_date}', cdatetime = '{$now_datetime}', od_id = {$orderid} ";
+            $pack_result_sql = "INSERT {$pack_table} SET mb_id = '{$mb_id}', idx= {$count_colum_cnt}, it_name='{$it_name}', nth = {$count_item_cnt}, pdate='0000-00-00', cdate = '{$now_date}', cdatetime = '{$now_datetime}', od_id = {$orderid} ";
             
             if($debug){
                 $pack_insert = $pack_result_sql;
@@ -63,7 +64,7 @@ function purchase_package($mb_id,$pack_id,$return = 0){
                 // $proc_done = process();
                 
                 /* 마이닝큐 등록 처리*/
-                if($pack_table_code > 2){
+                if($pack_table_code > -1){
                     $proc_done = mining_process($pack_table_code);
                 }else{
                     $proc_done = 1;
@@ -96,9 +97,9 @@ function mining_process($pack_table_code){
     global $orderid,$now_date,$od_rate;
     global $debug;
     
-    $mine_start_date = date("Y-m-d", strtotime($now_date."+45 day"));
+    $mine_start_date = date("Y-m-d", strtotime($now_date."+30 day"));
     $mine_date = $mine_start_date;
-    $mine_end_date = date("Y-m-d", strtotime($now_date."+15 day"."+5 year"));
+    $mine_end_date = date("Y-m-d", strtotime($now_date."+30 day"."+5 year"));
 
     $update_order_mine_sql = " UPDATE g5_shop_order set mine_table = {$pack_table_code}, mine_rate={$od_rate}, mine_start_date = '{$mine_start_date}', mine_date = '{$mine_date}',mine_end_date = '{$mine_end_date}' WHERE od_id = '{$orderid}' ";
     
@@ -227,15 +228,15 @@ function bonus_pick($val){
 }
 
 
-function bonus_condition_tx($bonus_condition){
-    if($bonus_condition == 1){
-        $bonus_condition_tx = '추천 계보';
-    }else if($bonus_condition == 2){
-        $bonus_condition_tx = '후원(바이너리) 계보';
+function bonus_source_tx($bonus_cource){
+    if($bonus_cource == 1){
+        $bonus_source_tx = '추천 계보';
+    }else if($bonus_cource == 2){
+        $bonus_source_tx = '후원(바이너리) 계보';
     }else{
-        $bonus_condition_tx='';
+        $bonus_source_tx='';
     }
-    return $bonus_condition_tx;
+    return $bonus_source_tx;
 }
 
 function bonus_layer_tx($bonus_layer){

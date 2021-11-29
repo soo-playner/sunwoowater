@@ -54,6 +54,15 @@ function onlyNumber(id){
 	}
 }
 
+function Price_value(origin,origin_currency,shift,shift_currency){
+	if(origin_currency == '$'){
+		if(shift_currency != '$'){
+			var value = parseFloat( (origin/shift).toFixed(4) );
+			return value;
+		}
+	}
+}
+
 
 // 보너스게이지
 function move(bonus_per,main = 0) {

@@ -3,15 +3,14 @@ include_once('./_common.php');
 include_once('./bonus_inc.php');
 
 
+// $debug=1;
 
-/* 
-    $debug=1;
-    if($debug){
-    $_POST['bonus_day'] = '2021-10-26';
+if($debug){
+    $_POST['bonus_day'] = '2021-11-24';
     $_POST['idx'] = 1;
     $_POST['global_mining_rate'] = 0.001;
     $_POST['act_button'] = 'solid';
-} */
+}
 
 $code = 'mining';
 $category = 'mining';
@@ -34,7 +33,7 @@ if($func == 'solid'){
 
     /* 수당지급 */
     if($benefit > 0){
-        $rec=$code.' Bonus By '.$hash_power.' mh/s | '.$od_id;
+        $rec=$code.' Bonus By '.$hash_power.' '.$mining_hash.' | '.$od_id;
         $rec_adm = $hash_power.' * '.$global_mining_rate.' = '.$benefit;
 
         echo "<span class=blue> ▶▶ 마이닝 지급 : ".$benefit.' '.$minings[0]."</span><br>";
@@ -107,7 +106,7 @@ if($func == 'solid'){
 
                 /* 수당지급 */
                 if($benefit > 0){
-                    $rec=$code.' Bonus By '.$hash_power.' mh/s | '.$od_id;
+                    $rec=$code.' Bonus By '.$hash_power.' '.$mining_hash[0].' | '.$od_id;
                     $rec_adm = $hash_power.' * '.$global_mining_rate.' = '.$benefit;
 
                     echo "<span class=blue> ▶▶ 마이닝 지급 : ".$benefit.' '.$minings[0]."</span><br>";
@@ -149,20 +148,15 @@ if($func == 'solid'){
 
             }else if($func == '선택 수정'){
                 $memo = "관리자 수정_".G5_TIME_YMD;
-                $update_order_sql = "UPDATE g5_shop_order set mine_date = '{$mine_date}', od_memo = '{$memo}' WHERE no = {$idx} ";
+                $update_order_sql = "UPDATE g5_shop_order set mine_date = '{$mine_date}', od_memo = '{$memo}' WHERE no = {$idx} ; ";
 
                 if($debug){
                     print_R($update_order_sql);
                     echo "<br>";
                 }else{
-                    $up_query = sql_query($update_order_sql);
+                    $up_query[$i] = sql_query($update_order_sql);
                 }
 
-                if($up_query){
-                    ob_clean();
-                    alert('선택항목이 변경처리 되었습니다.');
-                    goto_url('./bonus_mining2.php');
-                }
             }
         }
     }
@@ -170,6 +164,14 @@ if($func == 'solid'){
 }
 ?>
 
-<?if($func == '선택 마이닝 지급'){
+<?
+
+
+if($func == '선택 마이닝 지급'){
     include_once('./bonus_footer.php');
+
+}else if($func == '선택 수정' && $up_query[count($_POST['chk'])-1]){
+     ob_clean();
+     alert('선택항목이 변경처리 되었습니다.');
+     goto_url('./bonus_mining2.php');
 }?>

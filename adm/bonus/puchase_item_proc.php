@@ -13,7 +13,7 @@ $item = $_POST['item'];
 
 /* 구매내역 Invoice 생성*/
 // $target = "mb_".$coin_val."_calc";
-// $target_price = coin_price($coin_val);
+// $target_price = coin_prices($coin_val);
 /* 
 $orderid = date("YmdHis",time()).$mb_no;
 

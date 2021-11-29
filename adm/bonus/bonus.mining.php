@@ -1,14 +1,14 @@
 <?php
-$sub_menu = "600200";
+$sub_menu = "600299";
 include_once('./_common.php');
 // $debug=1;
+
+$category = 'mining';
 include_once('./bonus_inc.php');
 
 auth_check($auth[$sub_menu], 'r');
-$category = 'mining';
 
-
-if(!$debug){
+/* if(!$debug){
     $dupl_check_sql = "select mb_id from {$g5['mining']} where day='".$bonus_day."' and allowance_name = '{$code}' ";
     $get_today = sql_fetch( $dupl_check_sql);
 
@@ -16,17 +16,10 @@ if(!$debug){
         alert($bonus_day.' '.$code." 수당은 이미 지급되었습니다.");
         die;
     }
-}
+} */
 
-// 마이닝 컬럼 확인 
-$pre_sql = sql_fetch("SHOW COLUMNS FROM g5_member WHERE `Field`= '{$mining_target}' ");
 
-if(!$pre_sql){
-    $sql = "ALTER TABLE g5_member ADD COLUMN `{$mining_target}` DOUBLE NULL DEFAULT '0' AFTER `mb_shift_amt`,
-    ADD COLUMN `{$mining_amt_target}` DOUBLE NULL DEFAULT '0'  AFTER `{$mining_target}` ";
-    echo $sql;
-    sql_query($sql);
-}
+
 
 //회원 리스트를 읽어 온다.
 $sql_common = " FROM g5_member";
@@ -59,7 +52,7 @@ ob_start();
 
 // 설정로그 
 echo "<span class ='title' style='font-size:20px;'>".$bonus_row['name']." 수당 정산</span><br>";
-echo "<strong>".strtoupper($code)." 마이닝 지급비율 :  <span class='red'>". $bonus_row['rate']."</span>  </strong> |    지급조건 -".$pre_condition.' | '.$bonus_condition_tx." | ".$bonus_layer_tx." | ".$bonus_limit_tx."<br>";
+echo "<strong>".strtoupper($code)." 마이닝 지급비율 :  <span class='red'>". $bonus_row['rate']."</span>  </strong> |    지급조건 -".$pre_condition.' | '.$bonus_source_tx." | ".$bonus_layer_tx." | ".$bonus_limit_tx."<br>";
 echo "<strong>".$bonus_day."</strong><br>";
 echo "<br><span class='red'> 기준대상자(매출발생자) : ".$result_cnt."</span><br><br>";
 echo "<div class='btn' onclick='bonus_url();'>돌아가기</div>";

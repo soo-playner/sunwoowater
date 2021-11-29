@@ -3,7 +3,7 @@ include_once('./_common.php');
 include_once(G5_THEME_PATH.'/_include/wallet.php');
 include_once(G5_PATH.'/util/purchase_proc.php');
 
-// $debug = 1;
+$debug = 1;
 $now_datetime = date('Y-m-d H:i:s');
 $now_date = date('Y-m-d');
 
@@ -32,23 +32,24 @@ $it_supply_point = $_POST['it_supply_point'];
 $val = substr($pack_maker,1,1);
 
 if($debug){
-	$mb_id = 'test8';
-	$mb_no = 5;
+	$mb_id = 'test11';
+	$mb_no = 12;
 	$mb_rank = 0;
 	$func = 'admin';
-	$input_val ='6000000'; // 결제금액 (부가세포함)
-	$output_val ='5000'; // 구매금액 (부가세제외)
-	$pack_name = 'P5';
-	$pack_maker = 'P5';
-	$pack_id = 2021101835;
-	$it_point = 5000;
-	$it_supply_point = 5;
+	$input_val ='0'; // 결제금액 (부가세포함)
+	$output_val ='0'; // 구매금액 (부가세제외)
+	$pack_name = 'P0';
+	$pack_maker = 'P0';
+	$pack_id = 2021111640;
+	$it_point = 0;
+	$it_supply_point = 0.5;
 }
 
 $target = "mb_deposit_calc";
 $od_rate = $it_supply_point;
 
-$orderid = date("mdHis",time()).substr($pack_id,-2,2).$mb_no;
+$orderid = trim(date("mdHis",time()).'0'.substr(trim($pack_id),-2,2).'9'.$mb_no);
+
 
 
 $sql = "insert g5_shop_order set
@@ -75,6 +76,7 @@ if($debug){
 	$rst = sql_query($sql);
 }
 
+
 $logic = purchase_package($mb_id,$pack_id);
 $calc_value = conv_number($output_val);
 
@@ -93,9 +95,10 @@ if($rst && $logic){
 		$update_rank = $val;
 	}
 	
-	$update_point .= ", mb_rate = ( mb_rate + {$od_rate}) ";
+	// $update_point .= ", mb_rate = ( mb_rate + {$od_rate}) ";
+	// 마이닝보류
 	$update_point .= ", mb_pv = ( mb_pv + {$it_point}) ";
-	$update_point .= ", mb_save_point = ( mb_save_point + {$output_val}) ";
+	$update_point .= ", mb_save_point = ( mb_save_point + {$calc_value}) ";
 	$update_point .= ", rank = '{$update_rank}', rank_note = '{$pack_name}', sales_day = '{$now_datetime}' ";
 	$update_point .= " where mb_id ='".$mb_id."'";
 

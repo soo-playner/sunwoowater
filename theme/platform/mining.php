@@ -306,7 +306,7 @@
             var mb_block = Number("<?= $member['mb_block'] ?>"); // 차단
             var mb_id = '<?= $member['mb_id'] ?>';
             var fee_total = fee_calc = coin_amt = 0;
-            var eth_price = '<?=$eth_price?>';
+            var eth_price = '<?=$fil_price?>';
 
             // 출금설정
             var nw_with = '<?= $nw_with ?>'; // 출금서비스 가능여부

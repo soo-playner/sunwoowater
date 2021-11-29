@@ -1,12 +1,12 @@
 @charset "UTF-8";
 /*인트로*/
 #myBar {
-  background-color: #f5c97a;
+  background-color: #492191;
 }
 
 .b_main {
-  background: -webkit-gradient(linear, left bottom, left top, from(#3a0c39), to(#4c124b)) !important;
-  background: linear-gradient(0deg, #3a0c39, #4c124b) !important;
+  background: -webkit-gradient(linear, left top, left bottom, from(#967adb), to(#36307d)) !important;
+  background: linear-gradient(180deg, #967adb, #36307d) !important;
   color: #fff !important;
 }
 
@@ -16,8 +16,8 @@
 }
 
 .b_sub {
-  background: -webkit-gradient(linear, left bottom, left top, from(#1e5ab9), to(#3b86ff)) !important;
-  background: linear-gradient(0deg, #1e5ab9, #3b86ff) !important;
+  background: -webkit-gradient(linear, left top, left bottom, from(#3b86ff), to(#1e5ab9)) !important;
+  background: linear-gradient(180deg, #3b86ff, #1e5ab9) !important;
   color: #fff !important;
 }
 
@@ -46,7 +46,7 @@ a.btn_secondary, .btn_secondary {
   color: black;
   background: -webkit-gradient(linear, right top, left top, from(rgba(255, 255, 255, 0.6)), to(white));
   background: linear-gradient(to left, rgba(255, 255, 255, 0.6), white);
-  border: 2px solid rgba(255, 255, 255, 0.85);
+  border: none;
   border-radius: 8px;
   -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25);
           box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25);
@@ -56,7 +56,7 @@ a.btn_secondary:hover, .btn_secondary:hover {
   color: black;
   background: -webkit-gradient(linear, right top, left top, from(#fff), to(#fff));
   background: linear-gradient(to left, #fff, #fff);
-  border: 2px solid white;
+  border: none;
 }
 
 a.btn_primary, .btn_primary, .btn.btn_primary {
@@ -65,16 +65,17 @@ a.btn_primary, .btn_primary, .btn.btn_primary {
   border-radius: 8px;
   -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25);
           box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25);
-  background: -webkit-gradient(linear, left top, right top, from(#4c124b), to(#3a0c39));
-  background: linear-gradient(90deg, #4c124b, #3a0c39);
+  background: -webkit-gradient(linear, left top, right top, from(#967adb), to(#36307d));
+  background: linear-gradient(90deg, #967adb, #36307d);
+  border: 1px solid #967adb;
   -webkit-transition: all 1s;
   transition: all 1s;
 }
 
 a.btn_primary:hover, .btn_primary:hover, .btn.btn_primary:hover {
   color: white;
-  background: -webkit-gradient(linear, left top, right top, from(#f5c97a), to(#c47c2e));
-  background: linear-gradient(90deg, #f5c97a, #c47c2e);
+  background: -webkit-gradient(linear, left top, right top, from(#967adb), to(#967adb));
+  background: linear-gradient(90deg, #967adb, #967adb);
 }
 
 a.btn_cancle, .btn_cancle {
@@ -200,15 +201,15 @@ a.btn_cancle:hover, .btn_cancle:hover {
 }
 
 .color6 {
-  background: #1ac7ff !important;
-}
-
-.color7 {
   background: #6214ab !important;
 }
 
-.color8 {
+.color7 {
   background: #f65463 !important;
+}
+
+.color8 {
+  background: #1ac7ff !important;
 }
 
 .color9 {
