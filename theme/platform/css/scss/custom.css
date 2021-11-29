@@ -299,3 +299,10 @@ a.btn_cancle:hover, .btn_cancle:hover {
   max-height: 400px;
   overflow-y: scroll;
 }
+
+/* 대쉬보드 버튼 추가 */
+@media screen and (min-width: 768px) {
+  .my_btn_wrap .btn.main_btn {
+    padding: 15px 15px;
+  }
+}

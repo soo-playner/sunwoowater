@@ -210,3 +210,11 @@ a.btn_cancle, .btn_cancle{
 /* 모달팝업 제한 추가 */
 .modal-body{max-height: 400px;
     overflow-y: scroll;}
+
+
+/* 대쉬보드 버튼 추가 */
+@media screen and (min-width:768px) {
+    // body{background:#fff;color:white;}
+    // #wrapper{max-width:767px;margin:0 auto;}
+    .my_btn_wrap .btn.main_btn{padding:15px 15px;}
+} 
