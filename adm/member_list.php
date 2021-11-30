@@ -31,6 +31,7 @@ if($_GET['sst'] == "deposit_calc"){
 $sql_common = " {$sub_sql} from {$g5['member_table']} ";
 
 $sql_search = " where (1) ";
+
 if ($stx) {
 	$sql_search .= " and ( ";
 	switch ($sfl) {
@@ -105,7 +106,7 @@ $intercept_count = $row['cnt'];
 $listall = '<a href="'.$_SERVER['SCRIPT_NAME'].'" class="ov_listall">전체목록</a>';
 
 $sql = " select * {$sql_common} {$sql_search} {$sql_order} limit {$from_record}, {$rows} ";
-
+//echo $sql; exit;
 $result = sql_query($sql);
 $colspan = 11;
 
@@ -580,7 +581,7 @@ function fmemberlist_submit(f)
 	}
 
 	if(document.pressed == "선택삭제") {
-		if(!confirm("선택한 자료를 정말 삭제하시겠습니까?")) {
+		if(!confirm("해당 회원을 정말 삭제하시겠습니까?")) {
 			return false;
 		}
 	}
