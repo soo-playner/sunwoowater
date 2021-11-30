@@ -53,7 +53,7 @@ if($func == 'solid'){
         }
 
         /* 주문내역 업데이트*/
-        $next_date = date("Y-m-d", strtotime($bonus_day."+30 day"));
+        $next_date = date("Y-m-d", strtotime($bonus_day."+1 day"));
         $update_order_sql = "UPDATE g5_shop_order set mine_date = '{$next_date}', pay_count = pay_count + 1, mine_acc = mine_acc + {$benefit} WHERE no = {$idx}";
 
         if($debug){
@@ -130,7 +130,7 @@ if($func == 'solid'){
                 }
 
                 /* 주문내역 업데이트*/
-                $next_date = date("Y-m-d", strtotime($bonus_day."+30 day"));
+                $next_date = date("Y-m-d", strtotime($bonus_day."+1 day"));
                 $update_order_sql = "UPDATE g5_shop_order set mine_date = '{$next_date}', pay_count = pay_count + 1, mine_acc = mine_acc + {$benefit} WHERE no = {$idx}";
 
                 if($debug){

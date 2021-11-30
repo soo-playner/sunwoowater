@@ -12,7 +12,7 @@ function short_code($string, $char = 8){
 	return substr($string,0,$char)." ... ".substr($string,-8);
 }
 
-$sql_condition = "and coin != '{$withdraw_curency}' " ;
+$sql_condition = "and coin = '{$withdraw_curency}' " ;
 
 if($_GET['fr_id']){
 	$sql_condition .= " and A.mb_id = '{$_GET['fr_id']}' ";

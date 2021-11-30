@@ -105,13 +105,12 @@ $(function($){
                 <? while($row = sql_fetch_array($result)){
                     
 
-                    $order_total_sql = "SELECT sum(upstair) as upstair_total, sum(pv) as pv_total from g5_shop_order WHERE mb_id = '{$row['mb_id']}' AND od_date >= '{$fr_date}' AND od_date < '{$to_date}' ";
+                    $order_total_sql = "SELECT sum(upstair) as upstair_total from g5_shop_order WHERE mb_id = '{$row['mb_id']}' AND od_date >= '{$fr_date}' AND od_date < '{$to_date}' ";
                     $order_total = sql_fetch($order_total_sql);
                     
                     // $bg = 'bg'.($i%2);
                     $total_hap += $order_total['upstair_total'];
-                    $total_pv +=  $order_total['pv_total'];
-                    $center_bonus = $order_total['pv_total']*$center_bonus_rate;
+                    $center_bonus = $order_total['upstair_total']*$center_bonus_rate;
                     $total_center_bonus += $center_bonus ;
                 ?>
     
@@ -125,7 +124,7 @@ $(function($){
                         </div>
 
                         <div class='col-5 text-right'>
-                            <span class='d_sum center_p font_skyblue'> <?=Number_format($center_bonus)?>원</span>
+                            <span class='d_sum center_p font_skyblue'> $ <?=shift_auto_zero($center_bonus)?></span>
                             <!-- <span class='btn inline caret'><i class="ri-arrow-down-s-line"></i></span> -->
                         </div>
                     </div>
@@ -137,7 +136,7 @@ $(function($){
                         </div>
                         <div class='col-4 text-right nopadding'>
                             <!-- <dd>기간 PV : <?=Number_format($total_pv)?> 원</dd> -->
-                            <dd class='d_sum sales'>기간 매출 : <?=Number_format($total_hap)?> 원</dd>
+                            <dd class='d_sum sales' style="padding-right:5px">기간 매출 : $ <?=shift_auto_zero($order_total['upstair_total'])?></dd>
                         </div>
                     </div>
 
