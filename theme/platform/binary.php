@@ -70,9 +70,15 @@
 	$left_bottom = get_left_bottom($member['mb_id']);
 	$right_bottom = get_right_bottom($member['mb_id']);
 
+
 /* ____________________________________________________________________________*/
 
 
+$direct_left_sql = "select mb_id  from g5_member where mb_brecommend='".$member['mb_id']."' and mb_brecommend_type='L'";
+$direct_left = sql_fetch($direct_left_sql)['mb_id'];
+
+$direct_right_sql = "select mb_id  from g5_member where mb_brecommend='".$member['mb_id']."' and mb_brecommend_type='R'";
+$direct_right = sql_fetch($direct_right_sql)['mb_id'];
 
 $sql = "select mb_id as b_recomm from g5_member where mb_brecommend='".$start_id."' and mb_brecommend_type='L'";
 $sql_r = "select mb_id as b_recomm2 from g5_member where mb_brecommend='".$start_id."' and mb_brecommend_type='R'";
@@ -158,13 +164,17 @@ $left_point = array();$right_point = array();
 for($i=1;$i<=15;$i++){
 
 	$left = sql_fetch("select mb_id  from g5_member where mb_brecommend='".$b_recom_arr[$i]."' and mb_brecommend_type='L'")['mb_id'];
-	$left_acc = sql_fetch("select IFNULL(SUM(noo + (SELECT sum(upstair) FROM g5_shop_order WHERE mb_id ='{$left}') ),0) as hap from brecom_bonus_noo where mb_id ='{$left}' order by day desc limit 0 ,1");
+	// $left_acc = sql_fetch("select IFNULL(SUM(noo + (SELECT sum(upstair) FROM g5_shop_order WHERE mb_id ='{$left}') ),0) as hap from brecom_bonus_noo where mb_id ='{$left}' order by day desc limit 0 ,1");
+	$left_acc_result = sql_fetch("SELECT IFNULL(max(noo),0) AS T1,(SELECT sum(upstair) FROM g5_shop_order WHERE mb_id ='{$left}') AS T2 FROM brecom_bonus_noo WHERE mb_id = '{$left}' order by day desc limit 0 ,1");
+	$left_acc = $left_acc_result['T1'] + $left_acc_result['T2'];
 
 	$right = sql_fetch("select mb_id  from g5_member where mb_brecommend='".$b_recom_arr[$i]."' and mb_brecommend_type='R'")['mb_id'];
-	$right_acc = sql_fetch("select IFNULL(SUM(noo + (SELECT sum(upstair) FROM g5_shop_order WHERE mb_id ='{$right}') ),0) as hap from brecom_bonus_noo where mb_id ='{$right}' order by day desc limit 0 ,1");
+	// $right_acc = sql_fetch("select IFNULL(SUM(noo + (SELECT sum(upstair) FROM g5_shop_order WHERE mb_id ='{$right}') ),0) as hap from brecom_bonus_noo where mb_id ='{$right}' order by day desc limit 0 ,1");
+	$right_acc_result = sql_fetch("SELECT IFNULL(max(noo),0) AS T1,(SELECT sum(upstair) FROM g5_shop_order WHERE mb_id ='{$right}') AS T2 FROM brecom_bonus_noo WHERE mb_id = '{$right}' order by day desc limit 0 ,1");
+	$right_acc = $right_acc_result['T1'] + $right_acc_result['T2'];
 
-	array_push($left_point, $left_acc['hap']);
-	array_push($right_point, $right_acc['hap']);
+	array_push($left_point, $left_acc);
+	array_push($right_point, $right_acc);
 
 
 	$sql = "select mb_id,mb_level,grade,mb_pv,(SELECT count(mb_id) FROM g5_member WHERE mb_recommend = '{$b_recom_arr[$i]}') as direct_cnt from g5_member where  mb_id ='{$b_recom_arr[$i]}' ";
@@ -179,12 +189,15 @@ for($i=1;$i<=15;$i++){
 
 
 //본인 데이터 고정
-$left_sql = " SELECT mb_pv, (SELECT noo FROM brecom_bonus_noo WHERE mb_id ='{$brst['b_recomm']}' ) AS noo FROM g5_member WHERE mb_id = '{$brst['b_recomm']}' ";
+
+// $left_sql = " SELECT mb_pv, (SELECT noo FROM brecom_bonus_noo WHERE mb_id ='{$brst['b_recomm']}' ) AS noo FROM g5_member WHERE mb_id = '{$brst['b_recomm']}' ";
+$left_sql = " SELECT mb_pv, (SELECT noo FROM brecom_bonus_noo WHERE mb_id ='{$direct_left}' ) AS noo FROM g5_member WHERE mb_id = '{$direct_left}' ";
 $mb_self_left_result = sql_fetch($left_sql);
 $mb_self_left_acc = $mb_self_left_result['mb_pv'] + $mb_self_left_result['noo'];
 $mb_self_left_noo_result = $mb_self_left_acc ;
 
-$right_sql = " SELECT mb_pv, (SELECT noo FROM brecom_bonus_noo WHERE mb_id ='{$brst_r['b_recomm2']}' ) AS noo FROM g5_member WHERE mb_id = '{$brst_r['b_recomm2']}' ";
+// $right_sql = " SELECT mb_pv, (SELECT noo FROM brecom_bonus_noo WHERE mb_id ='{$brst_r['b_recomm2']}' ) AS noo FROM g5_member WHERE mb_id = '{$brst_r['b_recomm2']}' ";
+$right_sql = " SELECT mb_pv, (SELECT noo FROM brecom_bonus_noo WHERE mb_id ='{$direct_right}' ) AS noo FROM g5_member WHERE mb_id = '{$direct_right}' ";
 $mb_self_right_result = sql_fetch($right_sql);
 $mb_self_right_acc = $mb_self_right_result['mb_pv'] + $mb_self_right_result['noo'];
 $mb_self_right_noo_result = $mb_self_right_acc ;
