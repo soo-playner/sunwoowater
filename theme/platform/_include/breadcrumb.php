@@ -156,6 +156,7 @@ $title = 'Dashboard';
 					<ul class="row">
 						<li class="col-4">
 							<dt class="title" >보너스한계</dt>
+							<dd><?=$bonus_per*10?> % <span class='desc_small'>($ <?=Number_format($member['mb_pv'] * $limited/100,2)?>)</span></dd>
 						</li>
 
 						<li class="col-8" style="padding:10px 20px 10px">
@@ -167,7 +168,7 @@ $title = 'Dashboard';
 								
 								<div class='exp_per'>
 									<p class='start'>0%</p>
-									<p class='end' style="margin-right:36px;">100%</p>
+									<p class='end' style="margin-right:36px;">1000%</p>
 								</div>
 							</dd>
 						</li>
