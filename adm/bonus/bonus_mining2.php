@@ -208,13 +208,16 @@ include_once(G5_PLUGIN_PATH.'/jquery-ui/datepicker.php');
 
 <div class="local_desc01 local_desc">
     <p>
+        
 		<strong>마이닝 현황 : </strong> 기준일 마이닝 보너스 지급대상자 확인 <span class='divide'></span>
         <strong>마이닝 지급 : </strong> 개별지급/ 전체선택후 선택지급 실행 <span class='divide'></span>
         <strong>수정 : </strong> 선택항목 지급일 수정<span class='divide'></span><br>
+        ※ 마이닝 시작일 기준으로 하부 마이닝량 기록 / 마이닝지급일은 지급 다음날로 자동 변경처리되므로 변경할 필요없음<br>
         <strong>마이닝 추천롤업지급 : </strong> 추천롤업지급 <span class='divide'></span>
         <strong>마이닝 후원롤업지급 : </strong> 후원롤업지급 <span class='divide'></span><br>
         <strong>마이닝 지급내역 : </strong> 기간별 지급한 내역 확인 (기본값 최근7일) <br>
         ※ 현재설정된 마이닝 지급량 : <strong><?=$mining_rate?> <?=$minings[0]?></strong> / 1 <?=$mining_hash[0]?><br>
+
 	</p>
 </div>
 
@@ -338,7 +341,14 @@ include_once(G5_PLUGIN_PATH.'/jquery-ui/datepicker.php');
                 <td width='50' class='text-center'><?=$row['od_name'];?></td>
                 <td width='50' class='text-center'><?=$row['mine_rate'];?></td>
                 <td width='80' class='text-center'><?=$row['od_date']?></td>
-                <td width='80' class='text-center'><?=$row['mine_start_date']?></td>
+                <td width='80' class='text-center'>
+                    <?if($row['pay_count'] == 0){?>
+                        <input type='text' class='frm_input text-center red strong' value='<?=$row['mine_start_date']?>' name='mine_start_date[]'>
+                    <?}else{?>
+                        <input type='hidden' class='frm_input text-center red strong' value='<?=$row['mine_start_date']?>' name='mine_start_date[]'>
+                        <?=$row['mine_start_date']?>
+                    <?}?>
+                </td>
                 <td width='80' class='text-center green strong'>
                     <input type='text' class='frm_input text-center green strong' value='<?=$row['mine_date']?>' name='mine_date[]'>
                 </td>
