@@ -457,8 +457,8 @@ var gradeMap = {
 					row.find('.level').text(member.grade+' s');
 					row.find('.lvl-container').attr('class',"gr_"+member.grade);
 					row.find('.direct_cnt').html("<i class='ri-user-star-line'></i>" + member.cnt);
-					row.find('.pv').html("PV : " + Price(member.mb_rate/10000));
-					row.find('.acc').html("ACC : "+ Price(member.noo/10000));
+					row.find('.pv').html("PV : " + Price(member.mb_pv));
+					row.find('.acc').html("ACC : "+ Price(member.noo));
 
 					vHtml.append(row);
 				});
@@ -540,7 +540,7 @@ var gradeMap = {
 				</div>
 
 				
-				<div class="desc font_red" style='font-size:11px'>[ 금액단위 : 만원 ]</div>
+				<!-- <div class="desc font_red" style='font-size:11px'>[ 금액단위 : 만원 ]</div> -->
 				<div class="main-container content-box tree-container">
 					<div class="bin_top" >추천 조직도</div>
 					
@@ -556,12 +556,12 @@ var gradeMap = {
 							<span class="lvl-username"></span>
 							<span class="level badge"></span>
 							<span class="direct_cnt badge"></span>
-							<span class='divided'></span>
+							<!-- <span class='divided'></span> -->
 							<!-- <span class="package"></span> -->
-							<p class='mbpoint'>
+							<!-- <p class='mbpoint'>
 								<span class="pv"></span><br>
 								<span class="acc"></span>
-							</p>
+							</p> -->
 							<span class='toggle'><i class="ri-line-height"></i></span>
 						</dt>
 					</dl>
