@@ -221,6 +221,7 @@ function get_org_down($srow){
 			FROM g5_member
 			WHERE ".$recommend_name."=c.c_id AND mb_leave_date = '') AS m_child
 			, ( SELECT mb_rate FROM g5_member WHERE mb_id = c.c_id) AS mb_rate
+			, (select mb_pv FROM g5_member WHERE mb_id=c.c_id) AS mb_pv
 			, ( SELECT grade FROM g5_member WHERE mb_id = c.c_id) AS grade
 			,(SELECT mb_child FROM g5_member WHERE mb_id=c.c_id) AS mb_children
 			FROM g5_member m

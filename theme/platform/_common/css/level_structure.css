@@ -740,7 +740,7 @@
 .lvl .direct_cnt{background:#cbd2de}
 .lvl .direct_cnt i {vertical-align: top;}
 
-.lvl .badge.pv{background:#373cbc !important;color:white;}
+.lvl .badge.pv{background:#373cbc !important;color:white;font-size:10px;}
 .lvl .badge.grade{color:white;}
 .lvl .badge.grade.color0{color:#333;}
 

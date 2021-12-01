@@ -12,9 +12,9 @@
 		$start_id = $member['mb_id'];
 	}
 
-	function milloin_number($val){
-		return Number_format($val/10000);		
-	}
+/* 	function number_format($val){
+		return Number_format($val);		
+	} */
 
 
 	function get_left_bottom($start_id){
@@ -158,35 +158,35 @@ $left_point = array();$right_point = array();
 for($i=1;$i<=15;$i++){
 
 	$left = sql_fetch("select mb_id  from g5_member where mb_brecommend='".$b_recom_arr[$i]."' and mb_brecommend_type='L'")['mb_id'];
-	$left_acc = sql_fetch("select IFNULL(SUM(noo + (SELECT sum(pv) FROM g5_shop_order WHERE mb_id ='{$left}') ),0) as hap from brecom_bonus_noo where mb_id ='{$left}' order by day desc limit 0 ,1");
+	$left_acc = sql_fetch("select IFNULL(SUM(noo + (SELECT sum(upstair) FROM g5_shop_order WHERE mb_id ='{$left}') ),0) as hap from brecom_bonus_noo where mb_id ='{$left}' order by day desc limit 0 ,1");
 
 	$right = sql_fetch("select mb_id  from g5_member where mb_brecommend='".$b_recom_arr[$i]."' and mb_brecommend_type='R'")['mb_id'];
-	$right_acc = sql_fetch("select IFNULL(SUM(noo + (SELECT sum(pv) FROM g5_shop_order WHERE mb_id ='{$right}') ),0) as hap from brecom_bonus_noo where mb_id ='{$right}' order by day desc limit 0 ,1");
+	$right_acc = sql_fetch("select IFNULL(SUM(noo + (SELECT sum(upstair) FROM g5_shop_order WHERE mb_id ='{$right}') ),0) as hap from brecom_bonus_noo where mb_id ='{$right}' order by day desc limit 0 ,1");
 
 	array_push($left_point, $left_acc['hap']);
 	array_push($right_point, $right_acc['hap']);
 
 
-	$sql = "select mb_id,mb_level,grade,mb_rate,(SELECT count(mb_id) FROM g5_member WHERE mb_recommend = '{$b_recom_arr[$i]}') as direct_cnt from g5_member where  mb_id ='{$b_recom_arr[$i]}' ";
+	$sql = "select mb_id,mb_level,grade,mb_pv,(SELECT count(mb_id) FROM g5_member WHERE mb_recommend = '{$b_recom_arr[$i]}') as direct_cnt from g5_member where  mb_id ='{$b_recom_arr[$i]}' ";
 	$rem_info = sql_fetch($sql);
 
 	$member_info[$i]['mb_id'] = $rem_info['mb_id'];
 	$member_info[$i]['mb_level'] = $rem_info['mb_level']+1;
 	$member_info[$i]['grade']= $rem_info['grade'];
-	$member_info[$i]['mb_rate'] = $rem_info['mb_rate'];
+	$member_info[$i]['mb_pv'] = $rem_info['mb_pv'];
 	$member_info[$i]['direct_cnt'] =$rem_info['direct_cnt'];
 }
 
 
 //본인 데이터 고정
-$left_sql = " SELECT mb_rate, (SELECT noo FROM brecom_bonus_noo WHERE mb_id ='{$brst['b_recomm']}' ) AS noo FROM g5_member WHERE mb_id = '{$brst['b_recomm']}' ";
+$left_sql = " SELECT mb_pv, (SELECT noo FROM brecom_bonus_noo WHERE mb_id ='{$brst['b_recomm']}' ) AS noo FROM g5_member WHERE mb_id = '{$brst['b_recomm']}' ";
 $mb_self_left_result = sql_fetch($left_sql);
-$mb_self_left_acc = $mb_self_left_result['mb_rate'] + $mb_self_left_result['noo'];
+$mb_self_left_acc = $mb_self_left_result['mb_pv'] + $mb_self_left_result['noo'];
 $mb_self_left_noo_result = $mb_self_left_acc ;
 
-$right_sql = " SELECT mb_rate, (SELECT noo FROM brecom_bonus_noo WHERE mb_id ='{$brst_r['b_recomm2']}' ) AS noo FROM g5_member WHERE mb_id = '{$brst_r['b_recomm2']}' ";
+$right_sql = " SELECT mb_pv, (SELECT noo FROM brecom_bonus_noo WHERE mb_id ='{$brst_r['b_recomm2']}' ) AS noo FROM g5_member WHERE mb_id = '{$brst_r['b_recomm2']}' ";
 $mb_self_right_result = sql_fetch($right_sql);
-$mb_self_right_acc = $mb_self_right_result['mb_rate'] + $mb_self_right_result['noo'];
+$mb_self_right_acc = $mb_self_right_result['mb_pv'] + $mb_self_right_result['noo'];
 $mb_self_right_noo_result = $mb_self_right_acc ;
 
 $mem_self = $mb_self_left_noo_result - $mb_self_right_noo_result;
@@ -281,17 +281,17 @@ if($mem_self <= 0){
 					</div>
 					</div>
 
-					<div class="desc font_red" style='font-size:11px'>[ 금액단위 : 만원 ]</div>
+					<div class="desc font_red" style='font-size:11px'>[ 금액단위 : $ ]</div>
 
 					<div class='btn_input_wrap'>
 						<div class="sumary_lr mt20">
 							<li class="left">
-								LEFT : <?=milloin_number($mem_self_left)?><br>
-								<hr><span> ACC : <?=milloin_number(($mb_self_left_noo_result ? $mb_self_left_noo_result : 0),0)?></span>
+								LEFT : <?=number_format($mem_self_left)?><br>
+								<hr><span> ACC : <?=number_format(($mb_self_left_noo_result ? $mb_self_left_noo_result : 0),0)?></span>
 							</li>
 							<li class="right">
-								RIGHT : <?=milloin_number($mem_self_right)?><br>
-								<hr><span> ACC : <?= milloin_number(($mb_self_right_noo_result ? $mb_self_right_noo_result : 0),0) ;?></span>
+								RIGHT : <?=number_format($mem_self_right)?><br>
+								<hr><span> ACC : <?= number_format(($mb_self_right_noo_result ? $mb_self_right_noo_result : 0),0) ;?></span>
 							</li>
 						</div>
 					</div>
@@ -314,12 +314,12 @@ if($mem_self <= 0){
 										<span class='direct_cnt badge'><i class='ri-user-star-line'></i> <?=$member_info[1]['direct_cnt']?></span>
 										<span class='badge pv'>
 										<!-- <?=max_item_level_array($b_recom_arr[1],'name')?> -->
-										<?=milloin_number($member_info[1]['mb_rate'])?>
+										<?=number_format($member_info[1]['mb_pv'])?>
 										</span>
 									</div>
 									
 									
-									<div class='pointed left'><?=milloin_number($left_point[0])?> </div><div class='pointed right'><?=milloin_number($right_point[0])?></div>
+									<div class='pointed left'><?=number_format($left_point[0])?> </div><div class='pointed right'><?=number_format($right_point[0])?></div>
 								</div>
 							</div>
 							<!--line-->
@@ -342,11 +342,11 @@ if($mem_self <= 0){
 										<span class='direct_cnt badge'><i class='ri-user-star-line'></i> <?=$member_info[$i]['direct_cnt']?></span>
 										<span class='badge pv'>
 										<!-- <?=max_item_level_array($b_recom_arr[$i],'name')?></span> -->
-										<?=milloin_number($member_info[$i]['mb_rate'])?>
+										<?=number_format($member_info[$i]['mb_pv'])?>
 										</span>
 									</div>
 									
-									<div class='pointed left'><?=milloin_number($left_point[$i-1])?> </div><div class='pointed right'> <?=milloin_number($right_point[$i-1])?></div>
+									<div class='pointed left'><?=number_format($left_point[$i-1])?> </div><div class='pointed right'> <?=number_format($right_point[$i-1])?></div>
 								</div>
 
 								<?}else{?>
@@ -390,10 +390,10 @@ if($mem_self <= 0){
 										<span class='direct_cnt badge'><i class='ri-user-star-line'></i> <?=$member_info[$i]['direct_cnt']?></span>
 										<span class='badge pv'>
 										<!-- <?=max_item_level_array($b_recom_arr[$i],'name')?></span> -->
-										<?=milloin_number($member_info[$i]['mb_rate'])?>
+										<?=number_format($member_info[$i]['mb_pv'])?>
 										</span>
 									</div>
-									<div class='pointed left'><?=milloin_number($left_point[$i-1])?> </div><div class='pointed right'> <?=milloin_number($right_point[$i-1])?></div>
+									<div class='pointed left'><?=number_format($left_point[$i-1])?> </div><div class='pointed right'> <?=number_format($right_point[$i-1])?></div>
 								</div>
 								<?//if end}
 								}
