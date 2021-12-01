@@ -90,6 +90,7 @@ if($func == 'solid'){
 
             $idx = $_POST['no'][$k];
             $mine_date = $_POST['mine_date'][$k];
+            $mine_start_date = $_POST['mine_start_date'][$k];
             $mine_bonus = $_POST['mine_bonus'][$k];
             
             if($func == '선택 마이닝 지급'){
@@ -148,7 +149,7 @@ if($func == 'solid'){
 
             }else if($func == '선택 수정'){
                 $memo = "관리자 수정_".G5_TIME_YMD;
-                $update_order_sql = "UPDATE g5_shop_order set mine_date = '{$mine_date}', od_memo = '{$memo}' WHERE no = {$idx} ; ";
+                $update_order_sql = "UPDATE g5_shop_order set mine_start_date = '{$mine_start_date}', mine_date = '{$mine_date}', od_memo = '{$memo}' WHERE no = {$idx} ; ";
 
                 if($debug){
                     print_R($update_order_sql);
