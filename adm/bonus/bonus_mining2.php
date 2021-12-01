@@ -1,5 +1,5 @@
 <?php
-$sub_menu = "600300";
+$sub_menu = "600299";
 include_once('./_common.php');
 include_once('./bonus_inc.php');
 
@@ -76,6 +76,7 @@ function bonus_name_tx($code,$return = ''){
 
 /* 마이닝 시작일 체크 */
 $mining_check_sql = "SELECT * from g5_shop_order WHERE mine_rate != 0  AND mine_start_date != '0000-00-00' AND mine_start_date <= '{$now_date}' AND pay_count = 0 AND od_hope_date = '0000-00-00' ";
+
 $mining_check_result = sql_query($mining_check_sql);
 
 while($od_row = sql_fetch_array($mining_check_result)){

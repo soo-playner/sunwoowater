@@ -1,6 +1,6 @@
 <?php
 
-$sub_menu = "600200";
+$sub_menu = "600299";
 include_once('./_common.php');
 // $debug = 1;
 include_once('./bonus_inc.php');
