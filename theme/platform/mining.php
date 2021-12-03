@@ -8,6 +8,8 @@
 
 	$title = '마이닝';
 
+    
+
     $ordered_items = ordered_items($member['mb_id'],$_GET['item'],2);
     $mining_cnt = count($ordered_items);
 
@@ -48,7 +50,8 @@
     $mining_history_cnt = sql_num_rows($mining_history);
 
     // 마이닝 출금 내역
-    $mining_amt_log = sql_query("SELECT * from {$g5['withdrawal']} WHERE mb_id = '{$member['mb_id']}' AND coin = '{$minings[0]}' ");
+    $od_type = "마이닝출금요청";
+    $mining_amt_log = sql_query("SELECT * from {$g5['withdrawal']} WHERE mb_id = '{$member['mb_id']}' AND coin = '{$minings[0]}' and od_type = '{$od_type}' ");
     $mining_amt_cnt = sql_num_rows($mining_amt_log);
 
 
@@ -316,7 +319,7 @@
             var day_limit = '<?= $day_limit ?>';
 
             // 최대출금가능금액
-            var mb_max_limit = '<?=$max_mining_total?>';
+            var mb_max_limit = <?=$max_mining_total?>;
             // console.log(` min_limit : ${min_limit}\n max_limit:${max_limit}\n day_limit:${day_limit}\n fee: ${fee}`);
             
             function withdraw_value(num){

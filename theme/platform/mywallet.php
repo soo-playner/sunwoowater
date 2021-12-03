@@ -26,12 +26,14 @@ $withdrwal_day_limit = $withdrwal_setting['day_limit'];
 
 
 // 수수료제외 실제 출금가능금액
-$withdrwal_total = $total_withraw / (1 + $withdrwal_fee * 0.01);
+// $withdrwal_total = $total_withraw / (1 + $withdrwal_fee * 0.01);
+// $withdrwal_total = sprintf('%0.2f', $withdrwal_total);
 
-if ($withdrwal_max_limit > 1 && ($total_withraw * $withdrwal_max_limit * 0.01) < $withdrwal_total) {
-  $withdrwal_total = $total_withraw * ($withdrwal_max_limit * 0.01);
+// 달러 소수점 2자리까지 반영
+if(WITHDRAW_CURENCY == '원'){
+	$withdrwal_total = floor($total_withraw/(1 + $withdrwal_fee*0.01)); // 원화
 }else{
-  $withdrwal_total = 0;
+	$withdrwal_total = sprintf('%0.2f', $total_withraw/(1 + $withdrwal_fee*0.01)); // 달러 및 코인
 }
 
 //계좌정보
@@ -158,7 +160,7 @@ $result_deposit = sql_query($sql_deposit);
 $sql_common = "FROM {$g5['withdrawal']}";
 // $sql_common ="FROM wallet_withdrawal_request";
 $WITHDRAW_CURENCY = WITHDRAW_CURENCY;
-$sql_search = " WHERE mb_id = '{$member['mb_id']}' and coin = '{$WITHDRAW_CURENCY}' ";
+$sql_search = " WHERE mb_id = '{$member['mb_id']}' and coin = '{$WITHDRAW_CURENCY}' AND od_type ='수당출금요청' ";
 // $sql_search .= " AND create_dt between '{$fr_date}' and '{$to_date}' ";
 
 $sql = " select count(*) as cnt {$sql_common} {$sql_search} ";
@@ -739,7 +741,7 @@ if ($sel_price > 0) {
 
     // 최대출금가능금액
     var out_mb_max_limit = <?= $withdrwal_total ?>;
-
+    
 
     onlyNumber('pin_auth_with');
 

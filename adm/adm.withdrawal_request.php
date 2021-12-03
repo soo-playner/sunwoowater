@@ -41,7 +41,7 @@ if($_GET['ord']!=null && $_GET['ord_word']!=null){
 	$sql_ord = "order by ".$_GET['ord_word']." ".$_GET['ord'];
 }
 
-$sql = " select count(*) as cnt, sum(amt) as hap, sum(amt_total) as amt_total, sum(fee) as feehap, sum(out_amt) as outamt from {$g5['withdrawal']} A WHERE 1=1 AND DATE_FORMAT(A.create_dt, '%Y-%m-%d') between '{$fr_date}' and '{$to_date}'	 ";
+$sql = " select count(*) as cnt, sum(amt) as hap, sum(amt) as amt_total, sum(fee) as feehap, sum(out_amt) as outamt from {$g5['withdrawal']} A WHERE 1=1 AND DATE_FORMAT(A.create_dt, '%Y-%m-%d') between '{$fr_date}' and '{$to_date}'	 ";
 $sql .= $sql_condition;
 $sql .= $sql_ord;
 
@@ -220,9 +220,10 @@ $ord_rev = $ord_array[($ord_key+1)%2]; // 내림차순→오름차순, 오름차
 			<th style="width:7%;">출금요청액(<?=ASSETS_CURENCY?>)</th>
 			<th style="width:5%;">수수료(<?=ASSETS_CURENCY?>)</th>
 			<!-- <th style="width:6%;">출금계산액(<?=ASSETS_CURENCY?>)</th> -->
-			<th style="width:6%;">출금시세</th>
+			
 
 			<th style="width:8%;">실출금액 <span style='color:red'>(<?=WITHDRAW_CURENCY?>)</span></th>
+			<th style="width:6%;">출금시세</th>
 			
 			<th style="width:6%;">요청일시</th>
 			<th style="width:8%;">승인여부</th>
@@ -271,7 +272,7 @@ $ord_rev = $ord_array[($ord_key+1)%2]; // 내림차순→오름차순, 오름차
 				<td class="gray" style='font-size:11px;'><?=shift_auto($row['account'],ASSETS_CURENCY)?></td>
 
 				<!-- 출금요청액 -->
-				<td class="td_amt <?=$coin_class?>"><?=shift_auto($row['amt_total'],ASSETS_CURENCY)?></td>
+				<td class="td_amt <?=$coin_class?>"><?=shift_auto($row['amt'],ASSETS_CURENCY)?></td>
 				
 				<!-- 수수료 -->
 				<td class="gray" style='line-height:18px;'>
@@ -284,17 +285,16 @@ $ord_rev = $ord_array[($ord_key+1)%2]; // 내림차순→오름차순, 오름차
 				<!-- <td class="gray" style='line-height:18px;'>
 					<?=shift_auto($row['amt'],ASSETS_CURENCY)?> 
 				</td> -->
-
 				
-				
-				<!-- 출금시세 -->
-				<td class="gray" style='font-size:11px;'><span><?=ASSETS_CURENCY?>/<?=shift_auto($row['cost'],$row['coin'])?><?=WITHDRAW_CURENCY?></span></td>
 				
 				<!-- 실출금액 -->
 				<td  class="td_amt" style="color:red">
 					<input type="hidden" value="<?=shift_auto($row['out_amt'])?>" name="out_amt[]">
 					<?=shift_auto($row['out_amt'],$row['coin'])?>
 				</td>
+
+				<!-- 출금시세 -->
+				<td class="gray" style='font-size:11px;'><span><?=shift_auto($row['cost'],$row['coin'])?> <?=WITHDRAW_CURENCY?></span></td>
 
 				<td  style="font-size:11px;"><?=timeshift($row['create_dt'])?></td>
 				<td>
@@ -319,14 +319,12 @@ $ord_rev = $ord_array[($ord_key+1)%2]; // 내림차순→오름차순, 오름차
 		<tfoot>
 			<td>합계:</td>
 			<td><?=$total_count?></td>
-			<td colspan=2></td>
-			<td ></td>
-			<td colspan=1><?=shift_doller($total_amt)?></td>
-			<td><?=shift_doller($total_fee)?></td>
-			<td colspan=1></td>
-			<td colspan=1></td>
-			<td colspan=1><?=shift_auto($total_out)?></td>
-			<td colspan=3></td>
+			<td colspan=4></td>
+			<td colspan=1><?=shift_auto_zero($total_amt)?></td>
+			<td><?=shift_auto_zero($total_fee)?></td>
+			
+			<td colspan=1><?=shift_auto_zero($total_out,WITHDRAW_CURENCY)?></td>
+			<td colspan=4></td>
 		</tfoot>
     </table>
 </div>

@@ -14,6 +14,7 @@ $refund = $_POST['refund'];
 $coin = $_POST['coin'];
 $in_amt = $_POST['amt'];
 $func = $_POST['func'];
+$category = $_POST['category']; // 원화 외 구분
 
 $count = 1;
 $drain = 1;
@@ -42,13 +43,13 @@ if ($func == 'withrawal') {
 		$in_amt_total = $ret['amt_total'];
 
 		// 출금반환처리
-		if($coin == '원'){
-			$coin_target = "mb_deposit_calc";
-			$update_member_return = "update g5_member set {$coin_target} = {$coin_target} + {$in_amt_total}, mb_shift_amt = mb_shift_amt - {$in_amt_total}  where mb_id='{$mb_id}' ";
-		}else if($coin == 'eth'){
+		if($category == 'mining'){
 			$coin_target = "mb_mining_1";
 			$amt_target = "mb_mining_1_amt";
 			$update_member_return = "update g5_member set {$amt_target} = {$amt_target} - {$in_amt_total}  where mb_id='{$mb_id}' ";
+		}else{
+			$coin_target = "mb_deposit_calc";
+			$update_member_return = "update g5_member set {$coin_target} = {$coin_target} + {$in_amt_total}, mb_shift_amt = mb_shift_amt - {$in_amt_total}  where mb_id='{$mb_id}' ";
 		}
 		
 		if ($debug) {

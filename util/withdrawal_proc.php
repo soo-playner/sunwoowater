@@ -14,28 +14,31 @@ $func				= trim($_POST['func']);
 $mb_id			= trim($_POST['mb_id']);
 $amt		= trim($_POST['amt']);
 
+
+$od_type = "출금요청";
 if($select_coin == '원' || $select_coin == '$'){
 	/* 원화계좌출금*/
 	$bank_name = trim($_POST['dataset']['bank_name']);
 	$bank_account = trim($_POST['dataset']['bank_account']);
 	$account_name = trim($_POST['dataset']['account_name']);
 }else{
-
 	/* 코인출금시 */
 	$withdraw_wallet	= trim($_POST['dataset']['withdrawal_wallet_addr']);
 }
 
-
 if($debug){
-	$mb_id = 'test5';
+	$mb_id = 'admin';
 	$func = 'withdraw';
-	$amt = 95;
-	$select_coin = '$';
+	$amt = 952.38;
+	$select_coin = 'FIL';
 
-	$bank_name = '농협';
+	/* $bank_name = '농협';
 	$account_name = '로그컴퍼니';
-	$bank_account = '123-456789-012';
+	$bank_account = '123-456789-012'; */
+	$withdraw_wallet = '123u21634761278346178234617823467823';
 }
+
+
 
 
 // 출금 설정 
@@ -47,7 +50,11 @@ $day_limit = $withdrwal_setting['day_limit'];
 
 
 // 출금가능금액 검증
-$withdrwal_total = floor($total_withraw/(1 + $fee*0.01));
+if($select_coin == '원'){
+	$withdrwal_total = floor($total_withraw/(1 + $fee*0.01)); // 원화
+}else{
+	$withdrwal_total = sprintf('%0.2f', $total_withraw/(1 + $fee*0.01)); // 달러 및 코인
+}
 
 if($max_limit != 0 && ($total_withraw * $max_limit*0.01) < $withdrwal_total){
   $withdrwal_total = $total_withraw * ($max_limit*0.01);
@@ -59,18 +66,18 @@ $in_amt = $amt + $fee_calc; // 실제출금 차감포인트
 	
 
 //출금기록 확인
-$today_ready_sql = "SELECT * FROM {$g5['withdrawal']} WHERE mb_id = '{$mb_id}' AND date_format(create_dt,'%Y-%m-%d') = '{$now_date}' ";
+$today_ready_sql = "SELECT * FROM {$g5['withdrawal']} WHERE mb_id = '{$mb_id}' AND date_format(create_dt,'%Y-%m-%d') = '{$now_date}' AND od_type = '{$od_type}' ";
 $today_ready = sql_query($today_ready_sql);
 $today_ready_cnt = sql_num_rows($today_ready);
 
-if($is_debug) echo "<code>일제한: ".$day_limit .' / 오늘 : '.$today_ready_cnt."<br><br>".$today_ready_sql."/ 총 필요금액".$amt_eth_cal."</code><br><br>";
+if($debug) echo "<code>일제한: ".$day_limit .' / 오늘 : '.$today_ready_cnt."<br><br>".$today_ready_sql."/ 총 필요금액".$amt_eth_cal."</code><br><br>";
 
 // 일 요청 제한
 if($day_limit != 0 && $today_ready_cnt >= $day_limit){
 	echo (json_encode(array("result" => "Failed", "code" => "0010","sql"=>"<span style='font-size:12px'>Daily withdrawal count exceeded per day $day_limit time(s)</span><br><span style='font-size:13px'>(일일 출금 횟수 초과입니다. 하루 $day_limit 회 가능)</span>"),JSON_UNESCAPED_UNICODE)); 
 	return false;
 }
-if($is_debug) echo "<code>최소: ".$min_limit .' / 최대가능금액 : '.$withdrwal_total."  (".$max_limit."%) / 현재출금가능".$total_withraw."</code><br><br>";
+if($debug) echo "<code>최소: ".$min_limit .' / 최대가능금액 : '.$withdrwal_total."  (".$max_limit."%) / 현재출금가능".$total_withraw."</code><br><br>";
 
 
 // 최소금액 제한 확인

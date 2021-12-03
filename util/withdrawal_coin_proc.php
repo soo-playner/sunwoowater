@@ -31,8 +31,12 @@ $amt				= trim($_POST['amt']); // 입력값
 $fee 				= $_POST['fee']; // 수수료
 $select_coin 		= $_POST['select_coin']; // 계산코인
 $coin_amt 			= $_POST['coin_amt']; // 실제출금계산액
-$coin_cost 			= $_POST['cost']; // 코인가격
 
+if($_POST['cost'] > 0){
+	$coin_cost 			= $_POST['cost']; // 코인가격
+}else{
+	$coin_cost 			= $fil_price;
+}
 
 
 /* if($debug){
@@ -90,7 +94,7 @@ if($debug){
 }
 
 //출금기록 확인
-$today_ready_sql = "SELECT * FROM {$g5['withdrawal']} WHERE mb_id = '{$mb_id}' AND date_format(create_dt,'%Y-%m-%d') = '{$now_date}' AND coin = '{$select_coin}' ";
+$today_ready_sql = "SELECT * FROM {$g5['withdrawal']} WHERE mb_id = '{$mb_id}' AND date_format(create_dt,'%Y-%m-%d') = '{$now_date}' AND coin = '{$select_coin}' AND od_type = '{$od_type}' ";
 $today_ready = sql_query($today_ready_sql);
 $today_ready_cnt = sql_num_rows($today_ready);
 
