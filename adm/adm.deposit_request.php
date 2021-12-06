@@ -54,7 +54,7 @@ if($_GET['ord']!=null && $_GET['ord_word']!=null){
 $colspan = 11;
 // $to_date = date("Y-m-d", strtotime(date("Y-m-d")."+1 day"));
 
-$sql_common = " from {$g5['deposit']} as A";
+$sql_common = " from `{$g5['deposit']}` as A";
 $sql_search = " WHERE 1=1 ".$sql_condition;
 $sql = " select count(create_d) as cnt, sum(in_amt) as hap
 {$sql_common}
@@ -192,7 +192,7 @@ $result = sql_query($sql);
 	<a href="./adm.deposit_request.php?<?=$qstr?>" class="ov_listall"> 결과통계 <?=$total_count?> 건 = <strong><?=number_format($total_hap,ASSETS_NUMBER_POINT)?></strong></a> 
 	<?
 		// 현재 통계치
-		$stats_sql = "SELECT status, sum(in_amt) as hap, count(in_amt) as cnt from {$g5['deposit']} as A WHERE 1=1 ".$sql_condition. " GROUP BY status";
+		$stats_sql = "SELECT status, sum(in_amt) as hap, count(in_amt) as cnt from `{$g5['deposit']}` as A WHERE 1=1 ".$sql_condition. " GROUP BY status";
 		$stats_result = sql_query($stats_sql);
         
 
@@ -260,7 +260,7 @@ $result = sql_query($sql);
 
     for ($i=0; $row=sql_fetch_array($result); $i++) {
         $bg = 'bg'.($i%2);
-        $duplicate_sql ="select COUNT(*) as cnt from wallet_deposit_request WHERE mb_id='{$row['mb_id']}' ";
+        $duplicate_sql ="select COUNT(*) as cnt from `{$g5['deposit']}` WHERE mb_id='{$row['mb_id']}' ";
         $duplicate_result = sql_fetch($duplicate_sql);
         $duplicate = $duplicate_result['cnt'];
 

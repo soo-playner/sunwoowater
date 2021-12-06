@@ -13,6 +13,7 @@ $status = $_POST['status'];
 $refund = $_POST['refund'];
 $coin = $_POST['coin'];
 $in_amt = $_POST['amt'];
+
 $func = $_POST['func'];
 $category = $_POST['category']; // 원화 외 구분
 
@@ -25,14 +26,18 @@ $drain = 1;
 
 
 if ($debug) {
-	$uid = 1;
-	$status = 4;
-	$refund = 'Y';
-	$func = 'withrawal';
-	$coin = '$';
+	$uid = 205;
+	$status = 3;
+	$refund = 'N';
+	$func = 'deposit';
+	$coin = 'FIL';
+	$in_amt = '-';
 	// $in_amt = '330000';
 }
 
+if($in_amt == '-'){
+	$in_amt = 0;
+}
 
 if ($func == 'withrawal') {
 	if ($status == '4' && $refund == 'Y') {
@@ -79,7 +84,7 @@ if ($func == 'withrawal') {
 } else if ($func == 'deposit') {
 
 	if ($status == '1' && $coin != '') {
-		$get_row = "SELECT * from {$g5['deposit']} where uid = {$uid} ";
+		$get_row = "SELECT * from `{$g5['deposit']}` where uid = {$uid} ";
 		$ret = sql_fetch($get_row);
 		$mb_id = $ret['mb_id'];
 
@@ -350,7 +355,7 @@ if ($func == 'withrawal') {
 
 				// 아바타 입금요청 생성
 				if($origin_up_result){
-					$deposit_sql = "INSERT INTO wallet_deposit_request(mb_id, txhash, create_dt,create_d,status,coin) VALUES('{$avata_id}','AVATA','$now_datetime','$now_date',0,'eth')";
+					$deposit_sql = "INSERT INTO `{$g5['deposit']}`(mb_id, txhash, create_dt,create_d,status,coin) VALUES('{$avata_id}','AVATA','$now_datetime','$now_date',0,'eth')";
 					
 					if ($debug){
 						echo "<br><br>아바타 입금요청 생성 :: ";
@@ -369,7 +374,7 @@ if ($func == 'withrawal') {
 
 	} // 승인인경우
 	
-	$sql = "UPDATE {$g5['deposit']} set status = '{$status}' ";
+	$sql = "UPDATE `{$g5['deposit']}` set status = '{$status}' ";
 	$sql .= ", in_amt = {$in_amt}";
 	$sql .= ", update_dt = '{$now_datetime}' ";
 	$sql .= " where uid = {$uid} ";

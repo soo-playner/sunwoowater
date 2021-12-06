@@ -3,8 +3,6 @@ include_once('./_common.php');
 include_once(G5_THEME_PATH.'/_include/wallet.php');
 include_once(G5_LIB_PATH.'/Telegram/telegram_api.php');
 
-login_check($member['mb_id']);
-
 // 입금처리 PROCESS
 //  $debug = 1;
 
@@ -16,31 +14,38 @@ $mb_id = $_POST['mb_id'];
 $txhash = $_POST['hash'];
 $coin = $_POST['coin'];
 $d_price = $_POST['d_price'];
-   
+
+
 if($debug){
   $mb_id ='admin';
   $coin ='FIL';
-  $txhash ='bafy2bzacedadg6yufns42ibfuxm6qcqzsb4u2ykqbv5br2y7d2zbbkcwtyipq';
+   $txhash_1 = 'https://filfox.info/ko/message/bafy2bzaceazlhu6pyjn7cb5fepmoncmirkxwllrwhj6okuxvadynrjay5cvpy';
   $d_price ='0';
 }
 
 if(strpos($txhash_1,'/')){
-  $char_count = array();
-  $char_count = explode('/',$txhash_1);
-  $ary_cnt = count($char_count);
-  $txhash =  $char_count[$ary_cnt-1];
+    $char_count = array();
+    $char_count = explode('/',$txhash_1);
+    $ary_cnt = count($char_count);
+    $txhash =  $char_count[$ary_cnt-1];
 }
+
+
+echo count($char_count);
+
+
 
 if(DEPOSIT_CURENCY != ASSETS_CURENCY){
   $in_price = shift_price($d_price,$coin,ASSETS_CURENCY);
 }
 
 /*기존건 확인*/
-$pre_result = sql_fetch("SELECT count(*) as cnt from `{$g5['deposit']}` 
+
+$pre_result = sql_fetch("SELECT count(*) as cnt from wallet_deposit_request 
 WHERE mb_id ='{$mb_id}' AND create_d = '{$now_date}' AND in_amt = {$d_price} ");
 
 if($pre_result['cnt'] < 1){
-  $sql = "INSERT INTO `{$g5['deposit']}`(mb_id, txhash, create_dt,create_d,status,coin,amt,in_amt) 
+  $sql = "INSERT INTO wallet_deposit_request(mb_id, txhash, create_dt,create_d,status,coin,amt,in_amt) 
   VALUES('$mb_id','$txhash','$now_datetime','$now_date',0,'$coin', '$d_price','$in_price')";
   
   if($debug){

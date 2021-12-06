@@ -20,13 +20,13 @@ $inaddr    = get_text($_REQUEST["address"]);
 $now_datetime = date('Y-m-d H:i:s');
 $now_date = date('Y-m-d');
 
-if($debug){
+/* if($debug){
 	$coin = 'eth';
 	$api_token = 'BsokFsOPhUSbtMVnmgTJYSNyP9VdrkoynMEb7ag9';
 	$event = 'confirmed';
 	$tx_hash = '0x79acdefb928f2054320512200e56c91360aec089a0e99d877ad2dba3b1eb1e6b';
 	$inaddr = '0xbb51cebac915a0f3df1ce73f653d2b2c2fd781c9';
-}
+} */
 
 
 
@@ -222,7 +222,7 @@ if(!$tx['error']['message']){
 	$event_code = 3;
 }
 
-$deposit_sql = "INSERT INTO wallet_deposit_request(mb_id, txhash, create_dt,create_d,status,coin,amt,in_amt)";
+$deposit_sql = "INSERT INTO `{$g5['deposit']}`(mb_id, txhash, create_dt,create_d,status,coin,amt,in_amt)";
 $deposit_sql .= " VALUES('{$member_data['mb_id']}','$tx_hash','$now_datetime','$now_date','$event_code','$coin', '$amount','$point')";
 
 if($debug){

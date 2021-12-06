@@ -140,7 +140,7 @@ $rows = 15; //한페이지 목록수
 
 
 //입금내역
-$sql_common_deposit = "FROM {$g5['deposit']}";
+$sql_common_deposit = "FROM `{$g5['deposit']}` ";
 
 $sql_deposit = " select count(*) as cnt {$sql_common_deposit} {$sql_search_deposit} ";
 $row_deposit = sql_fetch($sql_deposit);

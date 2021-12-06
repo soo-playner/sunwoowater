@@ -48,7 +48,7 @@ if($status != ""){
     $sql_status .= "and A.status = '{$status}'";
 }
 
-$sql = "select * from wallet_deposit_request as A WHERE 1=1 {$sql_fr_id} {$sql_update_dt} {$sql_status} and DATE_FORMAT(A.create_dt, '%Y-%m-%d') between '$fr_date' and '$to_date' order by create_dt desc";
+$sql = "select * from `{$g5['deposit']}` as A WHERE 1=1 {$sql_fr_id} {$sql_update_dt} {$sql_status} and DATE_FORMAT(A.create_dt, '%Y-%m-%d') between '$fr_date' and '$to_date' order by create_dt desc";
 
 $result = mysqli_query($conn,$sql);
 

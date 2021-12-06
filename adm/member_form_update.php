@@ -230,7 +230,7 @@ else if ($w == 'u')
 		$ASSETS_CURENCY = ASSETS_CURENCY;
 		$deposit_adm_value = $deposit_code.$deposit_adm;
 		
-		$deposit_adm_sql = "insert wallet_deposit_request set
+		$deposit_adm_sql = "insert `{$g5['deposit']}` set
 				mb_id             = '{$mb_id}'
 				, txhash     =  '관리자 {$deposit_adm_code} : {$member['mb_id']}'
 				, create_dt         = '{$today}'
