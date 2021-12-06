@@ -47,11 +47,12 @@ if ($_GET['recom_referral']){
 	var verify = false;
 	var recommned = "<?= $mb_recommend ?>";
 	var recommend_search = false;
+	var center_search = false;
 
 	if (recommned) {
 		recommend_search = true;
 	}
-	//console.log(recommend_search);
+	
 
 	$(function() {
 
@@ -510,12 +511,13 @@ if ($_GET['recom_referral']){
 
 
 					$(target_type + ' .modal-footer #btnSave').click(function() {
-						recommend_search = true;
 						if(type == 2){
 							$('#reg_mb_center_nick').val($(target_type + ' .modal-body .user.selected').html())
 							$(target).val($(target_type + ' .modal-body .user.selected + .mb_nick').html());
+							center_search = true;
 						}else{
 							$(target).val($(target_type + ' .modal-body .user.selected').html());
+							recommend_search = true;
 						}
 						$(target_type).modal('hide');
 					});
@@ -533,8 +535,10 @@ if ($_GET['recom_referral']){
 
 	// submit 최종 폼체크
 	function fregisterform_submit() {
+		const admins = "<?=$config['cf_admin']?>";
+		const recommend_not_id = ['admin','',admins];
+
 		var f = $('#fregisterform')[0];
-		//console.log(recommend_search);
 		/*
 		if(key != sha256($('#vCode').val())){
 		 	commonModal('Do not match','<p>Please enter the correct code</p>',80);
@@ -546,31 +550,19 @@ if ($_GET['recom_referral']){
 		var select_nation = $("#nation_number option:selected").val();
 
 		if(select_nation == "" ){
-			commonModal('country check', '<strong>please select country.</strong>', 80);
+			commonModal('국가선택', '<strong>접속하신 국가를 선택해주세요</strong>', 80);
 			return false;
 		}
-
-		/* 이사멤버 검사
-		if (f.mb_director.value == '' || f.mb_director.value == 'undefined') {
-			commonModal('recommend check', '<strong>please check recommend search Button and choose recommend.</strong>', 80);
-			return false;
-		}
-		*/
-
+		
 		//추천인 검사
-		if (f.mb_recommend.value == '' || f.mb_recommend.value == 'undefined') {
-			commonModal('recommend check', '<strong>please check recommend search Button and choose recommend.</strong>', 80);
+		if (!recommend_not_id.indexOf(f.mb_recommend.value) || !recommend_search ) {
+			dialogModal('추천인 입력 확인', '<strong>추천인을 입력후 검색버튼을 눌러 선택해주세요 </strong>', 'warning');
 			return false;
 		}
-		if (!recommend_search) {
-			commonModal('recommend check', '<strong>please check recommend search Button and choose recommend.</strong>', 80);
-			return false;
-		}
-
 
 		//센터멤버 검사
-		if (f.mb_center.value == '' || f.mb_center.value == 'undefined') {
-			commonModal('recommend check', '<strong>please check recommend search Button and choose recommend.</strong>', 80);
+		if (f.mb_center.value == '' || f.mb_center.value == 'undefined' || !center_search) {
+			dialogModal('센터 입력/검색 확인', '<strong>센터정보를 입력후 검색버튼을 눌러 선택해주세요.</strong>', 'warning');
 			return false;
 		}
 		
@@ -583,19 +575,19 @@ if ($_GET['recom_referral']){
 
 		// 이름
 		if (f.mb_name.value == '' || f.mb_name.value == 'undefined') {
-			commonModal('이름입력확인', '<strong>이름을 확인해주세요.</strong>', 80);
+			dialogModal('이름입력확인', '<strong>이름을 확인해주세요.</strong>', 'warning');
 			return false;
 		}
 		
 		//아이디 중복체크
 		if (check_id == 0) {
-			commonModal('ID 중복확인', '<strong>아이디 중복확인을 해주세요. </strong>', 80);
+			dialogModal('ID 중복확인', '<strong>아이디 중복확인을 해주세요. </strong>', 'warning');
 			return false;
 		}
 
 		// 연락처
-		if (f.mb_hp.value == '' || f.mb_hp.value == 'undefined') {
-			commonModal('휴대폰번호확인', '<strong>휴대폰 번호가 잘못되거나 누락되었습니다. </strong>', 80);
+		if (f.mb_hp.value.length < 10) {
+			dialogModal('휴대폰번호확인', '<strong>휴대폰 번호가 누락되거나 잘못입력되었습니다. </strong>', 'warning');
 			return false;
 		}
 
