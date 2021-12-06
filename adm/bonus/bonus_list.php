@@ -127,9 +127,12 @@ $qstr .= '&stx=' . $stx . '&sfl=' . $sfl;
 $qstr .= '&aaa=' . $aaa;
 
 
+// 누적통계
+
+$total_exc_bonus = sql_fetch("SELECT sum(benefit) as total from soodang_pay")['total'];
+$search_sql = "SELECT sum(benefit) as total from soodang_pay WHERE day >= '{$start_dt}' AND day <= '{$end_dt}'";
+$search_exc_bonus = sql_fetch($search_sql)['total'];
 include_once(G5_PLUGIN_PATH . '/jquery-ui/datepicker.php');
-
-
 
 ?>
 
@@ -248,6 +251,9 @@ include_once(G5_PLUGIN_PATH . '/jquery-ui/datepicker.php');
 	<div class="local_ov01 ">
 		<?php echo $listall ?>
 		전체 <?php echo number_format($total_count) ?> 건
+
+		&nbsp&nbsp| 총 누적 보너스지급량 : <strong class='font_red'>$ <?=shift_auto($total_exc_bonus,'$')?></strong>
+		&nbsp&nbsp| 해당기간 보너스 지급량 : <strong class='font_red'>$ <?=shift_auto($search_exc_bonus,'$')?></strong>
 	</div>
 	<div class="tbl_head01 tbl_wrap">
 		<table>
