@@ -456,7 +456,7 @@
                     },
                     success: function(res) {
                         if (res.result == "success") {
-                            dialogModal('Withdraw has been successfully withdrawn', '<p>Please allow up to 24 hours for the transaction to complete.</p>', 'success');
+                            dialogModal('출금요청 접수 완료', '<p>트랜잭션이 완료될 때까지 최대 24시간 기다려 주십시오.</p>', 'success');
 
                             $('.closed').click(function() {
                                 location.reload();

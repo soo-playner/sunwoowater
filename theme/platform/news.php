@@ -97,7 +97,7 @@ $title = 'News';
     <div class='container nomargin nopadding'>
 		<div class="news_wrap content-box6">
 			<h3 class="title">공지사항</h3>
-			<p class="sub_title"><?=$config['cf_title']?>에서 전하는 새로운 소식을 확인하세요.</p>
+			<p class="sub_title"><?=CONFIG_TITLE?> 에서 전하는 새로운 소식을 확인하세요.</p>
 			<div class="b_line3"></div>
 				<?if($cnt == 0){?>
 					<div class="no_data box_on">공지사항이 존재하지 않습니다</div>
