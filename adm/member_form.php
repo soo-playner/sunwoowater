@@ -435,10 +435,13 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 	<tr class="ly_up padding-box fund">
 
 		<th scope="row">누적 매출 합계 (PV)</th>
-		<td colspan="1"><span class='strong soodang'><?=ASSETS_CURENCY?> <?=shift_auto($mb['mb_save_point'])?> </span></td>
+		<td colspan="1"><span class='strong soodang'><?=ASSETS_CURENCY?> <?=shift_auto($mb['mb_save_point'],BALANCE_CURENCY)?> </span></td>
 
 		<th scope="row">총 받은보너스(수당)</th>
-		<td colspan="1"><span class='strong bonus'><?=ASSETS_CURENCY?> <?=shift_auto($mb['mb_balance'])?> </span> </td>
+		<td colspan="1">
+			<input type='hidden' name='mb_balance' value ='<?=$mb['mb_balance']?>'/>
+			<span class='strong bonus'><?=ASSETS_CURENCY?> <?=shift_auto($mb['mb_balance'],BALANCE_CURENCY)?> </span> 
+		</td>
 
 	</tr>
 
