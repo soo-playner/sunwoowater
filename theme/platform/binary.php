@@ -363,7 +363,13 @@ if($mem_self <= 0){
 								</div>
 
 								<?}else{?>
-									<?if($i == 2 && ($_GET['left'] || $member['mb_id'] == $start_id) || $i == 3 && ($_GET['right'] || $member['mb_id'] == $start_id)){?>
+									<div class="lvl-open" id="<?echo $i ;?>" >
+											<select class="form-control">
+												<option selected value="" data-i18n='binary.회원선택하기'>Select Member</option>
+											</select>
+											<button class="addMem b_skyblue b_radius_5"><i class="ri-add-circle-line" style='font-size:15px;vertical-align:sub;'></i><span data-i18n='binary.등록하기'>Add member</span></button>
+										</div>
+									<!-- <?if($i == 2 && ($_GET['left'] || $member['mb_id'] == $start_id) || $i == 3 && ($_GET['right'] || $member['mb_id'] == $start_id)){?>
 										<div class="lvl-open" id="<?echo $i ;?>" >
 											<select class="form-control">
 												<option selected value="" data-i18n='binary.회원선택하기'>Select Member</option>
@@ -372,7 +378,7 @@ if($mem_self <= 0){
 										</div>
 									<?}else{?>
 										<div class="lvl-open" id="<?echo $i ;?>" ></div>
-									<?}?>
+									<?}?> -->
 
 								<?}//else end
 								}//for end?>
@@ -412,10 +418,10 @@ if($mem_self <= 0){
 								}
 								else{?>
 								<div class="lvl-open" id="<?echo $i ;?>" >
-									<!-- <select class="form-control">
+									<select class="form-control">
 										<option selected="" value="" data-i18n='binary.회원선택하기'>Select Member</option>
 									</select>
-									<button class="addMem b_skyblue b_radius_5"><span data-i18n='binary.등록하기'>등록하기</span></button> -->
+									<button class="addMem b_skyblue b_radius_5"><span data-i18n='binary.등록하기'>등록하기</span></button>
 								</div>
 								<?}//else end
 								}//for end?>
@@ -437,10 +443,10 @@ if($mem_self <= 0){
 						</div>
 						<div class="b_line3"></div>
 						<div class="page-scroll">
-							<span id="left_top" class="b_skyblue b_radius_5" >왼쪽 하부 <br>보기/등록</span>
+							<span id="left_top" class="b_skyblue b_radius_5" >왼쪽 하부 가기</span>
 							<span id="go_top" class="b_skyblue b_radius_5" data-i18n='binary.맨 위로 가기'>Back to top</span>
 							<span id="go_up_one" class="b_skyblue b_radius_5" data-i18n='binary.한 단계 위로 가기'>One level up</span>
-							<span id="right_top" class="b_skyblue b_radius_5" >오른쪽 하부 <br>보기/등록</span>
+							<span id="right_top" class="b_skyblue b_radius_5" >오른쪽 하부 가기</span>
 						</div>
 					</div>
 

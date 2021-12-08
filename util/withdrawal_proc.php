@@ -170,7 +170,6 @@ if($rst){
 	, bank_account = '{$bank_account}'
 	, account_name = '{$account_name}'
 	, withdraw_wallet = '{$withdraw_wallet}'
-	, mb_deposit_calc = mb_deposit_calc - {$in_amt}
 	, mb_shift_amt = mb_shift_amt + {$in_amt}
 	where mb_id = '{$mb_id}' ";
 }
