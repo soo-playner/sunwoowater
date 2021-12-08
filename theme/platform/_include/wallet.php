@@ -774,6 +774,16 @@ function retrun_tx_func($tx,$coin){
 	}
 }
 
+function retrun_fil_addr_func($tx,$coin){
+	if(strtolower($coin) == 'eth'){
+		return "<a href='https://etherscan.io/address/".$tx."' target='_blank' style='text-decoration:underline'>".$tx."</a>";
+	}else if(strtolower($coin) =='fil'){
+		return "<a href ='https://filfox.info/ko/address/".$tx."' target='_blank' style='text-decoration:underline'>".$tx."</a>";
+	}else{
+		return $tx;
+	}
+}
+
 
 function retrun_coin($coin){
 	if(strtolower($coin) == 'eth'){

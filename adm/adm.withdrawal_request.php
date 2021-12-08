@@ -258,7 +258,7 @@ $ord_rev = $ord_array[($ord_key+1)%2]; // 내림차순→오름차순, 오름차
 						<?=$row['bank_name']?> | <span class='withdrwal_info' ><?=$row['bank_account']?></span>(<?=$row['account_name']?>)	 
 					<?}else{?>	
 						<input type="hidden" value="<?=$row['addr']?>" name="addr[]">
-						<span class='withdrwal_info coin_tx'><?=retrun_tx_func($row['addr'],$row['coin'])?></span>
+						<span class='withdrwal_info coin_tx'><?=retrun_fil_addr_func($row['addr'],$row['coin'])?></span>
 					<?}?>
 				</td>
 
