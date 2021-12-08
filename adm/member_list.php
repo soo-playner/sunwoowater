@@ -139,6 +139,8 @@ function out_check($val){
 	return "<span class=".$class.">".number_format($bonus_OUT_CALC)." % </span>";
 }
 
+
+
 // 통계수치
 $stats_sql = "SELECT COUNT(*) as cnt, SUM(mb_deposit_point) AS deposit, SUM(mb_balance) AS balance, SUM(mb_deposit_point+mb_deposit_calc) AS fund {$sql_common} {$sql_search}";
 $stats_result = sql_fetch($stats_sql);
@@ -518,7 +520,7 @@ $stats_result = sql_fetch($stats_sql);
 		<!-- <td headers="mb_list_auth" class="td_mbstat" rowspan="2"><?= shift_auto_zero($row['mb_save_point']) ?></td> -->
 		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><?= shift_auto_zero($row['mb_pv']) ?></td>
 		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><?= shift_auto_zero($row['mb_rate']) ?></td>
-		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"> <?=$bonus_per?><?if($bonus_per != 0){echo "%";}?></td>
+		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"> <?=percent_express($bonus_per)?></td>
 		<td headers="mb_list_auth" class="td_mbstat text-center" rowspan="2"><span class='badge t_white color<?=$row['rank']?>'><?if($row['rank']){echo 'P'.$row['rank'];}?></span></td>
 		
 		<td headers="mb_list_member" class="td_mbgrade" rowspan="2">

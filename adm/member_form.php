@@ -159,7 +159,7 @@ if(!isset($mb['mb_email_certify2'])) {
 }
 
 
-$bonus_per = bonus_per($mb['mb_id'],$mb['mb_balance'],$mb['mb_save_point']);
+$bonus_per = bonus_per($mb['mb_id'],$mb['mb_balance'],$mb['mb_pv']);
 
 if ($mb['mb_intercept_date']) $g5['title'] = "차단된 ";
 else $g5['title'] .= "";
@@ -215,6 +215,8 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 <?
 	$rank_sql = "select * from rank where mb_id = '{$mb['mb_id']}' and rank = '{$mb['mb_level']}' ";
 	$rank_result = sql_fetch($rank_sql);
+
+
 ?>
 
 <style>
@@ -435,19 +437,26 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 	<tr class="ly_up padding-box fund">
 
 		<th scope="row">누적 매출 합계 (PV)</th>
-		<td colspan="1"><span class='strong soodang'><?=ASSETS_CURENCY?> <?=shift_auto($mb['mb_save_point'],BALANCE_CURENCY)?> </span></td>
+		<td colspan="1">
+			<span class='strong soodang'><?=ASSETS_CURENCY?> <?=shift_auto($mb['mb_save_point'],BALANCE_CURENCY)?> </span>
+			&nbsp&nbsp( PV : <?=$mb['mb_pv']?> )
+		</td>
 
 		<th scope="row">총 받은보너스(수당)</th>
 		<td colspan="1">
 			<input type='hidden' name='mb_balance' value ='<?=$mb['mb_balance']?>'/>
 			<span class='strong bonus'><?=ASSETS_CURENCY?> <?=shift_auto($mb['mb_balance'],BALANCE_CURENCY)?> </span> 
+			&nbsp&nbsp( per : <?=percent_express($bonus_per)?> )
 		</td>
 
 	</tr>
 
 	<tr class="ly_up padding-box fund">
-		<th scope="row">보유마이닝해쉬 (HP/S)</th>
-		<td colspan="1"><span class='strong mining'><?=Number_format($mb['mb_rate'])?> HP/s</span></td>
+		<th scope="row" style='line-height:20px;'>보유마이닝해쉬<br>(추천산하)(후원산하)</th>
+		<td colspan="1">
+			<span class='strong mining'><?=Number_format($mb['mb_rate'])?> <?=$mining_hash[0]?></span>
+			&nbsp&nbsp(<?=$mb['recom_mining']?> <?=$mining_hash[0]?> / <?=$mb['brecom_mining']?> <?=$mining_hash[0]?>)
+		</td>
 
 		<th scope="row">총 받은마이닝보너스</th>
 		<td colspan="1"><span class='strong mining_soodang'><?=shift_auto($mb[$mining_target],$minings[0])?> <?=strtoupper($minings[0])?></span> </td>
