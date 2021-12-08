@@ -210,7 +210,7 @@ function bonus_per($mb_id = '', $mb_balance = '', $mb_limit = '')
 	} else {
 		$mb_sql = "SELECT * from g5_member WHERE mb_id  = '{$mb_id}' ";
 		$mb = sql_fetch($mb_sql);
-		$mb_balance_calc = ($mb['balance'] - $mb['mb_balance_ignore']);
+		$mb_balance_calc = ($mb['mb_balance'] - $mb['mb_balance_ignore']);
 
 		if ($mb_limit != 0 && $mb_balance != 0 && $limited_per != 0) {
 			$bonus_per = ($mb_balance_calc / ($mb_limit * $limited_per));
