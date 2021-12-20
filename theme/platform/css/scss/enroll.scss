@@ -60,3 +60,49 @@
         margin-top:-42px;
     }
 }
+
+.account_wrap {
+    display: flex;
+
+    .bank {
+        width: 50%;
+        padding: 15px;
+        margin: 0;
+        margin-right: 5px !important;
+        margin-top: 15px !important;
+    }
+
+    .deposit_name {
+        width: 50%;
+        padding: 15px;
+    }
+}
+
+.account_info {
+    padding: 15px;
+}
+
+.address_wrap {
+    .address_search_wrap {
+        display: flex;
+
+        .address {
+            width: 100%;
+            margin-right: 5px !important;
+            margin-top: 15px !important;
+        }
+
+        .address_search_btn {
+            width: 20%;
+            background: #fff;
+            border:none;
+            border-bottom:1px solid rgba(0,0,0,0.25);
+            height:45px;
+            margin-top:15px;
+        }
+    }
+
+    .address_num {
+        margin-top: 15px;
+    }
+}
