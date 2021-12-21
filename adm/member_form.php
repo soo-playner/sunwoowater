@@ -21,7 +21,6 @@ function bonus_pick($val){
 $week_bonus_result = bonus_pick('weekend')['rate'];
 $week_bonus = explode(',',$week_bonus_result);
 
-
 if ($w == '')
 {
 	$required_mb_id = 'required';
@@ -172,10 +171,24 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 <!-- <script src="https://kit.fontawesome.com/21599d63fd.js" crossorigin="anonymous"></script> -->
 <link rel="stylesheet" href="<?=G5_THEME_URL?>/css/scss/custom.css">
 <link rel="stylesheet" href="./css/scss/admin_custom.css">
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="<?=G5_THEME_URL?>/_common/js/common.js" crossorigin="anonymous"></script>
 
 <script>
 	$(function() {
+		// 주소 찾기
+		const mb_addr1 = document.getElementById("mb_addr1");
+		const mb_addr2 = document.getElementById("mb_addr2");
+
+		mb_addr1.addEventListener('click', () => {
+			new daum.Postcode({
+				oncomplete: function(data) {
+					// address : 기본주소, roadAddress : 도로명 주소, jibunAddress : 지번 주소
+					mb_addr1.value = data.address;
+					mb_addr2.focuce();
+				}
+			}).open();
+		});
 
 		$('#center_use').click(function(){
 			var checked = $(this).is(":checked");
@@ -210,6 +223,7 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 			alert('주소가 복사되었습니다.');
 		}
 	});
+
 </script>
 
 <?
@@ -316,6 +330,18 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 		<?}?>
 		-->
 		</td>
+		<th scope="row"><label for="mb_hp">휴대폰번호</label></th>
+		<td>
+			<!-- <input type="text" name="nation_number" value="<?php echo $mb['nation_number'] ?>" id="nation_number" class="frm_input" style="height:36px;text-align:center" size="5" maxlength="50"> -->
+			<input type="text" name="mb_hp" value="<?php echo $mb['mb_hp'] ?>" id="mb_hp" class="frm_input  wide" size="15" maxlength="20">
+			
+			<!-- <?if($member['mb_certify'] == 1){?>
+				<img src="<?=G5_THEME_URL?>/_images/okay_icon.gif" alt="인증됨" style="width:15px;"> 인증됨
+			<?}else{?>
+				<img src="<?=G5_THEME_URL?>/_images/x_icon.gif" alt="인증안됨" style="width:15px;"> 인증안됨
+			<?}?> -->
+			
+		</td>
 		<!-- <th scope="row"><label for="mb_hp">휴대폰번호</label></th>
 		<td>
 			<input type="text" name="nation_number" value="<?php echo $mb['nation_number'] ?>" id="nation_number" class="frm_input" style="height:36px;text-align:center" size="5" maxlength="50">
@@ -328,6 +354,25 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 			<?}?>
 			
 		</td> -->
+	</tr>
+
+	<tr>
+		<th scope="row">
+			<label for="mb_addr1">주소</label>
+		</th>
+
+		<td>
+			<input type="text" name="mb_addr1" value="<?php echo $mb['mb_addr1']; ?>" id="mb_addr1" class="frm_input mb_addr1 wide" style="width: 80%;" readonly />
+		</td>
+
+
+		<th scope="row">
+			<label for="mb_add2">상세주소</label>
+		</th>
+
+		<td>
+			<input type="text" name="mb_addr2" value="<?php echo $mb['mb_addr2']; ?>" id="mb_addr2" maxlength="150" class="frm_input mb_addr2 wide" style="width: 80%;" autocomplete="off" />
+		</td>
 	</tr>
 
 	<tr>
@@ -714,7 +759,7 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 	-->
 
 
-	<tr class="hidden">
+	<!-- <tr class="hidden">
 		<th scope="row">주소</th>
 		<td colspan="3" class="td_addr_line">
 			<label for="mb_zip" class="sound_only">우편번호</label>
@@ -729,7 +774,7 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 			<label for="mb_addr3">참고항목</label>
 			<input type="hidden" name="mb_addr_jibeon" value="<?php echo $mb['mb_addr_jibeon']; ?>"><br>
 		</td>
-	</tr>
+	</tr> -->
 
 	<tr class="hidden">
 		<th scope="row"><label for="mb_icon">회원아이콘</label></th>

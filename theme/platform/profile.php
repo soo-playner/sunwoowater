@@ -122,6 +122,12 @@
 						</li>
 					</ul>
 					<?php } ?>
+					<ul class='row person_info'>
+						<li class='col-12'>
+							<label>주소</label>
+							<p><?=$member['mb_addr1']?> <?=$member['mb_addr2']?></p>		
+						</li>
+					</ul>
 				</div>
 				<div class='col-sm-12 col-12 profile-box'>
 					<h3 class='title b_line'>
@@ -154,12 +160,12 @@
 						</li>
 					</ul>
 
-					<ul class='row'>
+					<!-- <ul class='row'>
 						<li class='col-sm-12 col-12'>
 							<label data-i18n="profile.나의 센터">My Center</label>
 							<p ><?=get_name($member['mb_center'])?></p>
 						</li>
-					</ul>
+					</ul> -->
 
 					<!-- <div class="google-auth-top-qr" id="qrcode"></div> -->
 				</div>
