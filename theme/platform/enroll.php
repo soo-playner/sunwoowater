@@ -735,6 +735,8 @@ if ($_GET['recom_referral']){
 				
 				<input type="text" name="mb_addr1"  id="mb_addr1" style='padding:15px' required  placeholder="주소" readonly />
 
+				<div id="map_wrap" class="map_wrap"></div>
+
 				<input type="text" name="mb_addr2"  id="mb_addr2" style='padding:15px' required  placeholder="상세주소" maxlength="150" autocomplete="off" />
 				
 				<div class="row mt20">
@@ -829,8 +831,6 @@ if ($_GET['recom_referral']){
 				<input class="btn btn_double enroll_cancel_pop_open btn_cancle pop_open" type="button" value="Cancel" data-i18n='[value]signUp.취소'>
 				<input class="btn btn_double btn_primary" type="button" onclick="fregisterform_submit();" value="Enroll new member" data-i18n='[value]signUp.신규 회원 등록하기'>
 			</div>
-
-
 		</form>
 	</div>
 
@@ -840,24 +840,44 @@ if ($_GET['recom_referral']){
 <div class="gnb_dim"></div>
 
 
-
 <script>
 	$(function() {
 		$(".top_title h3").html("<span data-i18n='title.신규 회원등록' style='font-size:16px;margin-left:20px'>Create a new account</span>");
 
-		// 주소 찾기
+		const map_wrap = document.getElementById('map_wrap');
 		const mb_addr1 = document.getElementById("mb_addr1");
-		const mb_addr2 = document.getElementById("mb_addr2");
+		
+		const hidden_map = () => map_wrap.style.display = 'none';
 
-		mb_addr1.addEventListener('click', () => {
+		hidden_map();
+
+		mb_addr1.addEventListener('click', function() {
+			select_addr();
+		});
+
+		const select_addr = () => {
+			var currentScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
+
 			new daum.Postcode({
 				oncomplete: function(data) {
-					// address : 기본주소, roadAddress : 도로명 주소, jibunAddress : 지번 주소
-					mb_addr1.value = data.address;
-					mb_addr2.focus();
-				}
-			}).open();
-		});
+					document.getElementById("mb_addr1").value = data.address;
+					document.getElementById("mb_addr2").focus();
+					//mb_addr2.focus();
+
+					map_wrap.style.display = 'none';
+
+					// 우편번호 찾기 화면이 보이기 이전으로 scroll 위치를 되돌린다.
+					document.body.scrollTop = currentScroll;
+				},
+				// 우편번호 찾기 화면 크기가 조정되었을때 실행할 코드를 작성하는 부분. iframe을 넣은 element의 높이값을 조정한다.
+				onresize : function(size) {
+					map_wrap.style.height = size.height+'px';
+				},
+				width : '100%',
+				height : '100%'
+			}).embed(map_wrap);
+			map_wrap.style.display = 'block';
+		}
 	
 	});
 
