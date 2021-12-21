@@ -37,8 +37,15 @@ if ($_GET['recom_referral']){
 
 	.dd .ddlabel{vertical-align: middle;}
 
-	.dd .divider{right:34px;}
 	.ddcommon .ddArrow{right:10px;}
+
+	.id_set input{border-left:3px solid #999;}
+	.phone_set input[type='text'],.phone_set input[type='email']{border-left:3px solid #dc3545;}
+	.addr_set input{border-left:3px solid royalblue;}
+	.bank_info_set input{border-left:3px solid gold;}
+
+	hr.light_line{margin-top:10px;margin-bottom:-10px;border-top:1px solid rgba(0,0,0,0.1)}
+	.map_wrap{margin-top:-55px;}
 </style>
 
 
@@ -467,7 +474,8 @@ if ($_GET['recom_referral']){
 								vHtml.append($("<div style='color:red;>").addClass('non_user').html(obj.mb_id));
 							}
 						}
-/* 
+						
+						/* 
 						if (obj.mb_level > 0) {
 							
 
@@ -482,8 +490,6 @@ if ($_GET['recom_referral']){
 								vHtml.append($("<div style='color:red;>").addClass('non_user').html(obj.mb_id));
 							}
 						} */
-
-
 					});
 			
 					$(target_type + ' .modal-body').html(vHtml.html());
@@ -718,37 +724,45 @@ if ($_GET['recom_referral']){
 			<!-- <p class="check_appear_title mt40"><span data-i18n='signUp.일반정보'>General Information</span></p> -->
 			<p class="check_appear_title mt40"><span data-i18n='signUp.개인 정보 & 인증'>Personal Information & Authentication </span></p>
 			<div>
-				<input type="text" minlength="5" maxlength="20" name="mb_name" style='padding:15px' id="reg_mb_name" required placeholder="이름"  />
-				<!-- <div class='in_btn_ly'><input type="button" id='name_check' class='btn_round check' value="name" data-i18n='[value]signUp.중복확인'></div> -->
-
-				<input type="text" minlength="5" maxlength="20" name="mb_id" class='cabinet' style='padding:15px' id="reg_mb_id" required placeholder="아이디"/>
-				<span class='cabinet_inner' style=''>※영문+숫자조합 6자리 이상 입력해주세요</span>
-				<div class='in_btn_ly'><input type="button" id='id_check' class='btn_round check' value="ID Check" data-i18n='[value]signUp.중복확인'></div>
-
-				<input type="email"  id="reg_mb_email" name="mb_email" class='cabinet' style='padding:15px'placeholder="Email address" required data-i18n='[placeholder]signUp.이메일 주소' />
-				<span class='cabinet_inner' style=''>※수신가능한 이메일주소를 직접 입력해주세요</span>
-				<div class='in_btn_ly'><input type="button" id='EmailChcek' class='btn_round check' value="Eamil" data-i18n='[value]signUp.이메일 전송'></div>
-				
-				<input type="text" name="mb_hp"  id="reg_mb_hp" class='cabinet'  pattern="[0-9]*" style='padding:15px' required  placeholder="휴대폰번호"/>
-				<span class='cabinet_inner' style=''>※'-'를 제외한 숫자만 입력해주세요</span>
-				<!-- <label class='prev_icon'><i class="ri-smartphone-line"></i></label> -->
-				
-				<input type="text" name="mb_addr1"  id="mb_addr1" style='padding:15px' required  placeholder="주소" readonly />
-
-				<div id="map_wrap" class="map_wrap"></div>
-
-				<input type="text" name="mb_addr2"  id="mb_addr2" style='padding:15px' required  placeholder="상세주소" maxlength="150" autocomplete="off" />
-				
-				<div class="row mt20">
-					<div class="col-6">
-						<input type="text" name="bank_name" id="bank_name" class="" style='padding:15px' required placeholder="은행명" maxlength="30" autocomplete="off" />
-					</div>
-					<div class="col-6">
-						<input type="text" name="account_name" id="account_name" class="" style='padding:15px' required placeholder="예금주" maxlength="30" autocomplete="off" />
-					</div>
+				<div class='id_set mt20'>
+					<input type="text" minlength="5" maxlength="20" name="mb_name" style='padding:15px' id="reg_mb_name" required placeholder="이름"  />
+					<input type="text" minlength="5" maxlength="20" name="mb_id" class='cabinet' style='padding:15px' id="reg_mb_id" required placeholder="아이디"/>
+					<span class='cabinet_inner' style=''>※영문+숫자조합 6자리 이상 입력해주세요</span>
+					<div class='in_btn_ly'><input type="button" id='id_check' class='btn_round check' value="ID Check" data-i18n='[value]signUp.중복확인'></div>
 				</div>
 
-				<input type="text" name="bank_account" id="bank_account" pattern="[0-9]*" style='padding:15px' required placeholder="계좌번호" maxlength="50" autocomplete="off" />
+
+				<div class='phone_set mt20'>
+					<input type="email"  id="reg_mb_email" name="mb_email" class='cabinet' style='padding:15px'placeholder="Email address" required data-i18n='[placeholder]signUp.이메일 주소' />
+					<span class='cabinet_inner' style=''>※수신가능한 이메일주소를 직접 입력해주세요</span>
+					<div class='in_btn_ly'><input type="button" id='EmailChcek' class='btn_round check' value="Eamil" data-i18n='[value]signUp.이메일 전송'></div>
+					<input type="text" name="mb_hp"  id="reg_mb_hp" class='cabinet'  pattern="[0-9]*" style='padding:15px' required  placeholder="휴대폰번호"/>
+					<span class='cabinet_inner' style=''>※'-'를 제외한 숫자만 입력해주세요</span>
+				</div>
+
+				
+				
+				<div class='addr_set mt20'>
+					<input type="text" name="mb_addr1"  id="mb_addr1" style='padding:15px' required  placeholder="주소" readonly />
+					<div id="map_wrap" class="map_wrap"></div>
+					<input type="text" name="mb_addr2"  id="mb_addr2" style='padding:15px' required  placeholder="상세주소" maxlength="150" autocomplete="off" />
+				</div>
+
+				<hr class="light_line">
+
+				<div class="bank_info_set mt20 ">
+					<div class="row ">
+						<div class="col-6">
+							<input type="text" name="bank_name" id="bank_name" class="" style='padding:15px' required placeholder="은행명" maxlength="30" autocomplete="off" />
+						</div>
+						<div class="col-6">
+							<input type="text" name="account_name" id="account_name" class="" style='padding:15px' required placeholder="예금주" maxlength="30" autocomplete="off" />
+						</div>
+					</div>
+
+					<input type="text" name="bank_account" id="bank_account" pattern="[0-9]*" class='cabinet' style='padding:15px' required placeholder="계좌번호" maxlength="50" autocomplete="off" />
+					<span class='cabinet_inner' style=''>※'-'를 제외한 숫자만 입력해주세요</span>
+				</div>
 			</div>
 
 
