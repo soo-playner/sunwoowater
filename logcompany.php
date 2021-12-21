@@ -21,9 +21,9 @@ $mining_target = 'mb_mining_1';
 $mining_amt_target = 'mb_mining_1'.'_amt';
 
 define('DEPOSIT_NUMBER_POINT',0); // 입금단위
-define('ASSETS_NUMBER_POINT',2); // 정산 단위
-define('BONUS_NUMBER_POINT',2); // 수당계산,정산기준단위
-define('COIN_NUMBER_POINT',4); // 코인 단위
+define('ASSETS_NUMBER_POINT',0); // 정산 단위
+define('BONUS_NUMBER_POINT',0); // 수당계산,정산기준단위
+define('COIN_NUMBER_POINT',0); // 코인 단위
 
 $deposit_method = ['원'];
 
