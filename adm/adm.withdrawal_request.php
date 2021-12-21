@@ -289,8 +289,10 @@ $ord_rev = $ord_array[($ord_key+1)%2]; // 내림차순→오름차순, 오름차
 				
 				<!-- 실출금액 -->
 				<td  class="td_amt" style="color:red">
-					<input type="hidden" value="<?=shift_auto($row['out_amt'])?>" name="out_amt[]">
-					<?=shift_auto($row['out_amt'],$row['coin'])?>
+					<!-- <input type="hidden" value="<?=shift_auto($row['out_amt'])?>" name="out_amt[]">
+					<?=shift_auto($row['out_amt'],$row['coin'])?> -->
+					<input type="hidden" value="<?=shift_auto($row['amt_total'])?>" name="amt_total[]">
+					<?=shift_auto($row['amt_total'],$row['coin'])?>
 				</td>
 
 				<!-- 출금시세 -->
@@ -397,7 +399,8 @@ function start_transfer(){
 				f.elements['addr[]'][i].disabled=true;
 				f.elements['coin[]'][i].disabled=true;
 				f.elements['amt[]'][i].disabled=true;
-                f.elements['out_amt[]'][i].disabled=true;
+                // f.elements['out_amt[]'][i].disabled=true;
+                f.elements['amt_total[]'][i].disabled=true;
 				f.elements['t_status[]'][i].disabled=true;
             }
         }

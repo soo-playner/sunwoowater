@@ -27,14 +27,14 @@ if($select_coin == '원' || $select_coin == '$'){
 }
 
 if($debug){
-	$mb_id = 'admin';
-	$func = 'withdraw';
-	$amt = 952.38;
-	$select_coin = 'FIL';
+	// $mb_id = 'admin';
+	// $func = 'withdraw';
+	// $amt = 952.38;
+	// $select_coin = 'FIL';
 
-	/* $bank_name = '농협';
+	$bank_name = '농협';
 	$account_name = '로그컴퍼니';
-	$bank_account = '123-456789-012'; */
+	$bank_account = '123-456789-012'; 
 	$withdraw_wallet = '123u21634761278346178234617823467823';
 }
 
@@ -63,7 +63,6 @@ if($max_limit != 0 && ($total_withraw * $max_limit*0.01) < $withdrwal_total){
 
 $fee_calc = floor($amt*($fee*0.01)); // 수수료
 $in_amt = $amt + $fee_calc; // 실제출금 차감포인트
-	
 
 //출금기록 확인
 $today_ready_sql = "SELECT * FROM {$g5['withdrawal']} WHERE mb_id = '{$mb_id}' AND date_format(create_dt,'%Y-%m-%d') = '{$now_date}' AND od_type = '{$od_type}' ";
@@ -133,7 +132,7 @@ if($total_row['total_sum'] != ""){
 	return false;
 } */
 
-$out_amt = shift_auto($amt/$fil_price,'fil');
+//$out_amt = shift_auto($amt/$fil_price,'fil');
 
 //출금 처리
 $proc_receipt = "insert {$g5['withdrawal']} set
@@ -150,8 +149,8 @@ mb_id ='{$mb_id}'
 , coin = '{$select_coin}'
 , status = '0'
 , create_dt = '{$now_datetime}'
-, cost = '{$fil_price}'
-, out_amt = '{$out_amt}'
+, cost = '1'
+, out_amt = '{$amt}'
 , od_type = '수당출금요청' ";
 
 

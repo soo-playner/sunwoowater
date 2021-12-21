@@ -17,12 +17,12 @@ $txhash = $_POST['hash'];
 $coin = $_POST['coin'];
 $d_price = $_POST['d_price'];
    
-if($debug){
-  $mb_id ='admin';
-  $coin ='FIL';
-  $txhash ='bafy2bzacedadg6yufns42ibfuxm6qcqzsb4u2ykqbv5br2y7d2zbbkcwtyipq';
-  $d_price ='0';
-}
+// if($debug){
+//   $mb_id ='admin';
+//   $coin ='FIL';
+//   $txhash ='bafy2bzacedadg6yufns42ibfuxm6qcqzsb4u2ykqbv5br2y7d2zbbkcwtyipq';
+//   $d_price ='0';
+// }
 
 if(strpos($txhash_1,'/')){
   $char_count = array();
@@ -52,7 +52,7 @@ if($pre_result['cnt'] < 1){
   }
 
   // 입금알림 텔레그램 API
-  // curl_tele_sent('[ZETABYTE][입금요청] '.$mb_id.'('.$txhash.') 님의 '.Number_format($d_price).'입금요청이 있습니다.');
+  // curl_tele_sent('[SAMWOO][입금요청] '.$mb_id.'('.$txhash.') 님의 '.Number_format($d_price).'입금요청이 있습니다.');
 
   if($result){
     echo json_encode(array("response"=>"OK", "data"=>'complete'));

@@ -24,15 +24,17 @@ $withdrwal_min_limit = $withdrwal_setting['amt_minimum'];
 $withdrwal_max_limit = $withdrwal_setting['amt_maximum'];
 $withdrwal_day_limit = $withdrwal_setting['day_limit'];
 
-
 // 수수료제외 실제 출금가능금액
-$withdrwal_total = $total_withraw / (1 + $withdrwal_fee * 0.01);
-
-if ($withdrwal_max_limit > 1 && ($total_withraw * $withdrwal_max_limit * 0.01) < $withdrwal_total) {
-  $withdrwal_total = $total_withraw * ($withdrwal_max_limit * 0.01);
-}else{
-  $withdrwal_total = 0;
+$withdrwal_total = floor($total_withraw / (1 + $withdrwal_fee * 0.01));
+if ($withdrwal_max_limit != 0 && ($total_withraw * $withdrwal_max_limit * 0.01) < $withdrwal_total) {
+  $withdrwal_total = $total_withraw * ($withdrwal_max_limit * 0.01); // 476.19047619048 = 500 * (0 * 0.01)
 }
+
+// if ($withdrwal_max_limit > 1 && ($total_withraw * $withdrwal_max_limit * 0.01) < $withdrwal_total) {
+//   $withdrwal_total = $total_withraw * ($withdrwal_max_limit * 0.01);
+// }else{
+//   $withdrwal_total = 0;
+// }
 
 //계좌정보
 $bank_setting = wallet_config('bank_account');
@@ -555,7 +557,7 @@ if ($sel_price > 0) {
       <div class="col-sm-12 col-12 content-box round mt20">
         <h3 class="wallet_title">보너스 잔고 출금</h3>
         <span class="desc f_right"> 총 출금 가능액 :
-          <span class='price font_red font_weight' style='padding:0 5px;'> <?= shift_auto_zero($withdrwal_total) ?> <?= ASSETS_CURENCY ?> </span>
+          <span class='price font_red font_weight' style='padding:0 5px;'> <?= number_format($withdrwal_total) ?> <?= ASSETS_CURENCY ?> </span>
         </span>
         
         <!-- 
@@ -595,22 +597,22 @@ if ($sel_price > 0) {
 
 
           <input type="text" id="sendValue" class="send_coin b_ghostwhite p15 cabinet" placeholder="출금 금액(<?=BALANCE_CURENCY?>)을 입력해주세요" inputmode="numeric">
-          <span class='cabinet_inner font_red' style='display:contents'>※ 실제 출금은 <?= coin_prices($wallet_code[0], 'name')?> 로 출금됩니다.</span>
+          <!-- <span class='cabinet_inner font_red' style='display:contents'>※ 실제 출금은 <?= coin_prices($wallet_code[0], 'name')?> 로 출금됩니다.</span> -->
           <label class='currency-right2'><?= ASSETS_CURENCY ?></label>
 
 
-          <div class="row fee">
+          <!-- <div class="row fee">
             <div class="col-5 text_left fee_left">
               <i class="ri-exchange-fill"></i>
               <span id="active_amt">0</span>
             </div>
 
-            <div class="col-7 text_right fee_right">
+            <div class="col-12 text_right fee_right">
               <label class="fees">+ 수수료 :</label>
               <i class='ri-money-dollar-circle-line'></i>
               <span id="fee_val">0</span>
             </div>
-          </div>
+          </div> -->
         </div>
 
         <div class="b_line5 mt10 mb10" style='position:inherit'></div>
@@ -990,48 +992,48 @@ if ($sel_price > 0) {
     });
 
     // 입금 확인 요청 - coin
-    $('#deposit_request_coin_btn').on('click', function(e) {
+    // $('#deposit_request_coin_btn').on('click', function(e) {
 
-      var coin = $(this).data('currency');
-      var hash_target = $('#tx_hash').val();
+    //   var coin = $(this).data('currency');
+    //   var hash_target = $('#tx_hash').val();
 
-      console.log('입금 : ' + coin + ' || tx :' + hash_target + "\n length : " + hash_target.length);
+    //   console.log('입금 : ' + coin + ' || tx :' + hash_target + "\n length : " + hash_target.length);
 
-      if (hash_target == "" || hash_target == undefined || hash_target.length < 10) {
-        dialogModal('Deposit Confirmation Request', '<p> Check Transaction Hash !</p>', 'warning');
-        return;
-      }
+    //   if (hash_target == "" || hash_target == undefined || hash_target.length < 10) {
+    //     dialogModal('Deposit Confirmation Request', '<p> Check Transaction Hash !</p>', 'warning');
+    //     return;
+    //   }
 
-      $.ajax({
-        url: '/util/request_deposit.php',
-        type: 'POST',
-        cache: false,
-        async: false,
-        data: {
-          "mb_id": mb_id,
-          "coin": coin,
-          "hash": hash_target.trim(),
-          "d_price": 0
-        },
-        dataType: 'json',
-        success: function(result) {
-          if (result.response == "OK") {
-            dialogModal('Deposit Request', 'Deposit Request success', 'success');
-            $('.closed').click(function() {
-              location.reload();
-            });
-          } else {
-            if (debug) dialogModal('Deposit Request', result.data, 'failed');
-            else dialogModal('Deposit Request', '<p>ERROR<br>Please try later</p>', 'failed');
-          }
-        },
-        error: function(e) {
-          if (debug) dialogModal('ajax ERROR', 'IO ERROR', 'failed');
-        }
+    //   $.ajax({
+    //     url: '/util/request_deposit.php',
+    //     type: 'POST',
+    //     cache: false,
+    //     async: false,
+    //     data: {
+    //       "mb_id": mb_id,
+    //       "coin": coin,
+    //       "hash": hash_target.trim(),
+    //       "d_price": 0
+    //     },
+    //     dataType: 'json',
+    //     success: function(result) {
+    //       if (result.response == "OK") {
+    //         dialogModal('Deposit Request', 'Deposit Request success', 'success');
+    //         $('.closed').click(function() {
+    //           location.reload();
+    //         });
+    //       } else {
+    //         if (debug) dialogModal('Deposit Request', result.data, 'failed');
+    //         else dialogModal('Deposit Request', '<p>ERROR<br>Please try later</p>', 'failed');
+    //       }
+    //     },
+    //     error: function(e) {
+    //       if (debug) dialogModal('ajax ERROR', 'IO ERROR', 'failed');
+    //     }
 
-      });
+    //   });
 
-    });
+    // });
 
     /* $('#deposit_value').on('change',function(){
       var input_val = $(this).val().replace(/,/g, "");

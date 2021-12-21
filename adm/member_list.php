@@ -139,8 +139,6 @@ function out_check($val){
 	return "<span class=".$class.">".number_format($bonus_OUT_CALC)." % </span>";
 }
 
-
-
 // 통계수치
 $stats_sql = "SELECT COUNT(*) as cnt, SUM(mb_deposit_point) AS deposit, SUM(mb_balance) AS balance, SUM(mb_deposit_point+mb_deposit_calc) AS fund {$sql_common} {$sql_search}";
 $stats_result = sql_fetch($stats_sql);
@@ -310,7 +308,7 @@ $stats_result = sql_fetch($stats_sql);
 
 <div class="local_desc01 local_desc">
     <p>
-		- <strong>현재잔고</strong> : ( 총입금액 - 사용/구매 금액 )
+		- <strong>보유잔고</strong> : ( 총입금액 - 사용금액및출금액 )
 	</p>
 </div>
 
@@ -357,10 +355,9 @@ $stats_result = sql_fetch($stats_sql);
 		<!-- <th scope="col" rowspan="2" id="mb_list_mobile" class="td_mail">추천상위스폰서</th> -->
 		<th scope="col" rowspan="2" id="mb_list_mobile" class="td_mail">추천인</th>
 		<th scope="col" rowspan="2" id="mb_list_mobile" class="td_mail">후원인</th>
-		
+		<th scope="col" id="mb_list_auth"  class="bonus_eth" rowspan="2"><?php echo subject_sort_link('total_fund') ?>현재잔고<br></a></th>
 		<th scope="col" id="mb_list_auth2" class="bonus_calc"  rowspan="2"><?php echo subject_sort_link('deposit_point') ?>총입금액 <br></th>
 		<th scope="col" id="mb_list_auth2" class="bonus_bb"  rowspan="2"><?php echo subject_sort_link('deposit_calc') ?>사용금액<br>(출금포함)<br></th>
-		<th scope="col" id="mb_list_auth"  class="bonus_eth" rowspan="2"><?php echo subject_sort_link('total_fund') ?>현재잔고<br></a></th>
 		<th scope="col" id="mb_list_auth2" class="bonus_usdt" style='color:white !important' rowspan="2"><?php echo subject_sort_link('mb_shift_amt') ?>출금총액<br>(+수수료)<br></th>
 		
 		<th scope="col" id="mb_list_auth2" class="bonus_bb bonus_benefit"  rowspan="2"><?php echo subject_sort_link('mb_balance') ?> 수당합계</th>
@@ -512,15 +509,15 @@ $stats_result = sql_fetch($stats_sql);
 
 
 
+		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><strong><?=shift_auto_zero($total_fund)?></strong></td>
 		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><strong><?=shift_auto_zero($row['mb_deposit_point'])?> </strong></td>
 		<td headers="mb_list_auth" class="td_mbstat" style='color:red' rowspan="2"><?=shift_auto_zero($row['mb_deposit_calc'])?></td>
-		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><strong><?=shift_auto_zero($total_fund)?></strong></td>
 		<td headers="mb_list_auth" class="td_mbstat" style='color:red' rowspan="2"><?=shift_auto_zero($row['mb_shift_amt'])?></td>
 		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><strong><?= shift_auto_zero($total_bonus) ?> </strong></td>
 		<!-- <td headers="mb_list_auth" class="td_mbstat" rowspan="2"><?= shift_auto_zero($row['mb_save_point']) ?></td> -->
 		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><?= shift_auto_zero($row['mb_pv']) ?></td>
 		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><?= shift_auto_zero($row['mb_rate']) ?></td>
-		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"> <?=percent_express($bonus_per)?></td>
+		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"> <?=$bonus_per?><?if($bonus_per != 0){echo "%";}?></td>
 		<td headers="mb_list_auth" class="td_mbstat text-center" rowspan="2"><span class='badge t_white color<?=$row['rank']?>'><?if($row['rank']){echo 'P'.$row['rank'];}?></span></td>
 		
 		<td headers="mb_list_member" class="td_mbgrade" rowspan="2">

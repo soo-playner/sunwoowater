@@ -1,6 +1,6 @@
 <?
-define('CONFIG_TITLE','samwoo');
-define('CONFIG_SUB_TITLE','samwoo');
+define('CONFIG_TITLE','SAMWOO SYSTEM');
+define('CONFIG_SUB_TITLE','SAMWOO SYSTEM');
 
 // 메일설정
 define('CONFIG_MAIL_ACCOUNT','willsoftkr');
@@ -15,7 +15,7 @@ define('BALANCE_CURENCY','원');
 define('WITHDRAW_CURENCY','원');
 
 
-$minings = ['FIL'];
+$minings = ['DSP'];
 $mining_hash = ['T'];
 $mining_target = 'mb_mining_1';
 $mining_amt_target = 'mb_mining_1'.'_amt';
@@ -25,11 +25,11 @@ define('ASSETS_NUMBER_POINT',2); // 정산 단위
 define('BONUS_NUMBER_POINT',2); // 수당계산,정산기준단위
 define('COIN_NUMBER_POINT',4); // 코인 단위
 
-$deposit_method = ['FIL'];
+$deposit_method = ['원'];
 
 // 이더사용 및 회사지갑 설정
 // False 설정시 현금사용
-define('USE_WALLET',TRUE);
+define('USE_WALLET',false);
 $wallet_code = ['FIL'];
 $wallet_create_code = "1 TERA MINE TEST";
 $deposit_wallet_address = "1teramin_filecoin_address";

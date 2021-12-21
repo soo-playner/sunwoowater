@@ -5,7 +5,7 @@ if($_GET['debug']){
     echo "TEST";
     $api_code = "1897463083:AAF_xiQeS06nEFj0Eqt9jL4KiL1zrCYT45U";
     $chat_id = "-1001413702347";
-    $text = "[KHAN][입금요청]test1(입금테스트)님의 1,000,000입금요청이 있습니다.";
+    $text = "[SAMWOO][입금요청]test(입금테스트)님의 1,000,000입금요청이 있습니다.";
 
     $ch = curl_init();
 

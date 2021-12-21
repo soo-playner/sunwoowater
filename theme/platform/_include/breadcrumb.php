@@ -89,15 +89,15 @@ $title = 'Dashboard';
 					<ul class="row top">
 						<li class="col-4">
 							<dt class="title" >구매 가능 잔고</dt>
-							<dd class="value" style='font-size:15px;'><?=ASSETS_CURENCY?> <?=shift_auto($available_fund,ASSETS_CURENCY)?><span class='currency'></span></dd>
+							<dd class="value" style='font-size:15px;'><?=shift_auto($available_fund,ASSETS_CURENCY)?><span class='currency'><?=ASSETS_CURENCY?></span></dd>
 						</li>
 						<li class="col-4">
 							<dt class="title" >총 누적 보너스 </dt>
-							<dd class="value" style='font-size:15px;'><?=ASSETS_CURENCY?> <?=shift_auto($total_bonus,ASSETS_CURENCY)?><span class='currency'></span></dd>
+							<dd class="value" style='font-size:15px;'><?=shift_auto($total_bonus,ASSETS_CURENCY)?><span class='currency'><?=ASSETS_CURENCY?></span></dd>
 						</li>
 						<li class="col-4">
 							<dt class="title">출금 가능 잔고</dt>
-							<dd class="value" style='font-size:15px;'><?=ASSETS_CURENCY?> <?=shift_auto($total_withraw,ASSETS_CURENCY)?><span class='currency'></span></dd>
+							<dd class="value" style='font-size:15px;'><?=shift_auto($total_withraw,ASSETS_CURENCY)?><span class='currency'><?=ASSETS_CURENCY?></span></dd>
 						</li>
 					</ul>
 				</div>
@@ -137,7 +137,6 @@ $title = 'Dashboard';
 							<dd class="value"><?=get_name($member['mb_center'])?></dd>
 						</li>
 						
-
 						<li class="col-4">
 							<dt class="title"><span class='badge'>Mining : <?=Number_format($member['mb_rate'])?> mh/s</span></dt>
 							<dd class="value"><?=$mining_total?> <span style='font-size:12px;'><?=$minings[0]?></span></dd>
