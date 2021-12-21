@@ -47,7 +47,7 @@ if(!isset($g5['title'])){
 	<link href="<?=G5_THEME_URL?>/_common/css/gnb.css" rel="stylesheet">
 	
 	<!-- 커스텀 SCSS 추가 -->
-	<link href="<?=G5_THEME_URL?>/css/scss/custom.css" rel="stylesheet">
+	<link href="<?=G5_THEME_URL?>/css/scss/custom.css?a" rel="stylesheet">
 
 
 	<!-- JQuery  기본 설정 //-->
