@@ -26,14 +26,12 @@ $withdrwal_day_limit = $withdrwal_setting['day_limit'];
 
 
 // 수수료제외 실제 출금가능금액
-// $withdrwal_total = $total_withraw / (1 + $withdrwal_fee * 0.01);
-// $withdrwal_total = sprintf('%0.2f', $withdrwal_total);
+$withdrwal_total = $total_withraw / (1 + $withdrwal_fee * 0.01);
 
-// 달러 소수점 2자리까지 반영
-if(WITHDRAW_CURENCY == '원'){
-	$withdrwal_total = floor($total_withraw/(1 + $withdrwal_fee*0.01)); // 원화
+if ($withdrwal_max_limit > 1 && ($total_withraw * $withdrwal_max_limit * 0.01) < $withdrwal_total) {
+  $withdrwal_total = $total_withraw * ($withdrwal_max_limit * 0.01);
 }else{
-	$withdrwal_total = sprintf('%0.2f', $total_withraw/(1 + $withdrwal_fee*0.01)); // 달러 및 코인
+  $withdrwal_total = 0;
 }
 
 //계좌정보
@@ -67,64 +65,64 @@ if ($_GET['view'] == 'withdraw') {
 
 
 // 입금방법 
-$deposit_won = array_search('원', $deposit_method);
-$deposit_coin = array_search($wallet_code[0], $deposit_method);
+$deposit_won = array_search('원', $deposit_method); 
+//$deposit_coin = array_search($wallet_code[0], $deposit_method);
 
 
 // ETH 입금 전용 지갑 생성
-if (USE_WALLET && $wallet_code[0] == 'eth') {
+// if (USE_WALLET && $wallet_code[0] == 'eth') {
 
-  $callback = G5_URL . "/plugin/blocksdk/point-callback.php";
-  $blocksdk_conf = Crypto::GetConfig();
+//   $callback = G5_URL . "/plugin/blocksdk/point-callback.php";
+//   $blocksdk_conf = Crypto::GetConfig();
 
-  $member_wallet_target = $wallet_code[0] . '_wallet';
-  $member_wallet_target_id = $wallet_code[0] . '_wallet_id';
-  $create_blocksdk_target = 'de_' . $wallet_code[0] . '_use';
-
-
-  if (empty($member[$member_wallet_target]) == true && $blocksdk_conf[$create_blocksdk_target] == 1) {
-
-    $address = Crypto::GetClient("eth")->createAddress([
-      "name" => $wallet_create_code . "_mb_" . $member['mb_no']
-    ]);
-
-    Crypto::CreateWebHook($callback, $wallet_code[0], $address['address']);
-
-    // $update_sql .= empty($update_sql) ? "" : ","; 
-    $update_sql = $member_wallet_target . " ='{$address['address']}' ";
-    $update_sql .= ',' . $member_wallet_target_id . " ='{$address['id']}' ";
-
-    $member[$member_wallet_target] = $address['address'];
-
-    $sql = "
-    insert into 
-    blocksdk_member_key (id, address, private_key) 
-    values ('{$address['id']}', '{$address['address']}','{$address['private_key']}')
-    ";
-    sql_fetch($sql);
-
-    if (empty($update_sql) == false) {
-      $sql = "UPDATE {$g5['member_table']} SET {$update_sql} WHERE mb_no={$member['mb_no']}";
-      sql_query($sql);
-    }
-  }
-
-  $wallet_sql = "SELECT private_key FROM blocksdk_member_key WHERE address = '{$member[$member_wallet_target]}'";
-  $wallet_row = sql_fetch($wallet_sql);
-
-  $my_wallet = $member[$member_wallet_target];
-  $private_key = $wallet_row['private_key'];
-  $mb_id = $member['mb_id'];
+//   $member_wallet_target = $wallet_code[0] . '_wallet';
+//   $member_wallet_target_id = $wallet_code[0] . '_wallet_id';
+//   $create_blocksdk_target = 'de_' . $wallet_code[0] . '_use';
 
 
-  if ($member['key_download'] == "0") {
-    include_once(G5_LIB_PATH . "/download_key/set_private_key.php");
-  }
+//   if (empty($member[$member_wallet_target]) == true && $blocksdk_conf[$create_blocksdk_target] == 1) {
 
-  if ($member['key_download'] == "1") {
-    include_once(G5_LIB_PATH . "/download_key/get_private_key.php");
-  }
-}
+//     $address = Crypto::GetClient("eth")->createAddress([
+//       "name" => $wallet_create_code . "_mb_" . $member['mb_no']
+//     ]);
+
+//     Crypto::CreateWebHook($callback, $wallet_code[0], $address['address']);
+
+//     // $update_sql .= empty($update_sql) ? "" : ","; 
+//     $update_sql = $member_wallet_target . " ='{$address['address']}' ";
+//     $update_sql .= ',' . $member_wallet_target_id . " ='{$address['id']}' ";
+
+//     $member[$member_wallet_target] = $address['address'];
+
+//     $sql = "
+//     insert into 
+//     blocksdk_member_key (id, address, private_key) 
+//     values ('{$address['id']}', '{$address['address']}','{$address['private_key']}')
+//     ";
+//     sql_fetch($sql);
+
+//     if (empty($update_sql) == false) {
+//       $sql = "UPDATE {$g5['member_table']} SET {$update_sql} WHERE mb_no={$member['mb_no']}";
+//       sql_query($sql);
+//     }
+//   }
+
+//   $wallet_sql = "SELECT private_key FROM blocksdk_member_key WHERE address = '{$member[$member_wallet_target]}'";
+//   $wallet_row = sql_fetch($wallet_sql);
+
+//   $my_wallet = $member[$member_wallet_target];
+//   $private_key = $wallet_row['private_key'];
+//   $mb_id = $member['mb_id'];
+
+
+//   if ($member['key_download'] == "0") {
+//     include_once(G5_LIB_PATH . "/download_key/set_private_key.php");
+//   }
+
+//   if ($member['key_download'] == "1") {
+//     include_once(G5_LIB_PATH . "/download_key/get_private_key.php");
+//   }
+// }
 
 /*날짜계산*/
 $qstr = "stx=" . $stx . "&fr_date=" . $fr_date . "&amp;to_date=" . $to_date;
@@ -140,7 +138,7 @@ $rows = 15; //한페이지 목록수
 
 
 //입금내역
-$sql_common_deposit = "FROM `{$g5['deposit']}` ";
+$sql_common_deposit = "FROM {$g5['deposit']}";
 
 $sql_deposit = " select count(*) as cnt {$sql_common_deposit} {$sql_search_deposit} ";
 $row_deposit = sql_fetch($sql_deposit);
@@ -160,7 +158,7 @@ $result_deposit = sql_query($sql_deposit);
 $sql_common = "FROM {$g5['withdrawal']}";
 // $sql_common ="FROM wallet_withdrawal_request";
 $WITHDRAW_CURENCY = WITHDRAW_CURENCY;
-$sql_search = " WHERE mb_id = '{$member['mb_id']}' and coin = '{$WITHDRAW_CURENCY}' AND od_type ='수당출금요청' ";
+$sql_search = " WHERE mb_id = '{$member['mb_id']}' and coin = '{$WITHDRAW_CURENCY}' ";
 // $sql_search .= " AND create_dt between '{$fr_date}' and '{$to_date}' ";
 
 $sql = " select count(*) as cnt {$sql_common} {$sql_search} ";
@@ -333,11 +331,29 @@ if ($sel_price > 0) {
 
     <!-- 입금 -->
     <section id='deposit' class='loadable'>
+      <div class="content-box round">
+        <h3 class="wallet_title" data-i18n="deposit.입금계좌">Deposit Account</h3>
 
-      <div class="content-box catehead">
+        <div class="row ">
+          <div class='col-12 text-center bank_info'>
+            <?= $bank_name ?> : <input type="text" id="bank_account" class="bank_account" value="<?= $bank_account ?>" title='bank_account' disabled />(<?= $account_name ?>)
+            <?if ($sel_price) { ?>
+              <div class='sel_price'>입금액 : <span class='price'><?= Number_format($sel_price) ?><?= ASSETS_CURENCY ?></span></div>
+            <?}?>
+          </div>
+        </div>
 
+          <div class='col-12'>
+            <button class="btn wd line_btn " id="accountCopy" onclick="copyURL('#bank_account')">
+              <span data-i18n="deposit.계좌복사"> Copy Address </span>
+            </button>
+          </div>
+        </div>
+
+
+      <!-- <div class="content-box catehead"> -->
         <!-- 선택버튼 -->
-        <div class="select_head" style='text-align:center'>
+        <!-- <div class="select_head" style='text-align:center'>
           <? if (count($deposit_method) > 1) { ?>
             <div class='title_btn left active' data-category="won"><i class="ri-bank-line"></i>원화 입금 계좌 </div>
             <div class='title_btn right' data-category="coin"><i class="ri-wallet-3-line"></i>코인 입금 주소</div>
@@ -350,7 +366,7 @@ if ($sel_price > 0) {
             }
           ?>
           <? } ?>
-        </div>
+        </div> -->
 
         <!-- <section id='won' class='deposit_stage'>
           <div class="row ">
@@ -400,7 +416,8 @@ if ($sel_price > 0) {
         </section> -->
 
 
-        <section id='coin' class='deposit_stage active'>
+        <!-- 코인 입금 시작 -->
+        <!-- <section id='coin' class='deposit_stage active'>
           <div class="row ">
             <div class='col-12 text-center bank_info'>
               <div class="row" style='padding:15px;'>
@@ -426,14 +443,15 @@ if ($sel_price > 0) {
               <span> 지갑주소 복사 </span>
             </button>
           </div>
-        </section>
-
-      </div>
+        </section>-->
+      <!-- 코인 입금 끝 -->
+      <!-- </div>  -->
 
 
 
       <div class="col-sm-12 col-12 content-box round mt20">
-        <section id="deposit_request_won" class="deposit_requests">
+        <!-- 원화 입금요청 시작 -->
+        <section id="deposit_request_won" class="deposit_requests active">
           <h3 class="wallet_title">입금확인요청 </h3> <span class='desc'> - 계좌입금후 1회만 요청해주세요</span>
           <div class="row">
 
@@ -457,19 +475,21 @@ if ($sel_price > 0) {
             </div>
           </div>
         </section>
+        <!-- 원화 입금요청 끝 -->
 
-        <section id="deposit_request_eth" class="deposit_requests">
+        <!-- <section id="deposit_request_eth" class="deposit_requests">
           <h3 class="wallet_title" style="margin:5px;font-size:12px;">※ 입금 전용 <?= $wallet_code[0] ?>주소로 코인입금시 자동 처리됩니다. </h3>
-        </section>
+        </section> -->
 
-        <section id="deposit_request_coin" class="deposit_requests  active">
+        <!-- 코인 입금요청 시작 -->
+        <!-- <section id="deposit_request_coin" class="deposit_requests  active">
           <h3 class="wallet_title">입금확인요청 </h3> <span class='desc'> - 전송 건당 1회만 요청해주세요</span>
           <div class="row">
 
             <div class="col-12 btn_ly qrBox_right "></div>
-            <div class="col-12 withdraw mt20">
+            <div class="col-12 withdraw mt20"> -->
               <!-- <input type="text" id="deposit_name" class='b_ghostwhite p15 ' placeholder="전송 처리된 TX HASH 코드를 입력해주세요"> -->
-              <span style="font-size:12px;">Transaction Hash code:</span>
+              <!-- <span style="font-size:12px;">Transaction Hash code:</span>
               <textarea name='tx_hash' id="tx_hash" class='b_ghostwhite p15 tx_hash' placeholder="전송 처리된 Transaction(Message ID) 코드를 정확히 입력해주세요"></textarea>
 
             </div>
@@ -480,7 +500,8 @@ if ($sel_price > 0) {
               </button>
             </div>
           </div>
-        </section>
+        </section> -->
+        <!-- 코인 입금요청 끝 -->
 
       </div>
 
@@ -741,7 +762,7 @@ if ($sel_price > 0) {
 
     // 최대출금가능금액
     var out_mb_max_limit = <?= $withdrwal_total ?>;
-    
+
 
     onlyNumber('pin_auth_with');
 

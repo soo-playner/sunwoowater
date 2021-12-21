@@ -25,6 +25,7 @@ if ($_GET['recom_referral']){
 </style>
 <link href="<?=G5_THEME_URL ?>/css/scss/enroll.css" rel="stylesheet">
 <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <link href="<?=G5_THEME_URL ?>/css/dd.css" rel="stylesheet">
 <script src="<?=G5_THEME_URL?>/_common/js/jquery.dd.min.js"></script>
 
@@ -47,12 +48,11 @@ if ($_GET['recom_referral']){
 	var verify = false;
 	var recommned = "<?= $mb_recommend ?>";
 	var recommend_search = false;
-	var center_search = false;
 
 	if (recommned) {
 		recommend_search = true;
 	}
-	
+	//console.log(recommend_search);
 
 	$(function() {
 
@@ -64,6 +64,7 @@ if ($_GET['recom_referral']){
 		}); */
 
 		onlyNumber('reg_mb_hp');
+		onlyNumber('bank_account');
 
 		// 공통함수로 이전 common.js
 		/* $('.cabinet').on('click',function(){
@@ -511,13 +512,12 @@ if ($_GET['recom_referral']){
 
 
 					$(target_type + ' .modal-footer #btnSave').click(function() {
+						recommend_search = true;
 						if(type == 2){
 							$('#reg_mb_center_nick').val($(target_type + ' .modal-body .user.selected').html())
 							$(target).val($(target_type + ' .modal-body .user.selected + .mb_nick').html());
-							center_search = true;
 						}else{
 							$(target).val($(target_type + ' .modal-body .user.selected').html());
-							recommend_search = true;
 						}
 						$(target_type).modal('hide');
 					});
@@ -535,10 +535,8 @@ if ($_GET['recom_referral']){
 
 	// submit 최종 폼체크
 	function fregisterform_submit() {
-		const admins = "<?=$config['cf_admin']?>";
-		const recommend_not_id = ['admin','',admins];
-
 		var f = $('#fregisterform')[0];
+		//console.log(recommend_search);
 		/*
 		if(key != sha256($('#vCode').val())){
 		 	commonModal('Do not match','<p>Please enter the correct code</p>',80);
@@ -550,21 +548,32 @@ if ($_GET['recom_referral']){
 		var select_nation = $("#nation_number option:selected").val();
 
 		if(select_nation == "" ){
-			commonModal('국가선택', '<strong>접속하신 국가를 선택해주세요</strong>', 80);
+			commonModal('country check', '<strong>please select country.</strong>', 80);
 			return false;
 		}
-		
+
+		/* 이사멤버 검사
+		if (f.mb_director.value == '' || f.mb_director.value == 'undefined') {
+			commonModal('recommend check', '<strong>please check recommend search Button and choose recommend.</strong>', 80);
+			return false;
+		}
+		*/
+
 		//추천인 검사
-		if (!recommend_not_id.indexOf(f.mb_recommend.value) || !recommend_search ) {
-			dialogModal('추천인 입력 확인', '<strong>추천인을 입력후 검색버튼을 눌러 선택해주세요 </strong>', 'warning');
+		if (f.mb_recommend.value == '' || f.mb_recommend.value == 'undefined') {
+			commonModal('recommend check', '<strong>please check recommend search Button and choose recommend.</strong>', 80);
+			return false;
+		}
+		if (!recommend_search) {
+			commonModal('recommend check', '<strong>please check recommend search Button and choose recommend.</strong>', 80);
 			return false;
 		}
 
 		//센터멤버 검사
-		if (f.mb_center.value == '' || f.mb_center.value == 'undefined' || !center_search) {
-			dialogModal('센터 입력/검색 확인', '<strong>센터정보를 입력후 검색버튼을 눌러 선택해주세요.</strong>', 'warning');
-			return false;
-		}
+		// if (f.mb_center.value == '' || f.mb_center.value == 'undefined') {
+		// 	commonModal('recommend check', '<strong>please check recommend search Button and choose recommend.</strong>', 80);
+		// 	return false;
+		// }
 		
 		//추천인이 본인인지 확인
 		if (f.mb_id.value == f.mb_recommend.value) {
@@ -575,23 +584,38 @@ if ($_GET['recom_referral']){
 
 		// 이름
 		if (f.mb_name.value == '' || f.mb_name.value == 'undefined') {
-			dialogModal('이름입력확인', '<strong>이름을 확인해주세요.</strong>', 'warning');
+			commonModal('이름입력확인', '<strong>이름을 확인해주세요.</strong>', 80);
 			return false;
 		}
 		
 		//아이디 중복체크
 		if (check_id == 0) {
-			dialogModal('ID 중복확인', '<strong>아이디 중복확인을 해주세요. </strong>', 'warning');
+			commonModal('ID 중복확인', '<strong>아이디 중복확인을 해주세요. </strong>', 80);
 			return false;
 		}
 
 		// 연락처
-		if (f.mb_hp.value.length < 10) {
-			dialogModal('휴대폰번호확인', '<strong>휴대폰 번호가 누락되거나 잘못입력되었습니다. </strong>', 'warning');
+		if (f.mb_hp.value == '' || f.mb_hp.value == 'undefined') {
+			commonModal('휴대폰번호확인', '<strong>휴대폰 번호가 잘못되거나 누락되었습니다. </strong>', 80);
 			return false;
 		}
 
-		
+		// 주소
+		const mb_addr1 = $("#mb_addr1").val();
+		const mb_addr2 = $("#mb_addr2").val();
+		if(!mb_addr1 || !mb_addr2) {
+			commonModal('주소확인', '<strong>주소가 잘못되거나 누락되었습니다. </strong>', 80);
+			return false;
+		}
+
+		// 계좌번호
+		const bank_name = $("#bank_name").val();
+		const account_name = $("#account_name").val();
+		const bank_account = $("#bank_account").val();
+		if(!bank_name || !account_name || !bank_account) {
+			commonModal('계좌번호확인', '<strong>계좌정보가 잘못되거나 누락되었습니다. </strong>', 80);
+			return false;
+		}
 
 		// 패스워드
 		if (!chkPwd_1($('#reg_mb_password').val(), $('#reg_mb_password_re').val())) {
@@ -599,7 +623,7 @@ if ($_GET['recom_referral']){
 			return false;
 		}
 
-		// 핀코드
+		// // 핀코드
 		if (!chkPwd_2($('#reg_tr_password').val(), $('#reg_tr_password_re').val())) {
 			commonModal('Check password Rule', '<strong> Transaction Password does not match password Rule.</strong>', 80);
 			return false;
@@ -613,7 +637,7 @@ if ($_GET['recom_referral']){
 			}
 
 		}
-
+	
 		// 메일인증 체크
 		$.ajax({
 			type: "POST",
@@ -677,7 +701,7 @@ if ($_GET['recom_referral']){
 			</section>
 
 			<!-- 센터 정보 -->
-			<p class="check_appear_title mt20"><span data-i18n="signUp.센터정보">Referrer's Information</span></p>
+			<!--p class="check_appear_title mt20"><span data-i18n="signUp.센터정보">Referrer's Information</span></p>
 				<section class='referzone'>
 					<div class="btn_input_wrap">
 						<input type="hidden" name="mb_center_nick" id="reg_mb_center_nick" value=""  required  />
@@ -688,7 +712,7 @@ if ($_GET['recom_referral']){
 							><span data-i18n="signUp.검색">Search</span></button>
 						</div>
 					</div>
-				</section>
+				</section-->
 
 
 			<!-- <p class="check_appear_title mt40"><span data-i18n='signUp.일반정보'>General Information</span></p> -->
@@ -709,9 +733,22 @@ if ($_GET['recom_referral']){
 				<span class='cabinet_inner' style=''>※'-'를 제외한 숫자만 입력해주세요</span>
 				<!-- <label class='prev_icon'><i class="ri-smartphone-line"></i></label> -->
 				
+				<input type="text" name="mb_addr1"  id="mb_addr1" style='padding:15px' required  placeholder="주소" readonly />
+
+				<input type="text" name="mb_addr2"  id="mb_addr2" style='padding:15px' required  placeholder="상세주소" maxlength="150" autocomplete="off" />
+				
+				<div class="row mt20">
+					<div class="col-6">
+						<input type="text" name="bank_name" id="bank_name" class="" style='padding:15px' required placeholder="은행명" maxlength="30" autocomplete="off" />
+					</div>
+					<div class="col-6">
+						<input type="text" name="account_name" id="account_name" class="" style='padding:15px' required placeholder="예금주" maxlength="30" autocomplete="off" />
+					</div>
+				</div>
+
+				<input type="text" name="bank_account" id="bank_account" pattern="[0-9]*" style='padding:15px' required placeholder="계좌번호" maxlength="50" autocomplete="off" />
 			</div>
 
-			
 
 			<ul class="clear_fix pw_ul mt20">
 				<li>
@@ -807,9 +844,23 @@ if ($_GET['recom_referral']){
 <script>
 	$(function() {
 		$(".top_title h3").html("<span data-i18n='title.신규 회원등록' style='font-size:16px;margin-left:20px'>Create a new account</span>");
+
+		// 주소 찾기
+		const mb_addr1 = document.getElementById("mb_addr1");
+		const mb_addr2 = document.getElementById("mb_addr2");
+
+		mb_addr1.addEventListener('click', () => {
+			new daum.Postcode({
+				oncomplete: function(data) {
+					// address : 기본주소, roadAddress : 도로명 주소, jibunAddress : 지번 주소
+					mb_addr1.value = data.address;
+					mb_addr2.focus();
+				}
+			}).open();
+		});
+	
 	});
 
-	
 	function collapse(id) {
 			if ($(id + "_term").css("display") == "none") {
 				$(id + "_term").css("display", "block");

@@ -207,7 +207,7 @@ function get_theme_config_value($dir, $key='*')
 function get_member_level_select($name, $start_id=0, $end_id=4, $selected="", $event="")
 {
     global $g5;
-	$level_name=array("일반회원","정회원","센터회원",'인정회원','정회원','','','','','관리자',"슈퍼관리자");
+	$level_name=array("일반회원","정회원","센터회원",'지점회원','지사회원','본부회원','','','','관리자',"슈퍼관리자");
 	//$level_name=array("Black","Red","Yellow","Green");
     $str = "\n<select id=\"{$name}\" name=\"{$name}\"";
     if ($event) $str .= " $event";
@@ -520,18 +520,4 @@ $qstr = implode("&amp;", $arr_query);
 
 // 관리자에서는 추가 스크립트는 사용하지 않는다.
 //$config['cf_add_script'] = '';
-
-
-function percent_express($value){
-	if($value > 0){
-		if($value > 85){
-			$result = "<span class='strong font_red'>".($value * 10)." % </span>";
-		}else{
-			$result = ($value * 10)." %";
-		}
-	}else{
-		$result = $value;
-	}
-	return $result;
-}
 ?>

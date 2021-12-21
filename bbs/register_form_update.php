@@ -110,6 +110,10 @@ $mb_addr2       = clean_xss_tags($mb_addr2);
 $mb_addr3       = clean_xss_tags($mb_addr3);
 $mb_addr_jibeon = preg_match("/^(N|R)$/", $mb_addr_jibeon) ? $mb_addr_jibeon : '';
 
+$bank_name       = isset($_POST['bank_name'])         ? trim($_POST['bank_name'])       	: "";
+$account_name    = isset($_POST['account_name'])      ? trim($_POST['account_name'])       	: "";
+$bank_account    = isset($_POST['bank_account'])      ? trim($_POST['bank_account'])       	: "";
+
 $last_name        = trim($_POST['last_name']);
 $first_name       = trim($_POST['first_name']);
 
@@ -333,7 +337,10 @@ if ($w == '') {
 					 depth = '{$depth}',
 					 last_name = '{$last_name}',
 					 first_name = '{$first_name}',
-					 nation_number = '{$nation_number}'
+					 nation_number = '{$nation_number}',
+					 bank_name = '{$bank_name}',
+					 account_name = '{$account_name}',
+					 bank_account = '{$bank_account}'
 					 {$sql_certify} ";
 
 	// 이 Email Verification을 사용하지 않는다면 이Email Verification시간을 바로 넣는다

@@ -1,6 +1,6 @@
 <?
-define('CONFIG_TITLE','1 TERA MINE');
-define('CONFIG_SUB_TITLE','1 TERA MINE');
+define('CONFIG_TITLE','samwoo');
+define('CONFIG_SUB_TITLE','samwoo');
 
 // 메일설정
 define('CONFIG_MAIL_ACCOUNT','willsoftkr');
@@ -8,11 +8,11 @@ define('CONFIG_MAIL_PW','willsoft0780');
 define('CONFIG_MAIL_ADDR','willsoftkr@gmail.com');
 
 // 기준통화설정
-define('DEPOSIT_CURENCY','FIL');
-define('ASSETS_CURENCY','$');
-define('PURCHASE_CURENCY','$');
-define('BALANCE_CURENCY','$');
-define('WITHDRAW_CURENCY','FIL');
+define('DEPOSIT_CURENCY','원');
+define('ASSETS_CURENCY','원');
+define('PURCHASE_CURENCY','원');
+define('BALANCE_CURENCY','원');
+define('WITHDRAW_CURENCY','원');
 
 
 $minings = ['FIL'];
