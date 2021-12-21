@@ -1,9 +1,10 @@
 
-
-
-$main-point-color: #492191 !global;
-$main-button-color:#967adb !global;
-$main-button-color2:#36307d !global;
+$main-point-color: #3c8fcd !global;
+$main-button-color:#3c8fcd !global;
+$main-button-color2:#005596 !global;
+$login-button-color1: #e3e7f6;
+$login-button-color2: #b2bed2;
+$main-button-border-color: #3ca1ec !global;
 $main-sub-button-color:#4a8ed1 !global;
 $main-sub-button-color2:#225991 !global;
 $deposit-btn-background: #302783 !global;
@@ -44,6 +45,14 @@ $sky-color:#3b86ff;
 /*인트로*/
 #myBar {background-color: $main-point-color;}
 
+.b_main {}
+
+
+
+
+
+
+
 .b_main{background:linear-gradient(180deg, $main-button-color,$main-button-color2) !important; color: #fff !important;}
 .b_main:hover{background:linear-gradient(90deg, $sub3-color,$sub3-color) !important;}
 
@@ -68,13 +77,28 @@ a.btn_secondary, .btn_secondary{
     }
 }
 
+a.btn_third, .btn_third{
+    color:black;
+    background:linear-gradient(to left, $login-button-color1,$login-button-color2);
+    border:none;
+    border-radius: 8px;
+    box-shadow: 0px 1px 2px rgba(0,0,0,0.25);
+
+    &:hover{
+        color:black;
+        background:linear-gradient(to left, #fff,#fff);;
+        border:none;
+    }
+}
+
+
 a.btn_primary, .btn_primary, .btn.btn_primary{
     border:none;
     color:white;
     border-radius: 8px;
     box-shadow: 0px 1px 2px rgba(0,0,0,0.25);
     background:linear-gradient(90deg, $main-button-color,$main-button-color2);
-    border:1px solid $main-button-color;
+    border:1px solid $main-button-border-color;
     transition:all 1s;
 
     &:hover{
