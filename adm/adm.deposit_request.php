@@ -211,7 +211,7 @@ $result = sql_query($sql);
     <p>
         <strong>- 요청확인중 :</strong> 기본값 | <strong>승인 :</strong> 입금금액 포인트 반영 | <strong>대기 :</strong> 확인처리중 | <strong>불가 :</strong> 입금자, 입금액 불일치 - 입금액변경하여 처리가능 | <strong>취소 :</strong> 미승인처리<br>
         - 상태값 승인 => 입금액 반영시에만 회원에게 포인트 지급처리<br>
-        - <button type='button' class='btn in_btn' onclick="fil_update()">FIL 입금정보 가져오기</button> : 파일코인 TX코드 조회하여 입금요청금액 자동 업데이트
+        <!-- - <button type='button' class='btn in_btn' onclick="fil_update()">FIL 입금정보 가져오기</button> : 파일코인 TX코드 조회하여 입금요청금액 자동 업데이트 -->
 	</p>
 </div>
 
@@ -224,7 +224,7 @@ $result = sql_query($sql);
         <th scope="col" width='5%'>no</th>
         <th scope="col" width='8%'>아이디</th>
         <th scope="col" width='8%'>추천인</th>
-        <th scope="col" width='auto'>입금자명(TX HASH)</th>
+        <th scope="col" width='auto'>입금자명</th>
         <th scope="col" width='8%'>입금요청금액</th>
         <th scope="col" width='5%'>입금종류</th>
         <th scope="col" width='10%'>입금처리금액 (<?=ASSETS_CURENCY?>)</th>

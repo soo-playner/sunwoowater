@@ -31,9 +31,9 @@ if(strpos($txhash_1,'/')){
   $txhash =  $char_count[$ary_cnt-1];
 }
 
-if(DEPOSIT_CURENCY != ASSETS_CURENCY){
-  $in_price = shift_price($d_price,$coin,ASSETS_CURENCY);
-}
+// if(DEPOSIT_CURENCY != ASSETS_CURENCY){
+//   $in_price = shift_price($d_price,$coin,ASSETS_CURENCY);
+// }
 
 /*기존건 확인*/
 $pre_result = sql_fetch("SELECT count(*) as cnt from `{$g5['deposit']}` 
@@ -41,7 +41,7 @@ WHERE mb_id ='{$mb_id}' AND create_d = '{$now_date}' AND in_amt = {$d_price} ");
 
 if($pre_result['cnt'] < 1){
   $sql = "INSERT INTO `{$g5['deposit']}`(mb_id, txhash, create_dt,create_d,status,coin,amt,in_amt) 
-  VALUES('$mb_id','$txhash','$now_datetime','$now_date',0,'$coin', '$d_price','$in_price')";
+  VALUES('$mb_id','$txhash','$now_datetime','$now_date',0,'$coin', '$d_price','$d_price')";
   
   if($debug){
     echo "<br><br>";

@@ -176,6 +176,8 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 
 <script>
 	$(function() {
+		onlyNumber('bank_account');
+
 		// 주소 찾기
 		const mb_addr1 = document.getElementById("mb_addr1");
 
@@ -694,7 +696,7 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 		<th scope="row">출금계좌정보</th>			
 		<td colspan="3"> 
 		은행 :<input type="text" name="bank_name" value="<?php echo $mb['bank_name'] ?>" id="bank_name" class="frm_input wide" size="15" style="";>
-		&nbsp 계좌번호 : &nbsp<input type="text" name="bank_account" value="<?php echo $mb['bank_account'] ?>" id="bank_account" class="frm_input wide" size="15" style="width:300px;";>
+		&nbsp 계좌번호 : &nbsp<input type="text" name="bank_account" value="<?php echo str_replace('-', '', $mb['bank_account']); ?>" id="bank_account" class="frm_input wide" size="15" style="width:300px;";>
 		&nbsp 예금주 : &nbsp<input type="text" name="account_name" value="<?php echo $mb['account_name'] ?>" id="account_name" class="frm_input wide" size="15" style="";>
 		</td>
 	</tr>

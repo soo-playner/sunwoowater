@@ -529,7 +529,7 @@ if ($sel_price > 0) {
               <div class="row">
                 <span class="hist_date"><?= $row['create_dt'] ?></span>
                 <span class="hist_value">
-                  <?= ASSETS_CURENCY ?> <?= Number_format($row['in_amt']) ?><br>
+                   <?= Number_format($row['in_amt']) ?><?= ASSETS_CURENCY ?><br>
                   <span class='small' style='color:#333'>= ￦<?= Number_format($row['amt']) ?><?= $row['coin'] ?></span>
                 </span>
               </div>

@@ -132,10 +132,10 @@ $title = 'Dashboard';
 					</ul>
 
 					<ul class="row">
-						<li class="col-4">
+						<!-- <li class="col-4">
 							<dt class="title" >센터(지사)</dt>
 							<dd class="value"><?=get_name($member['mb_center'])?></dd>
-						</li>
+						</li> -->
 						
 						<li class="col-4">
 							<dt class="title"><span class='badge'>Mining : <?=Number_format($member['mb_rate'])?> mh/s</span></dt>
