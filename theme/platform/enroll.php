@@ -39,7 +39,7 @@ if ($_GET['recom_referral']){
 
 	.ddcommon .ddArrow{right:10px;}
 
-	.id_set input{border-left:3px solid #999;}
+	.id_set input:not(#id_check){border-left:3px solid #999;}
 	.phone_set input[type='text'],.phone_set input[type='email']{border-left:3px solid #dc3545;}
 	.addr_set input{border-left:3px solid royalblue;}
 	.bank_info_set input{border-left:3px solid gold;}
@@ -876,20 +876,20 @@ if ($_GET['recom_referral']){
 				oncomplete: function(data) {
 					document.getElementById("mb_addr1").value = data.address;
 					document.getElementById("mb_addr2").focus();
-					//mb_addr2.focus();
 
 					map_wrap.style.display = 'none';
 
 					// 우편번호 찾기 화면이 보이기 이전으로 scroll 위치를 되돌린다.
 					document.body.scrollTop = currentScroll;
 				},
-				// 우편번호 찾기 화면 크기가 조정되었을때 실행할 코드를 작성하는 부분. iframe을 넣은 element의 높이값을 조정한다.
+				// iframe을 넣은 element의 높이값을 조정
 				onresize : function(size) {
 					map_wrap.style.height = size.height+'px';
 				},
 				width : '100%',
 				height : '100%'
 			}).embed(map_wrap);
+
 			map_wrap.style.display = 'block';
 		}
 	
