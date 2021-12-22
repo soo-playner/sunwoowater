@@ -178,14 +178,12 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 	$(function() {
 		// 주소 찾기
 		const mb_addr1 = document.getElementById("mb_addr1");
-		const mb_addr2 = document.getElementById("mb_addr2");
 
 		mb_addr1.addEventListener('click', () => {
 			new daum.Postcode({
 				oncomplete: function(data) {
 					// address : 기본주소, roadAddress : 도로명 주소, jibunAddress : 지번 주소
 					mb_addr1.value = data.address;
-					mb_addr2.focuce();
 				}
 			}).open();
 		});
