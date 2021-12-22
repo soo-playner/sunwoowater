@@ -45,7 +45,6 @@ if ($_GET['recom_referral']){
 	.bank_info_set input{border-left:3px solid gold;}
 
 	hr.light_line{margin-top:10px;margin-bottom:-10px;border-top:1px solid rgba(0,0,0,0.1)}
-	.map_wrap{margin-top:-55px;}
 </style>
 
 
@@ -860,27 +859,31 @@ if ($_GET['recom_referral']){
 
 		const map_wrap = document.getElementById('map_wrap');
 		const mb_addr1 = document.getElementById("mb_addr1");
+		const mb_addr2 = document.getElementById("mb_addr2");
 		
 		const hidden_map = () => map_wrap.style.display = 'none';
 
 		hidden_map();
 
 		mb_addr1.addEventListener('click', function() {
+			mb_addr1.style.display = 'none';
+
 			select_addr();
 		});
 
 		const select_addr = () => {
-			var currentScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
+			let current_scroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
 
 			new daum.Postcode({
 				oncomplete: function(data) {
-					document.getElementById("mb_addr1").value = data.address;
-					document.getElementById("mb_addr2").focus();
+					mb_addr1.value = data.address;
+					mb_addr1.style.display = 'block';
+					mb_addr2.focus();
 
 					map_wrap.style.display = 'none';
 
 					// 우편번호 찾기 화면이 보이기 이전으로 scroll 위치를 되돌린다.
-					document.body.scrollTop = currentScroll;
+					document.body.scrollTop = current_scroll;
 				},
 				// iframe을 넣은 element의 높이값을 조정
 				onresize : function(size) {

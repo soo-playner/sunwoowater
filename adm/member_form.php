@@ -409,7 +409,7 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 			</td>
 	</tr>
 	<?php } ?>
-
+<!-- 
 	<tr>
 		<th scope="row">센터지정</th>
 		<td colspan="1">
@@ -432,7 +432,7 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 		<td colspan="1">
 			<input type="text" name="mb_center" id="mb_center" value="<?=$mb['mb_center']?>" class="frm_input wide" />
 		</td>
-	</tr>
+	</tr> -->
 
 	
 	
@@ -496,7 +496,7 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 
 	</tr>
 
-	<tr class="ly_up padding-box fund">
+	<!-- <tr class="ly_up padding-box fund">
 		<th scope="row" style='line-height:20px;'>보유마이닝해쉬<br>(추천산하)(후원산하)</th>
 		<td colspan="1">
 			<span class='strong mining'><?=Number_format($mb['mb_rate'])?> <?=$mining_hash[0]?></span>
@@ -505,14 +505,14 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 
 		<th scope="row">총 받은마이닝보너스</th>
 		<td colspan="1"><span class='strong mining_soodang'><?=shift_auto($mb[$mining_target],$minings[0])?> <?=strtoupper($minings[0])?></span> </td>
-	</tr>
+	</tr> -->
 
 	<tr class="ly_up padding-box fund">
 		<th scope="row">출금총액</th>
 		<td colspan="1"><span class='strong amt'><?=ASSETS_CURENCY?> <?=shift_auto($mb['mb_shift_amt'])?>  </span>  ( <?=shift_auto(($mb['mb_shift_amt']*$usd_price),WITHDRAW_CURENCY)?><?=WITHDRAW_CURENCY?> )</td>
 
-		<th scope="row">마이닝출금액</th>
-		<td colspan="1"><span class='strong amt'><?=shift_auto($mb[$mining_amt_target],$minings[0])?> <?=strtoupper($minings[0])?></span></td>
+		<!-- <th scope="row">마이닝출금액</th>
+		<td colspan="1"><span class='strong amt'><?=shift_auto($mb[$mining_amt_target],$minings[0])?> <?=strtoupper($minings[0])?></span></td> -->
 	</tr>
 	
 	<!-- <tr class="ly_up padding-box week_dividend ">
