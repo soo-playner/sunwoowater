@@ -41,7 +41,7 @@ if($_GET['ord']!=null && $_GET['ord_word']!=null){
 	$sql_ord = "order by ".$_GET['ord_word']." ".$_GET['ord'];
 }
 
-$sql = " select count(*) as cnt, sum(amt) as hap, sum(amt) as amt_total, sum(fee) as feehap, sum(out_amt) as outamt from {$g5['withdrawal']} A WHERE 1=1 AND DATE_FORMAT(A.create_dt, '%Y-%m-%d') between '{$fr_date}' and '{$to_date}'	 ";
+$sql = " select count(*) as cnt, sum(amt) as hap, sum(amt_total) as amt_total, sum(fee) as feehap, sum(out_amt) as outamt from {$g5['withdrawal']} A WHERE 1=1 AND DATE_FORMAT(A.create_dt, '%Y-%m-%d') between '{$fr_date}' and '{$to_date}'	 ";
 $sql .= $sql_condition;
 $sql .= $sql_ord;
 
@@ -325,7 +325,7 @@ $ord_rev = $ord_array[($ord_key+1)%2]; // 내림차순→오름차순, 오름차
 			<td colspan=1><?=shift_auto_zero($total_amt)?></td>
 			<td><?=shift_auto_zero($total_fee)?></td>
 			
-			<td colspan=1><?=shift_auto_zero($total_out,WITHDRAW_CURENCY)?></td>
+			<td colspan=1><?=shift_auto_zero($total_amt)?></td>
 			<td colspan=4></td>
 		</tfoot>
     </table>

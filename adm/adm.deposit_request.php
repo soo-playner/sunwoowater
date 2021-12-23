@@ -282,7 +282,7 @@ $result = sql_query($sql);
             <?=retrun_value_func($row['amt'],$row['coin']);?>
         </td>
         <td class='coin'><?=retrun_coin($row['coin'])?></td>
-        <td><input type='text' class='reg_text input_amt_val <?=value_color($row['in_amt'])?>' style='font-weight:600;' value='<?=shift_auto_zero($row['in_amt'],'$')?>' inputmode="numeric"></td>
+        <td><input type='text' class='reg_text input_amt_val <?=value_color($row['in_amt'])?>' style='font-weight:600;' value='<?=shift_auto_zero($row['in_amt'],'원')?>' inputmode="numeric"></td>
         
         <td>
             <!-- <?=status($row['status'])?> -->

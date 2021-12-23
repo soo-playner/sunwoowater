@@ -483,14 +483,14 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 
 		<th scope="row">누적 매출 합계 (PV)</th>
 		<td colspan="1">
-			<span class='strong soodang'><?=ASSETS_CURENCY?> <?=shift_auto($mb['mb_save_point'],BALANCE_CURENCY)?> </span>
+			<span class='strong soodang'><?=shift_auto($mb['mb_save_point'],BALANCE_CURENCY)?> <?=ASSETS_CURENCY?></span>
 			&nbsp&nbsp( PV : <?=$mb['mb_pv']?> )
 		</td>
 
 		<th scope="row">총 받은보너스(수당)</th>
 		<td colspan="1">
 			<input type='hidden' name='mb_balance' value ='<?=$mb['mb_balance']?>'/>
-			<span class='strong bonus'><?=ASSETS_CURENCY?> <?=shift_auto($mb['mb_balance'],BALANCE_CURENCY)?> </span> 
+			<span class='strong bonus'><?=shift_auto($mb['mb_balance'],BALANCE_CURENCY)?> <?=ASSETS_CURENCY?></span> 
 			&nbsp&nbsp( per : <?=percent_express($bonus_per)?> )
 		</td>
 
@@ -509,7 +509,9 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 
 	<tr class="ly_up padding-box fund">
 		<th scope="row">출금총액</th>
-		<td colspan="1"><span class='strong amt'><?=ASSETS_CURENCY?> <?=shift_auto($mb['mb_shift_amt'])?>  </span>  ( <?=shift_auto(($mb['mb_shift_amt']*$usd_price),WITHDRAW_CURENCY)?><?=WITHDRAW_CURENCY?> )</td>
+		<td colspan="1"><span class='strong amt'><?=shift_auto($mb['mb_shift_amt'])?> <?=ASSETS_CURENCY?> </span>  
+		<!-- &nbsp&nbsp( <?=shift_auto(($mb['mb_shift_amt']),WITHDRAW_CURENCY)?> <?=WITHDRAW_CURENCY?> ) -->
+	</td>
 
 		<!-- <th scope="row">마이닝출금액</th>
 		<td colspan="1"><span class='strong amt'><?=shift_auto($mb[$mining_amt_target],$minings[0])?> <?=strtoupper($minings[0])?></span></td> -->

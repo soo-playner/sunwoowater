@@ -463,7 +463,7 @@ if ($sel_price > 0) {
               <input type="text" id="deposit_value" class='b_ghostwhite p15 cabinet' placeholder="입금액(숫자만)을 입력해주세요" inputmode="numeric">
               <span class='cabinet_inner'>※입금하신 원화금액을 입력해주세요</span>
               <span class='cabinet_outer'></span>
-              <label class='currency-right2'><?= DEPOSIT_CURENCY ?></label>
+              <!-- <label class='currency-right2'><?= DEPOSIT_CURENCY ?></label> -->
 
               <!-- <input type='button' class='btn input_right_btn' value='$'> -->
               <!-- <input type='button' class='btn input_right_btn' value='원'> -->
@@ -598,7 +598,7 @@ if ($sel_price > 0) {
 
           <input type="text" id="sendValue" class="send_coin b_ghostwhite p15 cabinet" placeholder="출금 금액(<?=BALANCE_CURENCY?>)을 입력해주세요" inputmode="numeric">
           <!-- <span class='cabinet_inner font_red' style='display:contents'>※ 실제 출금은 <?= coin_prices($wallet_code[0], 'name')?> 로 출금됩니다.</span> -->
-          <label class='currency-right2'><?= ASSETS_CURENCY ?></label>
+          <!-- <label class='currency-right2'><?= ASSETS_CURENCY ?></label> -->
 
 
           <!-- <div class="row fee">
@@ -649,11 +649,11 @@ if ($sel_price > 0) {
             <div class="hist_con_row1">
               <div class="row">
                 <span class="hist_date"><?= $row['create_dt'] ?></span>
-                <span class="hist_value "><?= BALANCE_CURENCY ?> <?= shift_doller($row['amt_total']) ?></span>
+                <span class="hist_value "><?= shift_doller($row['amt_total']) ?> <?= BALANCE_CURENCY ?></span>
               </div>
 
               <div class="row">
-                <span class="hist_withval"><?= BALANCE_CURENCY ?> <?= $row['amt'] ?> / <label>Fee : </label><?= BALANCE_CURENCY ?> <?= $row['fee'] ?></span>
+                <span class="hist_withval"><?= $row['amt'] ?> <?= BALANCE_CURENCY ?> / <label>Fee : </label><?= $row['fee'] ?> <?= BALANCE_CURENCY ?></span>
                 <span class="hist_value status"><?= $row['out_amt'] ?> <?= $row['coin'] ?></span>
               </div>
 

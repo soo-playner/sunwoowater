@@ -16,7 +16,7 @@ define('WITHDRAW_CURENCY','원');
 
 
 $minings = ['DSP'];
-$mining_hash = ['T'];
+$mining_hash = ['DSP'];
 $mining_target = 'mb_mining_1';
 $mining_amt_target = 'mb_mining_1'.'_amt';
 

@@ -158,9 +158,9 @@ $listall = '<a href="'.$_SERVER['SCRIPT_NAME'].'" class="ov_listall">전체목�
         <th scope="col" id="th_pc_title" style='width:auto;'><?php echo subject_sort_link('it_option_subject', 'sca='.$sca); ?>노출상품명</a></th>
         <th scope="col" id="th_amt" style='width:100px;'><?php echo subject_sort_link('it_price', 'sca='.$sca); ?>상품가격(<?=PURCHASE_CURENCY?>)</a></th>
         <th scope="col" id="th_pt" style='width:120px;'><?php echo subject_sort_link('it_cust_price', 'sca='.$sca); ?>판매가격(<?=DEPOSIT_CURENCY?>)</a></th>
-        <th scope="col" id="th_pt" style='width:100px;'><?php echo subject_sort_link('it_extra', 'sca='.$sca); ?>EXTRA(담보&가스비)</a></th>
+        <!-- <th scope="col" id="th_pt" style='width:100px;'><?php echo subject_sort_link('it_extra', 'sca='.$sca); ?>EXTRA(담보&가스비)</a></th> -->
         <th scope="col" id="th_pt" style='width:100px;'><?php echo subject_sort_link('it_point', 'sca='.$sca); ?>실적(PV)</a></th>
-        <th scope="col" id="th_pt" style='width:100px;'><?php echo subject_sort_link('it_supply_point', 'sca='.$sca); ?>Mining(<?=$mining_hash[0]?>)</a></th>
+        <th scope="col" id="th_pt" style='width:150px;'><?php echo subject_sort_link('it_supply_point', 'sca='.$sca); ?>Mining(<?=$mining_hash[0]?>)</a></th>
         <th scope="col" style='width:30px;'><?php echo subject_sort_link('it_order', 'sca='.$sca); ?>노출순서</a></th>
         <th scope="col" style='width:20px;'><?php echo subject_sort_link('it_use', 'sca='.$sca, 1); ?>판매</a></th>
         <!-- <th scope="col" style='width:30px;'><?php echo subject_sort_link('it_hit', 'sca='.$sca, 1); ?>조회</a></th> -->
@@ -233,11 +233,11 @@ $listall = '<a href="'.$_SERVER['SCRIPT_NAME'].'" class="ov_listall">전체목�
         </td>
 
         <!--판매가격-->
-        <td headers="th_pt" class="td_numbig td_input" id="it_cust_price">
-            <label for="it_cust_price" class="sound_only">Extra</label>
+        <!-- <td headers="th_pt" class="td_numbig td_input" id="it_cust_price">
+            <label for="it_cust_price" class="sound_only">Extra</label> -->
             <!-- <button type='button' class='vat_calc' data-num = '<?=$i?>' >vat</button> -->
-            <input type="text" name="it_extra[<?php echo $i; ?>]" value="<?=shift_auto($row['it_extra']) ?>" id="extra_<?php echo $i; ?>" class="frm_input sit_amt" size="5" style="background:#fff8d3 !important" inputmode = "numeric"> <?=$minings[0]?>
-        </td>
+            <!-- <input type="text" name="it_extra[<?php echo $i; ?>]" value="<?=shift_auto($row['it_extra']) ?>" id="extra_<?php echo $i; ?>" class="frm_input sit_amt" size="5" style="background:#fff8d3 !important" inputmode = "numeric"> <?=$minings[0]?>
+        </td> -->
         
 
         <!--판매가격-->

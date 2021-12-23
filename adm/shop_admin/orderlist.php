@@ -428,7 +428,7 @@ if(!sql_query(" select mb_id from {$g5['g5_shop_order_delete_table']} limit 1 ",
         <td rowspan="2" class="td_numsum"><?=$row['od_name']?></td>
         <td rowspan="2" class="td_numsum" style='text-align:right'><?= number_format($row['od_cart_price'])?> <?=PURCHASE_CURENCY?></td>
         <td ><?php echo $row['od_settle_case'] ?></td>
-		<td rowspan="2" style="text-align:right;font-weight:600"><?=number_format($row['od_cash'])?> <?=PURCHASE_CURENCY?></td>
+		<td rowspan="2" style="text-align:right;font-weight:600"><?=number_format($row['od_cart_price'])?> <?=PURCHASE_CURENCY?></td>
 		<td ><?=number_format($row['upstair'])?> </td>
         <td >
             <?php echo $row['pv']; ?>
@@ -455,7 +455,7 @@ if(!sql_query(" select mb_id from {$g5['g5_shop_order_delete_table']} limit 1 ",
         $tot_itemcount     = $i+1;
         $tot_orderprice    += ($row['od_cart_price'] + $row['od_send_cost'] + $row['od_send_cost2']);
         $tot_ordercancel   += $row['od_cancel_price'];
-        $tot_receiptprice  += $row['od_cash'];
+        $tot_receiptprice  += $row['od_cart_price'];
 		/*##  ################################################*/
         $tot_receiptcash  += $row['od_receipt_cash'];
         $tot_pv  += $row['pv'];
@@ -473,18 +473,13 @@ if(!sql_query(" select mb_id from {$g5['g5_shop_order_delete_table']} limit 1 ",
     </tbody>
     <tfoot>
     <tr class="orderlist">
-        <th scope="row" colspan="3">&nbsp;</th>
-        <td><?php echo number_format($tot_odcount); ?>건</td>
-        <td></td>
-        <td>
-            <!-- <?php echo number_format($tot_itemcount); ?>건 -->
-        </td>
-        <th scope="row">합 계</th>
+        <th scope="row" colspan="2">합 계</th>
+        <td><?php echo number_format($tot_odcount); ?>건</td></td>
+        <th scope="row" colspan="4"></th>
         <td style='text-align:right'><?=Number_format($tot_orderprice)?> <?=PURCHASE_CURENCY?></td>
         <td></td>
         <td style='text-align:right'><?=Number_format($tot_receiptprice)?> <?=PURCHASE_CURENCY?></td>
-        <td></td>
-		<td></td>
+        <td colspan="2"></td>
     </tr>
     </tfoot>
     </table>

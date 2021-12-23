@@ -335,7 +335,7 @@ $stats_result = sql_fetch($stats_sql);
 		<col width="180" />
 		<col width="180" />
 		<col width="180" />
-		<col width="180" />
+		<!-- <col width="180" /> -->
 		<col width="140" />
 		<col width="100" />
 		<col width="140" />
@@ -362,7 +362,7 @@ $stats_result = sql_fetch($stats_sql);
 		
 		<th scope="col" id="mb_list_auth2" class="bonus_bb bonus_benefit"  rowspan="2"><?php echo subject_sort_link('mb_balance') ?> 수당합계</th>
 		<th scope="col" id="mb_list_auth2" class="bonus_aa"  rowspan="2"><?php echo subject_sort_link('mb_pv') ?> 누적매출(PV)</th>
-		<th scope="col" id="mb_list_auth2" class=""  rowspan="2"><?php echo subject_sort_link('mb_rate') ?> 마이닝해쉬(<?=$mining_hash[0]?>)</th>
+		<!-- <th scope="col" id="mb_list_auth2" class=""  rowspan="2"><?php echo subject_sort_link('mb_rate') ?> 마이닝해쉬(<?=$mining_hash[0]?>)</th> -->
 		<th scope="col" id="mb_list_auth2" class="bonus_bb bonus_out"  rowspan="2">수당/한계<br>(100%)</th>
 		
 		<th scope="col" rowspan="2" id="" class="item_title">상위보유패키지</th>
@@ -516,7 +516,7 @@ $stats_result = sql_fetch($stats_sql);
 		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><strong><?= shift_auto_zero($total_bonus) ?> </strong></td>
 		<!-- <td headers="mb_list_auth" class="td_mbstat" rowspan="2"><?= shift_auto_zero($row['mb_save_point']) ?></td> -->
 		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><?= shift_auto_zero($row['mb_pv']) ?></td>
-		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><?= shift_auto_zero($row['mb_rate']) ?></td>
+		<!-- <td headers="mb_list_auth" class="td_mbstat" rowspan="2"><?= shift_auto_zero($row['mb_rate']) ?></td> -->
 		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"> <?=$bonus_per?><?if($bonus_per != 0){echo "%";}?></td>
 		<td headers="mb_list_auth" class="td_mbstat text-center" rowspan="2"><span class='badge t_white color<?=$row['rank']?>'><?if($row['rank']){echo 'P'.$row['rank'];}?></span></td>
 		
