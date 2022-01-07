@@ -44,7 +44,7 @@ if(!isset($g5['title'])){
 	<link href="<?=G5_THEME_URL?>/_common/css/normalize.css" rel="stylesheet">
 	<link href="<?=G5_THEME_URL?>/_common/css/common.css" rel="stylesheet">
 	<link href="<?=G5_THEME_URL?>/_common/css/jquery-ui.min.css" rel="stylesheet">
-	<link href="<?=G5_THEME_URL?>/_common/css/gnb.css" rel="stylesheet">
+	<link href="<?=G5_THEME_URL?>/_common/css/gnb.css?a" rel="stylesheet">
 	
 	<!-- 커스텀 SCSS 추가 -->
 	<link href="<?=G5_THEME_URL?>/css/scss/custom.css?a" rel="stylesheet">
