@@ -30,10 +30,10 @@ header .left_gnbWrap .left_gnb{padding:10px 0;max-height:62vh;width:100%;overflo
 header .left_gnbWrap .left_gnb > li {width: 96%;background-repeat: no-repeat;background-size: 28px;background-position: 18px 10px;margin-left:5px;}
 header .left_gnbWrap .left_gnb .b_line3 {margin-top:130px;}
 
-#gnb_language{position:fixed;bottom:60px;background:#eeedf7;width:300px;text-align: center;box-shadow: inset -1px 1px 3px rgba(0,0,0,0.25);}
+#gnb_language{position:absolute;bottom:60px;background:#eeedf7;width:300px;text-align: center;box-shadow: inset -1px 1px 3px rgba(0,0,0,0.25);}
 #gnb_language .title{font-size:11px;padding:5px 0;}
 
-.logout_wrap{position:fixed;bottom:0;line-height:20px;padding:20px 15px;width:300px;display:flex;background:white}
+.logout_wrap{position:absolute;bottom:0;line-height:20px;padding:20px 15px;width:300px;display:flex;background:white}
 .logout_wrap a{display:inline-block;width:50%;text-align: center;font-size:13px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
 .logout_wrap a:first-child{border-right:1px solid #666;}
 .logout_wrap a i{vertical-align: middle;padding-right:5px;font-size:18px;}
