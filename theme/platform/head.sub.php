@@ -96,7 +96,7 @@ if($config['cf_add_meta'])
 	<!-- 기본 설정 //-->
 	<link href= "<?=G5_THEME_URL?>/_common/css/normalize.css" rel="stylesheet">
 	<link href="<?=G5_THEME_URL?>/_common/css/jquery-ui.min.css" rel="stylesheet">
-	<link href="<?=G5_THEME_URL?>/_common/css/gnb.css" rel="stylesheet">
+	<link href="<?=G5_THEME_URL?>/_common/css/gnb.css?a" rel="stylesheet">
 	<link href="<?=G5_THEME_URL?>/_common/css/common.css?ver=20200429" rel="stylesheet">
 
 
