@@ -743,12 +743,27 @@ if ($_GET['recom_referral']){
 				
 				<div class='addr_set mt20'>
 					<input type="text" name="mb_addr1"  id="mb_addr1" style='padding:15px' required  placeholder="주소" readonly />
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 					<div id="map_wrap" class="map_wrap"></div>
+=======
+>>>>>>> Stashed changes
 					<input type="text" name="mb_addr2"  id="mb_addr2" style='padding:15px' required  placeholder="상세주소" maxlength="150" autocomplete="off" />
 				</div>
 
 				<hr class="light_line">
+<<<<<<< Updated upstream
 
+=======
+				
+>>>>>>> Stashed changes
+=======
+					<input type="text" name="mb_addr2"  id="mb_addr2" style='padding:15px' required  placeholder="상세주소" maxlength="150" autocomplete="off" />
+				</div>
+
+				<hr class="light_line">
+				
+>>>>>>> Stashed changes
 				<div class="bank_info_set mt20 ">
 					<div class="row ">
 						<div class="col-6">

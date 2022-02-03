@@ -86,7 +86,7 @@ $(document).ready(function(){
 			<li class="mywallet_icon"><a href="/page.php?id=mywallet"><span>입출금</span></a></li> 
 			<!--<li class="mining_icon"><a href="/page.php?id=mining"><span>마이닝</span></a></li>-->
 			<li class="upstairs_icon"><a href="/page.php?id=upstairs"><span>패키지구매</span></a></li>
-			<!--<li class="bonus_history_icon"><a href="/page.php?id=bonus_history"><span>보너스내역</span></a></li> -->
+			<li class="bonus_history_icon"><a href="/page.php?id=bonus_history"><span>보너스내역</span></a></li>
 			<?
 				if($member['center_use'] == 1){?>
 				<li class="center_page"><a href="/page.php?id=center_page"><i class="ri-team-line" style='font-size:26px;color:#435388'></i><span style='margin-left:22px;'>센터회원관리</span></a></li>

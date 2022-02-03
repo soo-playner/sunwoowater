@@ -27,13 +27,13 @@
 				<div class="my_btn_wrap">
 					<div class='row'>
 						<div class='col-lg-4 col-12'>
-							<button type='button' class='btn wd main_btn b_sub' onclick="go_to_url('mywallet');" data-i18n="dashboard.내 지갑"> MY WALLET</button>
+							<button type='button' class='btn wd main_btn b_sub' onclick="go_to_url('mywallet');" > 입출금</button>
 						</div>
-						<div class='col-lg-4 col-12'>
+						<!-- <div class='col-lg-4 col-12'>
 							<button type='button' class='btn wd main_btn b_third' onclick="go_to_url('mining');" > 마이닝</button>
-						</div>
+						</div> -->
 						<div class='col-lg-4 col-12'>
-							<button type='button' class='btn wd main_btn b_main' onclick="go_to_url('upstairs');" data-i18n="dashboard.패키지구매">패키지구매</button>
+							<button type='button' class='btn wd main_btn b_main' onclick="go_to_url('upstairs');" >기부</button>
 						</div>
 						<!-- <div class='col-lg-12 col-12'>
 							<button type='button' class='btn wd main_btn b_third' onclick="move_to_shop()" >쇼핑몰바로가기</button>
@@ -46,7 +46,7 @@
 
 				<div class='r_card_wrap content-box round mt30'>
 					<?$ordered_items = ordered_items($member['mb_id']);?>
-					<div class="card_title" >보유 패키지 (<?=count($ordered_items)?>) <a href='<?=G5_URL?>/page.php?id=upstairs' class='f_right inline more'><span >더보기<i class="ri-add-circle-fill"></i></span></a></div>
+					<div class="card_title" >기부 현황 (<?=count($ordered_items)?>) <a href='<?=G5_URL?>/page.php?id=upstairs' class='f_right inline more'><span >더보기<i class="ri-add-circle-fill"></i></span></a></div>
 					<?
 					if(count($ordered_items) < 1) { 
 							echo "<div class='no_data'>내 보유 상품이 존재하지 않습니다</div>";

@@ -104,7 +104,7 @@ $title = 'Dashboard';
 				<div class="total_view_top collapse" id="collapseExample">
 					<ul class="row">
 						<li class="col-4">
-							<dt class="title" data-i18n="dashboard.직추천인">직추천인</dt>
+							<dt class="title" >나의 구좌</dt>
 							<dd class="value"><?=$direct_reffer?></dd>
 						</li>
 						<li class="col-4">
@@ -112,42 +112,39 @@ $title = 'Dashboard';
 							<dd class="value"><?=division_count($member['mb_child'] - 1)?>명</dd>
 						</li>
 						<li class="col-4">
-							<dt class="title" data-i18n="dashboard.추천산하매출">추천산하매출</dt>
+							<dt class="title" data-i18n="dashboard.추천산하매출">추천산하구좌</dt>
 							<dd class="value"><?=Number_format($recom_sale)?> </dd>
 						</li>
 					</ul>
 					<ul class="row">
 						<li class="col-4">
-							<dt class="title" data-i18n="dashboard.후원인">후원인</dt>
+							<dt class="title" >센터</dt>
 							<dd class="value"><?=secure_id($member['mb_brecommend'])?></dd>
 						</li>
 						<li class="col-4">
-							<dt class="title" data-i18n="dashboard.후원산하">후원산하</dt>
+							<dt class="title">지점</dt>
 							<dd class="value"><?=division_count($member['mb_b_child'] -1)?>명</dd>
 						</li>
 						<li class="col-4">
-							<dt class="title" data-i18n="dashboard.후원산하매출">후원산하매출</dt>
+							<dt class="title">지사</dt>
 							<dd class="value"><?=Number_format($brecom_sale)?> </dd>
 						</li>
 					</ul>
 
 					<ul class="row">
-						<!-- <li class="col-4">
-							<dt class="title" >센터(지사)</dt>
-							<dd class="value"><?=get_name($member['mb_center'])?></dd>
-						</li> -->
 						
 						<li class="col-4">
-							<dt class="title"><span class='badge'>Mining : <?=Number_format($member['mb_rate'])?> mh/s</span></dt>
+							<dt class="title">본부</dt>
 							<dd class="value"><?=$mining_total?> <span style='font-size:12px;'><?=$minings[0]?></span></dd>
 						</li>
 
-						<!-- <li class="col-4">
-							<dt class="title" >보석수령(주배당)</dt>
-							<dd class="value"><?=week_jewel()?></dd>
-						</li> -->
 						<li class="col-4">
-							<dt class="title" >나의구매등급</dt>
+							<dt class="title" >나의 직급</dt>
+							<dd class="value"><?=$member['rank']?><?=rank_name($member['rank'])?></dd>
+						</li>
+
+						<li class="col-4">
+							<dt class="title" >나의 DSP</dt>
 							<dd class="value"><?=$member['rank']?><?=rank_name($member['rank'])?></dd>
 						</li>
 					</ul>

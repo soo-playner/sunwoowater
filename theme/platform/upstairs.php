@@ -72,7 +72,7 @@ $result = sql_query($sql);
 			<div class="package_wrap mt20">
 				<div class="box-header">
 					<div class="col-9">
-						<h3 class="title upper" data-i18n="">패키지 상품</h3>
+						<h3 class="title upper">기부구좌</h3>
 					</div>
 				</div>
 				<div class="box-body round">
@@ -158,7 +158,7 @@ $result = sql_query($sql);
 			<div class="pakage_sale content-box round mt20" id="pakage_sale">
 				<ul class="row">
 					<li class="col-12">
-						<h3 class="tit upper" data-i18n="">Package 상품구매</h3>
+						<h3 class="tit upper" >기부</h3>
 					</li>
 					<!-- <li class="col-4">
 						<select class="form-control" name="" id="coin_select">
@@ -168,7 +168,7 @@ $result = sql_query($sql);
 					</li> -->
 				</ul>
 				<div class='row '>
-					<div class='col-5 current_currency coin'>선택 상품 금액 </div>
+					<div class='col-5 current_currency coin'>선택 기부 금액 </div>
 					
 					<div class='col-1 shift_usd'><i class="ri-exchange-fill exchange"></i></div>
 					
@@ -180,7 +180,7 @@ $result = sql_query($sql);
 				</div>
 
 				<div class='row select_box' id='usd' style='margin-top:10px'>
-					<div class='col-12'><h3 class='tit'> 구매가능잔고</h3></div>
+					<div class='col-12'><h3 class='tit'> 기부가능잔고</h3></div>
 
 					<div class='col-5 my_cash_wrap'>
 						<!-- <input type='radio' value='eth' class='radio_btn' name='currency'><input type="text" id="trade_money_eth" class="trade_money" placeholder="0" min=5 data-currency='eth' readonly> -->
@@ -199,8 +199,8 @@ $result = sql_query($sql);
 				</div>
 
 				<div class="submit mt20">
-					<button id="purchase" class="btn wd main_btn b_blue b_darkblue round" data-i18n="upstair.구매"> Purchase</button>
-					<button id="go_wallet_btn" class="btn wd main_btn b_green b_skyblue round" data-i18n="upstair.입금"> DEPOSIT</button>
+					<button id="purchase" class="btn wd main_btn b_blue b_darkblue round" > 기부하기</button>
+					<button id="go_wallet_btn" class="btn wd main_btn b_green b_skyblue round" > 입금하기</button>
 				</div>
 				
 			</div>
@@ -285,7 +285,7 @@ $result = sql_query($sql);
 		<!-- <div class="col-sm-12 col-12 content-box round secondary mt20" > -->
 
 		<div class="history_box content-box mt40">
-			<h3 class="hist_tit" data-i18n="">Package 구매 내역</h3>
+			<h3 class="hist_tit" >내 보유 구좌</h3>
 
 			<?if(sql_num_rows($result) == 0) {?>	
 				<div class="no_data"> Package 구매 내역이 존재하지 않습니다</div>
