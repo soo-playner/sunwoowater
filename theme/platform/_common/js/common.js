@@ -189,6 +189,9 @@ function dialogModal(title, htmlBody, category,dim = true){
 	else if(category == 'failed'){
 		$('#dialogModal .modal-body').html("<div class=chkimg><img src='"+g5_url+"/img/notice_pop.gif'></div>" + htmlBody);
 		$('#dialogModal .modal-footer').html("<button type='button' class='btn wd btn_defualt closed' data-dismiss='modal' id='modal_return_back' onclick='"+dimhide+"'>Close</button>");
+	}else if(category == 'view'){
+		$('#dialogModal .modal-body').html(htmlBody);
+		$('#dialogModal .modal-footer').html("<button type='button' class='btn wd btn_defualt closed' data-dismiss='modal' id='modal_return_back' onclick='"+dimhide+"'>Close</button>");
 	}
 
 	$('#dialogModal').focus();

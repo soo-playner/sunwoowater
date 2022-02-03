@@ -39,32 +39,115 @@ $sql .= "order by od_receipt_time desc limit {$from_record}, {$rows} ";
 $result = sql_query($sql);
 ?>
 
-<link rel="stylesheet" href="<?=G5_THEME_URL?>/css/default.css">
-<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+<link rel="stylesheet" href="<?= G5_THEME_URL ?>/css/default.css">
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
 <style>
-.product_buy_wrap .title{padding-right:0;}
-.mining_ico{vertical-align: middle;}
-.mining_ico, .mining_ico img{margin-left:5px;height:22px;}
-.mining_product{width:100%;display: table;}
-.iconbox{display:block;width:100%;height:30px;margin-top:10px;}
-.table-cell{display:table-cell;}
-.v-middle{vertical-align: middle;}
-.v-bottom{vertical-align: bottom;}
-.mining_product img{max-width:30px;max-height:30px;vertical-align: middle;}
-.iconbox + .text_wrap{margin-top:5px !important;}
-.hash{color:white;font-weight:300;font-size:18px;letter-spacing:-0.25px;margin:5px 0 -10px;font-family:"Helvetica Neue","Apple SD Gothic Neo",sans-serif;    font-family: "Helvetica Neue","Apple SD Gothic Neo",sans-serif;
-    background: rgba(0,0,0,0.2);
-    padding: 0px 15px 4px 10px;
-    border-radius: 10px;
-    box-shadow: inset 1px 1px 2px rgb(0 0 0 / 80%), 1px 1px 1px rgb(255 255 255 / 30%);
-    text-align: left;}
-.hash img{width:20px;height:20px;vertical-align: bottom;}
-.origin_price{margin-top:-5px;font-size:11px;color:rgba(255,255,255,0.75)}
+	.product_buy_wrap .title {
+		padding-right: 0;
+	}
+
+	.mining_ico {
+		vertical-align: middle;
+	}
+
+	.mining_ico,
+	.mining_ico img {
+		margin-left: 5px;
+		height: 22px;
+	}
+
+	.mining_product {
+		width: 100%;
+		display: table;
+	}
+
+	.iconbox {
+		display: block;
+		width: 100%;
+		height: 30px;
+		margin-top: 10px;
+	}
+
+	.table-cell {
+		display: table-cell;
+	}
+
+	.v-middle {
+		vertical-align: middle;
+	}
+
+	.v-bottom {
+		vertical-align: bottom;
+	}
+
+	.mining_product img {
+		max-width: 30px;
+		max-height: 30px;
+		vertical-align: middle;
+	}
+
+	.iconbox+.text_wrap {
+		margin-top: 5px !important;
+	}
+
+	.hash {
+		color: white;
+		font-weight: 300;
+		font-size: 18px;
+		letter-spacing: -0.25px;
+		margin: 5px 0 -10px;
+		font-family: "Helvetica Neue", "Apple SD Gothic Neo", sans-serif;
+		font-family: "Helvetica Neue", "Apple SD Gothic Neo", sans-serif;
+		background: rgba(0, 0, 0, 0.2);
+		padding: 0px 15px 4px 10px;
+		border-radius: 10px;
+		box-shadow: inset 1px 1px 2px rgb(0 0 0 / 80%), 1px 1px 1px rgb(255 255 255 / 30%);
+		text-align: left;
+	}
+
+	.hash img {
+		width: 20px;
+		height: 20px;
+		vertical-align: bottom;
+	}
+
+	.origin_price {
+		margin-top: -5px;
+		font-size: 11px;
+		color: rgba(255, 255, 255, 0.75)
+	}
+
+	.box-radio-input{
+		width:100%;
+		height:100%;
+	}
+		
+	.box-radio-input input[type="radio"]{
+		display:none;
+	}
+
+	.box-radio-input input[type="radio"] + span{
+		display:block;
+		border:1px solid #dfdfdf;  
+		text-align:center;
+		width:100%;
+		height:35px;
+		line-height:33px;
+		font-weight:600;
+		font-size:14px;
+		cursor:pointer;
+	}
+
+	.box-radio-input input[type="radio"]:checked + span{
+		border:1px solid #fee500;
+		background:#fee500;
+		color:#111;
+	}
 </style>
 
-<?include_once(G5_THEME_PATH.'/_include/breadcrumb.php');?>
+<? include_once(G5_THEME_PATH . '/_include/breadcrumb.php'); ?>
 
 <main>
 	<div class="container upstairs">
@@ -78,135 +161,171 @@ $result = sql_query($sql);
 				<div class="box-body round">
 					<div class="r_card_wrap ">
 						<div class="row nopadding nomargin">
-						<? 
-						$row = get_shop_item();
+							<?
+							$row = get_shop_item();
 
-						if(count($row) == 0) {
-							echo "<div class='no_data'>패키지 상품이 존재하지 않습니다</div>";
-						}else{
-						
-							for($i=0; $i < count($row); $i++){
+							if (count($row) == 0) {
+								echo "<div class='no_data'>패키지 상품이 존재하지 않습니다</div>";
+							} else {
 
-							$sign = "원";
-							// $extra_price = $row[$i]['it_extra']*$fil_price;
-							$it_price = floor($row[$i]['it_price'] + $extra_price);
-						
-							// $coin_price = floor(($it_price/$fil_price)*10000)/10000;
-						
-							if($row[$i]['it_cust_price'] == 0){
-								$won_price = $it_price;
-							}
+								for ($i = 0; $i < count($row); $i++) {
 
-							// $row[$i]['it_coin_price'] = $coin_price;
-	
+									$sign = "원";
+									// $extra_price = $row[$i]['it_extra']*$fil_price;
+									$it_price = floor($row[$i]['it_price'] + $extra_price);
 
-							$data_arr = array();
-							array_push($data_arr, array(
-								"it_id"=>$row[$i]['it_id'],
-								"it_name"=>$row[$i]['it_name'],
-								"it_price"=>sprintf("%.2f",$it_price),
-								"it_point"=>$row[$i]['it_point'],
-								// "it_coin_price"=>$coin_price,
-								"it_cust_price"=>0,
-								"it_maker"=>$row[$i]['it_maker'],
-								"it_supply_point"=>$row[$i]['it_supply_point'],
-								"it_option_subject"=>$row[$i]['it_option_subject'],
-								"it_model"=>$row[$i]['it_model'],
-								"sign" => $sign
-							));
+									// $coin_price = floor(($it_price/$fil_price)*10000)/10000;
 
-							if($i == 0){
-								$row_col = 'col-6 col-lg-4';
-							}else{
-								$row_col = 'col-6 col-lg-4';
-							}
-						?>
-							<div class="<?=$row_col?> r_card_box">
-								<div class="r_card color<?=$i+1?>" data-row=<?=json_encode($data_arr,JSON_UNESCAPED_UNICODE)?>>
-									<p class="title">
-										<span style='vertical-align:middle'><?=$row[$i]['it_name']?></span>
-										<span style='font-size:13px;float:right;line-height:36px;'><?=$row[$i]['it_option_subject']?></span>
-										
-									</p>
-									<div class="b_blue_bottom"></div>
+									if ($row[$i]['it_cust_price'] == 0) {
+										$won_price = $it_price;
+									}
 
-									<div class='mining_product'>
-										<?if($row[$i]['it_supply_point'] > 0){?>
-										<div class="iconbox v-bottom">
-											<div class='hash text-right'>
-											<!-- <img src='<?=G5_THEME_URL?>/img/mine_icon_small.png'> -->
-												<?=$row[$i]['it_supply_point']?> <span class='f_small'><?=$mining_hash[0]?></span>
+									// $row[$i]['it_coin_price'] = $coin_price;
+
+
+									$data_arr = array();
+									array_push($data_arr, array(
+										"it_id" => $row[$i]['it_id'],
+										"it_name" => $row[$i]['it_name'],
+										"it_price" => sprintf("%.2f", $it_price),
+										"it_point" => $row[$i]['it_point'],
+										// "it_coin_price"=>$coin_price,
+										"it_cust_price" => 0,
+										"it_maker" => $row[$i]['it_maker'],
+										"it_supply_point" => $row[$i]['it_supply_point'],
+										"it_option_subject" => $row[$i]['it_option_subject'],
+										"it_model" => $row[$i]['it_model'],
+										"sign" => $sign
+									));
+
+									if ($i == 0) {
+										$row_col = 'col-6 col-lg-4';
+									} else {
+										$row_col = 'col-6 col-lg-4';
+									}
+							?>
+									<div class="<?= $row_col ?> r_card_box">
+										<div class="r_card color<?= $i + 1 ?>" data-row=<?= json_encode($data_arr, JSON_UNESCAPED_UNICODE) ?>>
+											<p class="title">
+												<span style='vertical-align:middle'><?= $row[$i]['it_name'] ?></span>
+												<span style='font-size:13px;float:right;line-height:36px;'><?= $row[$i]['it_option_subject'] ?></span>
+
+											</p>
+											<div class="b_blue_bottom"></div>
+
+											<div class='mining_product'>
+												<? if ($row[$i]['it_supply_point'] > 0) { ?>
+													<div class="iconbox v-bottom">
+														<div class='hash text-right'>
+															<!-- <img src='<?= G5_THEME_URL ?>/img/mine_icon_small.png'> -->
+															<?= Number_format($row[$i]['it_point']) ?> <span class='f_small'><?= $mining_hash[0] ?></span>
+														</div>
+													</div>
+												<? } ?>
+
+												<div class="text_wrap ">
+													<div class="it_price">￦ <?= Number_format($it_price) ?></div>
+													<!-- <div class='origin_price'>VAT ￦<?= Number_format($it_price) ?></div> -->
+													<!-- <div class='coin_price'><i class="ri-coin-line"></i> <?= Number_format($row[$i]['it_coin_price'], 4) ?> <?= $minings[0] ?></div> -->
+												</div>
 											</div>
 										</div>
-										<?}?>
-												
-										<div class="text_wrap ">
-											<div class="it_price">￦ <?=Number_format($it_price)?></div>
-											<!-- <div class='origin_price'>VAT ￦<?=Number_format($it_price)?></div> -->
-											<!-- <div class='coin_price'><i class="ri-coin-line"></i> <?=Number_format($row[$i]['it_coin_price'],4)?> <?=$minings[0]?></div> -->
-										</div>
 									</div>
-								</div>
-							</div>
-						<?}
-						} ?>
+							<? }
+							} ?>
 						</div>
 					</div>
 				</div>
 
-				
-			<div class="pakage_sale content-box round mt20" id="pakage_sale">
-				<ul class="row">
-					<li class="col-12">
-						<h3 class="tit upper" >기부</h3>
-					</li>
-					<!-- <li class="col-4">
+
+				<div class="pakage_sale content-box round mt20" id="pakage_sale">
+					<ul class="row">
+						<li class="col-12">
+							<h3 class="tit upper">기부</h3>
+						</li>
+						<!-- <li class="col-4">
 						<select class="form-control" name="" id="coin_select">
 							<option value="eth" selected>ETH</option>
 							<option value="mbm">MBM</option>
 						</select>
 					</li> -->
-				</ul>
-				<div class='row '>
-					<div class='col-5 current_currency coin'>선택 기부 금액 </div>
-					
-					<div class='col-1 shift_usd'><i class="ri-exchange-fill exchange"></i></div>
-					
-					<div class='col-6'>
-						<input type="text" id="trade_total" class="trade_money input_price" placeholder="0" min=5 readonly>
-						<!-- <span class='currency-right coin'><?=ASSETS_CURENCY?></span> -->
-						<div id='shift_won'></div>
-					</div>
-				</div>
+					</ul>
+					<div class='row '>
+						<div class='col-5 current_currency coin'>선택 기부 금액 </div>
 
-				<div class='row select_box' id='usd' style='margin-top:10px'>
-					<div class='col-12'><h3 class='tit'> 기부가능잔고</h3></div>
+						<div class='col-1 shift_usd'><i class="ri-exchange-fill exchange"></i></div>
 
-					<div class='col-5 my_cash_wrap'>
-						<!-- <input type='radio' value='eth' class='radio_btn' name='currency'><input type="text" id="trade_money_eth" class="trade_money" placeholder="0" min=5 data-currency='eth' readonly> -->
-						<div>
-							<input type="text" id="total_coin_val" class='input_price' value="<?=number_format($available_fund)?>" readonly>
-							<span class="currency-right coin"><?=ASSETS_CURENCY?></span>
+						<div class='col-6'>
+							<input type="text" id="trade_total" class="trade_money input_price" placeholder="0" min=5 readonly>
+							<!-- <span class='currency-right coin'><?= ASSETS_CURENCY ?></span> -->
+							<div id='shift_won'></div>
 						</div>
 					</div>
-						
-					<div class='col-1 shift_usd'><div class='ex_dollor'><i class="ri-arrow-right-fill"></i></div></div>
 
-					<div class='col-6'>
-						<input type="text" id='shift_dollor' class='input_price red' readOnly>
-						<span class="currency-right coin "><?=ASSETS_CURENCY?></span>
+					<div class='row select_box' id='usd' >
+						<div class='col-12'>
+							<h3 class='tit'> 기부가능잔고</h3>
+						</div>
+
+						<div class='col-5 my_cash_wrap'>
+							<!-- <input type='radio' value='eth' class='radio_btn' name='currency'><input type="text" id="trade_money_eth" class="trade_money" placeholder="0" min=5 data-currency='eth' readonly> -->
+							<div>
+								<input type="text" id="total_coin_val" class='input_price' value="<?= number_format($available_fund) ?>" readonly>
+								<span class="currency-right coin"><?= ASSETS_CURENCY ?></span>
+							</div>
+						</div>
+
+						<div class='col-1 shift_usd'>
+							<div class='ex_dollor'><i class="ri-arrow-right-fill"></i></div>
+						</div>
+
+						<div class='col-6'>
+							<input type="text" id='shift_dollor' class='input_price red' readOnly>
+							<span class="currency-right coin "><?= ASSETS_CURENCY ?></span>
+						</div>
 					</div>
-				</div>
 
-				<div class="submit mt20">
-					<button id="purchase" class="btn wd main_btn b_blue b_darkblue round" > 기부하기</button>
-					<button id="go_wallet_btn" class="btn wd main_btn b_green b_skyblue round" > 입금하기</button>
+					<!-- 기부옵션 -->
+					<div class='row select_box' style='margin-top:10px'>
+						<div class='col-12'>
+							<h3 class='tit'> 재기부횟수</h3>
+						</div>
+
+						<div class='col-12'>
+							<input type="text" id='recharge' class='input_price' style="text-align:center;font-size:16px">
+							<span class="currency-right coin">회</span>
+						</div>
+					</div>
+
+					<div class='row select_box' style='margin-top:10px'>
+						<div class='col-12 mb20'>
+							<h3 class='tit'> 기부선택</h3>
+						</div>
+
+						<div class='col-6'>
+							<label class="box-radio-input">
+							<input type="radio" name="schedule" value="1" checked="checked"><span>1차</span>
+							</label>
+						</div>
+
+						<div class="col-6">
+							<label class="box-radio-input">
+							<input type="radio" name="schedule" value="2"><span>2차</span></label>
+						</div>
+					</div>
+					<!-- 기부옵션 -->
+					
+
+					<div class="submit mt20">
+						<button id="preschdule" class="btn wd sub_btn round"> 지급스케쥴미리보기</button>
+						<button id="purchase" class="btn wd main_btn b_blue b_darkblue round"> 기부하기</button>
+						<button id="go_wallet_btn" class="btn wd main_btn b_green b_skyblue round"> 입금하기</button>
+					</div>
+
 				</div>
-				
 			</div>
-		</div>
 
-		<!--
+			<!--
 		<div class="box-header ">
 			<div class='col-9'>
 				<h3 class="title upper" style='line-height:40px' >내 보유 패키지</h3>
@@ -214,38 +333,43 @@ $result = sql_query($sql);
 		</div>
 			
 		 <?
-		$ordered_items = ordered_items($member['mb_id']);
-		if(count($ordered_items) == 0) { ?>
+			$ordered_items = ordered_items($member['mb_id']);
+			if (count($ordered_items) == 0) { ?>
 				<div class="no_data box_on">내 보유 상품이 존재하지 않습니다</div>
-		<?}else{?>
+		<? } else { ?>
 				
 		<div class="box-body row slide_product">
-		<?php	  
-		for($i = 0; $i < count($ordered_items); $i++){	
-			$color_num = substr($ordered_items[$i]['it_maker'],1,1); 
-			
-			if(count($ordered_items) > 3){$spread_average = 3;}else{$spread_average = 1;}
+		<?php
+				for ($i = 0; $i < count($ordered_items); $i++) {
+					$color_num = substr($ordered_items[$i]['it_maker'], 1, 1);
+
+					if (count($ordered_items) > 3) {
+						$spread_average = 3;
+					} else {
+						$spread_average = 1;
+					}
 		?>		
 
-			<div class="content-box3 product_buy_wrap pack_<?=$color_num?> col-11">
+			<div class="content-box3 product_buy_wrap pack_<?= $color_num ?> col-11">
 				<li class="row">
-					<p class="title col-12"><?=strtoupper($ordered_items[$i]['it_name'])?></p>
+					<p class="title col-12"><?= strtoupper($ordered_items[$i]['it_name']) ?></p>
 				</li>
 				<li class="row">
-					<p class="value col-8">구매일 : <?=$ordered_items[$i]['od_time']?></p>
+					<p class="value col-8">구매일 : <?= $ordered_items[$i]['od_time'] ?></p>
 				</li>
 			</div>
 
-		<?php 
-			echo "<script>slide_color('$color_num')</script>";
-		} }?>
+		<?php
+					echo "<script>slide_color('$color_num')</script>";
+				}
+			} ?>
 		</div> 
 		
 			
 			<!-- 내 보유 상품 슬라이드 
 			<script>
 				$(document).ready(function(){
-					var spread_average = '<?=$spread_average?>';
+					var spread_average = '<?= $spread_average ?>';
 					$('.slide_product').slick({
 						slide: 'div',
 						speed: 300,
@@ -282,42 +406,42 @@ $result = sql_query($sql);
 		</div>
 		-->
 
-		<!-- <div class="col-sm-12 col-12 content-box round secondary mt20" > -->
+			<!-- <div class="col-sm-12 col-12 content-box round secondary mt20" > -->
 
-		<div class="history_box content-box mt40">
-			<h3 class="hist_tit" >내 보유 구좌</h3>
+			<div class="history_box content-box mt40">
+				<h3 class="hist_tit">내 보유 구좌</h3>
 
-			<?if(sql_num_rows($result) == 0) {?>	
-				<div class="no_data"> Package 구매 내역이 존재하지 않습니다</div>
-			<?}else{?>
+				<? if (sql_num_rows($result) == 0) { ?>
+					<div class="no_data"> Package 구매 내역이 존재하지 않습니다</div>
+				<? } else { ?>
 
-				<?while( $row = sql_fetch_array($result) ){?>
-					
-				<div class="hist_con">
-					<div class="hist_con_row1">
-						<div class="row">
-							<span class="hist_date"><?= $row['od_receipt_time'] ?></span>
-							<span class="hist_value">￦ <?=Number_format($row['od_cart_price'])?></span>
+					<? while ($row = sql_fetch_array($result)) { ?>
+
+						<div class="hist_con">
+							<div class="hist_con_row1">
+								<div class="row">
+									<span class="hist_date"><?= $row['od_receipt_time'] ?></span>
+									<span class="hist_value">￦ <?= Number_format($row['od_cart_price']) ?></span>
+								</div>
+
+								<div class="row">
+
+									<h2 class="pack_name pack_f_<?= substr($od_name, 1, 1) ?>"><?= strtoupper($row['od_name']) ?> </h2>
+									<span class='hist_sub_price'><?= Number_format($row['od_cart_price']) ?><?= $row['od_settle_case'] ?></span>
+								</div>
+							</div>
 						</div>
-
-						<div class="row">
-							
-							<h2 class="pack_name pack_f_<?=substr($od_name,1,1)?>"><?= strtoupper($row['od_name']) ?> </h2>
-							<span class='hist_sub_price'><?=Number_format($row['od_cart_price'])?><?=$row['od_settle_case']?></span>
-						</div>
-					</div>
-				</div>
-				<?}?>
-			<?}?>
-			<?php
-			$pagelist = get_paging($config['cf_write_pages'], $page, $total_page, "{$_SERVER['SCRIPT_NAME']}?id=upstairs&$qstr");
-			echo $pagelist;
-			?>
+					<? } ?>
+				<? } ?>
+				<?php
+				$pagelist = get_paging($config['cf_write_pages'], $page, $total_page, "{$_SERVER['SCRIPT_NAME']}?id=upstairs&$qstr");
+				echo $pagelist;
+				?>
+			</div>
 		</div>
-	</div>
 </main>
 
-<?php include_once(G5_THEME_PATH.'/_include/tail.php'); ?>
+<?php include_once(G5_THEME_PATH . '/_include/tail.php'); ?>
 
 <div class="gnb_dim"></div>
 
@@ -326,184 +450,217 @@ $result = sql_query($sql);
 
 <!-- <script src="<?= G5_THEME_URL ?>/_common/js/timer.js"></script> -->
 <script>
-
-$(function(){
-	$(".top_title h3").html("<span data-i18n=''>패키지구매</span>")
-});
-
-$(function(){
-
-	var mb_id = "<?=$member['mb_id']?>";
-	var mb_no = "<?=$member['mb_no']?>";
-	var total_fund = Number(<?=$available_fund?>);
-	// 시세
-	var usd_price = '<?=$usd_price?>';
-	// var fil_price = Number(<?=$fil_price?>);
-	var purchase_curency = '<?=PURCHASE_CURENCY?>';
-	
-	// 패키지
-	var data, it_id, it_name, it_price, func, od_id, it_supply_point, input_val, won_price,origin_bal,price_calc;
-	var processing = true;
-
-	/* window.onload = function(){
-		getTime("<?=$next_rate_time?>");
-		$('.select_box').removeClass('active');
-		$('.select_box').first().addClass('active');
-		$('.select_box').first().find('.radio_btn').prop('checked', true); 
-		var radioVal = $('input[name="currency"]:checked').val();
-		$('.current_currency > .txt').text(radioVal);
-	} */
-	
-	// 패키지 리스트 선택
-	$('.r_card').on('click',function(){
-		data = $(this).data('row');
-
-		it_id = data[0].it_id;
-		it_name = data[0].it_name;
-		it_maker = data[0].it_maker;
-		it_price = data[0].it_price; //상품가격
-		it_point = data[0].it_point; //PV
-		it_supply_point = data[0].it_supply_point; //MP 
-		won_price = data[0].it_cust_price;
-		func = "new";
-		origin_bal = total_fund;
-		price_calc = origin_bal - it_price ;
-		change_coin = purchase_curency;
-
-		change_coin_status();
+	$(function() {
+		$(".top_title h3").html("<span data-i18n=''>패키지구매</span>")
 	});
 
-	/* $('#coin_select').on('change',function(){
-		change_coin_status()
-	}) */
+	$(function() {
 
-	/* $('.upgade').click(function(){
-		data = $(this).data('row_ordered');
-		if(data.it_name != "M6"){
-			it_id = data.upgrade_id
-			it_name = data.it_name+"->"+data.upgrade_name
-			it_price = data.upgrade_price - data.it_price
+		var mb_id = "<?= $member['mb_id'] ?>";
+		var mb_no = "<?= $member['mb_no'] ?>";
+		var total_fund = Number(<?= $available_fund ?>);
+		// 시세
+		var usd_price = '<?= $usd_price ?>';
+		// var fil_price = Number(<?= $fil_price ?>);
+		var purchase_curency = '<?= PURCHASE_CURENCY ?>';
 
-			it_supply_point = data.it_supply_point
-			func = "upgrade"
-			od_id = data.row.od_id
+		// 패키지
+		var data, it_id, it_name, it_price, func, od_id, it_supply_point, input_val, won_price, origin_bal, price_calc;
+		var processing = true;
+
+		/* window.onload = function(){
+			getTime("<?= $next_rate_time ?>");
+			$('.select_box').removeClass('active');
+			$('.select_box').first().addClass('active');
+			$('.select_box').first().find('.radio_btn').prop('checked', true); 
+			var radioVal = $('input[name="currency"]:checked').val();
+			$('.current_currency > .txt').text(radioVal);
+		} */
+
+		// 패키지 리스트 선택
+		$('.r_card').on('click', function() {
+			data = $(this).data('row');
+
+			it_id = data[0].it_id;
+			it_name = data[0].it_name;
+			it_maker = data[0].it_maker;
+			it_price = data[0].it_price; //상품가격
+			it_point = data[0].it_point; //PV
+			it_supply_point = data[0].it_supply_point; //MP 
+			won_price = data[0].it_cust_price;
+			func = "new";
+			origin_bal = total_fund;
+			price_calc = origin_bal - it_price;
+			change_coin = purchase_curency;
+
+			change_coin_status();
+		});
+
+		/* $('#coin_select').on('change',function(){
 			change_coin_status()
-		}else{
-			alert("Worng Way")
-		}
-	}); */
-	
-	function change_coin_status(){
-		it_price = Math.floor(it_price);
-		$('#trade_total').val( Price(it_price) + purchase_curency );
-		$('#shift_won').text( '￦' + Price(it_price) + '원' );
-		$('#shift_dollor').val( Price(Math.floor(price_calc)) );
-		
-		// 상품구매로 이동
-		var scrollPosition = $('#pakage_sale').offset().top;
-		window.scrollTo({top: scrollPosition, behavior: 'smooth'});
-	}
+		}) */
 
+		/* $('.upgade').click(function(){
+			data = $(this).data('row_ordered');
+			if(data.it_name != "M6"){
+				it_id = data.upgrade_id
+				it_name = data.it_name+"->"+data.upgrade_name
+				it_price = data.upgrade_price - data.it_price
 
-	// 패키지구매
-	$('#purchase').on('click', function(){
-		var nw_purchase = '<?=$nw_purchase?>'; // 점검코드
-	
-		// 부분시스템 점검
-		if(nw_purchase == 'N'){
-			dialogModal('Not available right now','<strong>Not available right now.</strong>','warning');
-			if(debug) console.log('error : 1');
-			return false;
-		}
+				it_supply_point = data.it_supply_point
+				func = "upgrade"
+				od_id = data.row.od_id
+				change_coin_status()
+			}else{
+				alert("Worng Way")
+			}
+		}); */
 
-		// 금액이 0 일때
-		if( it_price == undefined || it_price == 0){
-			dialogModal('Check input amount','<strong>Please choose a goods for buying.</strong>','warning');
-			if(debug) console.log('error : 2' );
-			return false;
+		function change_coin_status() {
+			it_price = Math.floor(it_price);
+			$('#trade_total').val(Price(it_price) + purchase_curency);
+			$('#shift_won').text('￦' + Price(it_price) + '원');
+			$('#shift_dollor').val(Price(Math.floor(price_calc)));
+
+			// 상품구매로 이동
+			var scrollPosition = $('#pakage_sale').offset().top;
+			window.scrollTo({
+				top: scrollPosition,
+				behavior: 'smooth'
+			});
 		}
 
-		// 잔고 확인 
-		if(price_calc < 0){
-			dialogModal('check your balance','<strong> Not enough balance.</strong>','warning');
-			if(debug) console.log('error : 4' );
-			return false;
-		}
+		$("#preschdule").on('click',function(){
 
-		/* if (confirm(it_name + '팩을 구매 하시겠습니까?')) {
-			} else {
-				return false;
-			} 
-		*/
+			var pre_price = it_price;
+			var pre_schedule = $('input[name=schedule]:checked').val();
+			var pre_recharge = $("#recharge").val();
 
-		console.log(`it_cust_price:${Number(won_price)}`);
-		console.log(`total:${total_fund}\nprice:${it_price}`);
-		
-		dialogModal('Package 상품구매 확인','<strong>'+ it_name + '팩을 구매 하시겠습니까?</strong>','confirm');
+			console.log(`price : ${pre_price}\nrecharge : ${pre_recharge}\nschedule : ${pre_schedule}\n`);
 
-
-		$('#modal_confirm').on('click',function(){
-			dimHide();
-
-			if(processing){
 			$.ajax({
 				type: "POST",
-				url: "/util/upstairs_proc.php",
-				dataType: "json",
-				async : false,
-				data:  {
-					"func" : func,
-					"input_val" : won_price,
-					"output_val" : it_price,
-					"select_pack_name" : it_name,
-					"select_pack_id" : it_id,
-					"select_maker" : it_maker,
-					"it_point" : it_point,
-					"it_supply_point" : it_supply_point
+				url: "/util/schedule.php",
+				dataType: 'text',
+				async: false,
+				data: {
+					"pre_price" : pre_price,
+					"pre_schedule" : pre_schedule,
+					"pre_recharge" : pre_recharge
 				},
 				success: function(data) {
-					console.log(data); return false;
-					// 중복클릭방지
-					processing = false;
-					$('#purchase').attr("disabled", true);
-
-					dialogModal('Purchase','<strong>Congratulation! Complete Purchase </strong>','success');
-
-					$('.closed').on('click', function(){
-						location.href="<?=G5_URL?>/page.php?id=upstairs";
-					});
+					dialogModal('예상 지급 스케쥴', data, 'view');
 				},
-				error:function(e){
-					commonModal('Error!','<strong> Please check retry.</strong>',100);
+				error: function(e) {
+					commonModal('Error!', '<strong> Please check retry.</strong>', 100);
 				}
 			});
-		}else{
-			commonModal('Processing','<strong> Processing is in progress.</strong>',80);
-		}
-		
+
+			// 페이지넘김
+			// dialogModal()
+			// var url = "<?=G5_URL?>/util/schedule.php";
+			// window.open(url);  
 		});
-		
-		
 
-	});
+		// 패키지구매
+		$('#purchase').on('click', function() {
+			var nw_purchase = '<?= $nw_purchase ?>'; // 점검코드
+			var pre_schedule = $('input[name=schedule]:checked').val();
+			var pre_recharge = $("#recharge").val();
 
-	// 입금하기
-	$('#go_wallet_btn').click(function(e){
-		
-		if(it_price > 0){
-			if(price_calc < 0){
-				deposit_calc = price_calc * -1;
-			}else{
-				deposit_calc = it_price;
+			// 부분시스템 점검
+			if (nw_purchase == 'N') {
+				dialogModal('Not available right now', '<strong>Not available right now.</strong>', 'warning');
+				if (debug) console.log('error : 1');
+				return false;
 			}
-			go_to_url('mywallet'+'&sel_price='+deposit_calc);
-		}else{
-			go_to_url('mywallet');
-		}
+
+			// 금액이 0 일때
+			if (it_price == undefined || it_price == 0) {
+				dialogModal('Check input amount', '<strong>Please choose a goods for buying.</strong>', 'warning');
+				if (debug) console.log('error : 2');
+				return false;
+			}
+
+			// 잔고 확인 
+			if (price_calc < 0) {
+				dialogModal('check your balance', '<strong> Not enough balance.</strong>', 'warning');
+				if (debug) console.log('error : 4');
+				return false;
+			}
+
+			/* if (confirm(it_name + '팩을 구매 하시겠습니까?')) {
+				} else {
+					return false;
+				} 
+			*/
+
+			console.log(`it_cust_price:${Number(won_price)}`);
+			console.log(`total:${total_fund}\nprice:${it_price}`);
+			console.log(`recharge : ${recharge}`);
+
+			dialogModal('Package 상품구매 확인', '<strong>[' + it_name + '] '+ it_supply_point+' 구좌를 기부 하시겠습니까?</strong>', 'confirm');
+
+
+			$('#modal_confirm').on('click', function() {
+				dimHide();
+
+				if (processing) {
+					$.ajax({
+						type: "POST",
+						url: "/util/upstairs_proc.php",
+						dataType: "json",
+						async: false,
+						data: {
+							"func": func,
+							"input_val": won_price,
+							"output_val": it_price,
+							"select_pack_name": it_name,
+							"select_pack_id": it_id,
+							"select_maker": it_maker,
+							"it_point": it_point,
+							"it_supply_point": it_supply_point,
+							"recharge" : pre_recharge,
+							"schedule" : pre_schedule,
+						},
+						success: function(data) {
+							
+							// 중복클릭방지
+							processing = false;
+							$('#purchase').attr("disabled", true);
+
+							dialogModal('Purchase', '<strong>Congratulation! Complete Purchase </strong>', 'success');
+
+							$('.closed').on('click', function() {
+								location.href = "<?= G5_URL ?>/page.php?id=upstairs";
+							});
+						},
+						error: function(e) {
+							commonModal('Error!', '<strong> Please check retry.</strong>', 100);
+						}
+					});
+				}
+
+			});
+
+
+
+		});
+
+		// 입금하기
+		$('#go_wallet_btn').click(function(e) {
+
+			if (it_price > 0) {
+				if (price_calc < 0) {
+					deposit_calc = price_calc * -1;
+				} else {
+					deposit_calc = it_price;
+				}
+				go_to_url('mywallet' + '&sel_price=' + deposit_calc);
+			} else {
+				go_to_url('mywallet');
+			}
+		});
+
 	});
-
-});
-
 </script>
-
-
