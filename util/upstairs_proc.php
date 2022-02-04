@@ -28,6 +28,8 @@ $pack_name= $_POST['select_pack_name'];
 $pack_id = $_POST['select_pack_id'];
 $pack_maker = $_POST['select_maker'];
 $it_supply_point = $_POST['it_supply_point'];
+$recharge = $_POST['recharge']; // 재기부
+$schedule = $_POST['schedule']; // 지급스케쥴
 
 $val = substr($pack_maker,1,1);
 

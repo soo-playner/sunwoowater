@@ -9,6 +9,8 @@ include_once('./bonus_inc.php');
 auth_check($auth[$sub_menu], 'r');
 $token = get_token();
 
+
+
 ?>
 
 <link href="<?=G5_ADMIN_URL?>/css/scss/bonus/bonus_config2.css" rel="stylesheet">
@@ -17,9 +19,7 @@ $token = get_token();
 <div class="local_desc01 local_desc">
     <p>
         - 마케팅수당설정 - 관리자외 설정금지<br>
-        - 수당한계 : 0 또는 값이 없으면 제한없음.<br>
-        - 마이닝 : 1TERA 당 = 마이닝지급량 (고정값)(FIL)<br>
-        - 마이닝매칭 : 마이닝지급량의 % 입력
+        - 현재 볼 총합 : <?=Number_format($total_ball_count)?><br>
 	</p>
 </div>
 
@@ -27,7 +27,6 @@ $token = get_token();
     <table >
     <caption><?php echo $g5['title']; ?> 목록</caption>
     <thead>
-	<p> 수당 설정 </p>
     <tr>
         <th scope="col" width="30px">No</th>
         <th scope="col" width="40px">사용설정</th>
@@ -45,32 +44,48 @@ $token = get_token();
 
     <tbody>
     <?for($i=0; $row=sql_fetch_array($list); $i++){?>
+        <?if($row['used'] == 3){?>
+        <tr style="margin-top:20px;">
+            <th scope="col" width="30px">No</th>
+            <th scope="col" width="40px">사용설정</th>
+            <th scope="col" width="100px">수당명</th>	
+            <th scope="col" width="80px">수당코드</th>
+            <th scope="col" width="80px"></th>
+            <th scope="col" width="80px"></th>
+            <th scope="col" width="200px">현재누적볼수량</th>
+            <th scope="col" width="200px"></th>
+            <th scope="col" width="80px">수당지급방식</th>
+            <th scope="col" width="100px">수당조건</th>
+            <th scope="col" width="auto">수당설명</th>
+        </tr>
+        <?}?>
+
+        <tr class='<?if($i = 0){echo 'first';}?>'>
     
-    <tr class='<?if($i == 0){echo 'first';}?>'>
-   
-    <td style="text-align:center"><input type="hidden" name="idx[]" value="<?=$row['idx']?>"><?=$row['idx']?></td>
-    <td style="text-align:center"><input type='checkbox' class='checkbox' name='check' <?php echo $row['used'] > 0?'checked':''; ?>>
-        <input type="hidden" name="used[]" class='used' value="<?=$row['used']?>">
-    </td>
-    <td style="text-align:center"><input class='bonus_input' name="name[]"  value="<?=$row['name']?>"></input></td>
-    <td style="text-align:center"><input class='bonus_input' name="code[]"  value="<?=$row['code']?>"></input></td>
+        <td style="text-align:center"><input type="hidden" name="idx[]" value="<?=$row['idx']?>"><?=$row['idx']?></td>
+        <td style="text-align:center"><input type='checkbox' class='checkbox' name='check' <?php echo $row['used'] > 0?'checked':''; ?>>
+            <input type="hidden" name="used[]" class='used' value="<?=$row['used']?>">
+        </td>
+        <td style="text-align:center"><input class='bonus_input' name="name[]"  value="<?=$row['name']?>"></input></td>
+        <td style="text-align:center"><input class='bonus_input' name="code[]"  value="<?=$row['code']?>"></input></td>
+        
+        <td style="text-align:center"><input class='bonus_input' name="kind[]"  value="<?=$row['kind']?>"></input></td>
+        <td style="text-align:center"><input class='bonus_input' name="limited[]"  value="<?=$row['limited']?>"></input></td>
+        <td style="text-align:center"><input class='bonus_input' name="rate[]"  value="<?=$row['rate']?>"></input></td>
+        <td style="text-align:center"><input class='bonus_input' name="layer[]"  value="<?=$row['layer']?>"></input></td>
+        <td style="text-align:center">
+            <select id="bonus_source" class='bonus_source' name="source[]">
+                <?php echo option_selected(0, $row['source'], "ALL"); ?>
+                <?php echo option_selected(1, $row['source'], "추천인[tree]"); ?>
+                <?php echo option_selected(2, $row['source'], "바이너리[binary]"); ?>
+            </select>
+        </td>
+        <td style="text-align:center"><input class='bonus_input' name="bonus_condition[]"  value="<?=$row['bonus_condition']?>"></input></td>
+        <td style="text-align:center"><input class='bonus_input' name="memo[]"  value="<?=$row['memo']?>"></input></td>
+        </tr>
+        <?}?>
     
-    <td style="text-align:center"><input class='bonus_input' name="kind[]"  value="<?=$row['kind']?>"></input></td>
-	<td style="text-align:center"><input class='bonus_input' name="limited[]"  value="<?=$row['limited']?>"></input></td>
-	<td style="text-align:center"><input class='bonus_input' name="rate[]"  value="<?=$row['rate']?>"></input></td>
-    <td style="text-align:center"><input class='bonus_input' name="layer[]"  value="<?=$row['layer']?>"></input></td>
-    <td style="text-align:center">
-        <select id="bonus_source" class='bonus_source' name="source[]">
-            <?php echo option_selected(0, $row['source'], "ALL"); ?>
-            <?php echo option_selected(1, $row['source'], "추천인[tree]"); ?>
-            <?php echo option_selected(2, $row['source'], "바이너리[binary]"); ?>
-        </select>
-    </td>
-    <td style="text-align:center"><input class='bonus_input' name="bonus_condition[]"  value="<?=$row['bonus_condition']?>"></input></td>
-    <td style="text-align:center"><input class='bonus_input' name="memo[]"  value="<?=$row['memo']?>"></input></td>
-    </tr>
-    <?}?>
-    </tbody>
+    
     
     <tfoot>
         <td colspan=12 height="100px" style="padding:20px 0px" class="btn_ly">
@@ -82,7 +97,10 @@ $token = get_token();
 </div>
 </form>
 
-
+<?
+    $mining_use = sql_fetch("SELECT used from wallet_bonus_config WHERE code = 'mining' ")['used'];
+    if($mining_use > 0){
+?>
 <style>
     #mining_log{width:400px;margin: 20px;}
     #mining_log .head{border:1px solid #eee;background:orange;display: flex;width:inherit}
@@ -90,6 +108,8 @@ $token = get_token();
     #mining_log dt,#mining_log dd{display:block;padding:5px 10px;text-align: center;width:inherit;}
     #mining_log dd{border-left:1px solid #eee}
 </style>
+
+
 
 <div id='mining_log'>
     마이닝 지급량 기록 (최근 7일)
@@ -108,6 +128,7 @@ $token = get_token();
     </div>
     <?}?>
 </div>
+<?}?>
 
 <script>
 

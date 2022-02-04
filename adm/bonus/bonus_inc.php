@@ -447,6 +447,22 @@ function shift_auto($val,$coin = '원'){
 	}
 }
 
+// 현재 누적 볼카운트
+$current_count = sql_fetch("SELECT SUM(od_count) as count FROM g5_shop_order")['count'];
+$extra_count = sql_fetch("SELECT rate from wallet_bonus_config WHERE code = 'extra' ")['rate'];
+
+$total_ball_count = $current_count + $extra_count;
+
+return_layer();
+
+// 대수계산
+function return_layer(){
+
+    for($i=1; $i < 10; $i++){
+        echo pow(2, $i);
+        echo "<br>";
+    }
+}
 
 // Not zero express
 function zero_value($val){

@@ -57,6 +57,12 @@ $usd_price = coin_prices('usdt') * 1000;
 $fil_price = coin_prices('fil');
 // $eth_price = coin_prices('eth');
 
+// 현재 누적 볼카운트
+$current_count = sql_fetch("SELECT SUM(od_count) as count FROM g5_shop_order")['count'];
+$extra_count = sql_fetch("SELECT rate from wallet_bonus_config WHERE code = 'extra' ")['rate'];
+
+$total_ball_count = $current_count + $extra_count;
+
 
 function coin_prices($income, $category = 'cost')
 {
