@@ -67,7 +67,7 @@ include_once(G5_ADMIN_PATH . '/admin.head.php');
 					</td>
 
 					<th scope="row"><label for="nw_data_test"> 테스트환경 생성 <strong class="sound_only"> 필수</strong></label>
-						<span class='desc red' >※ 관리자 제외 전체 잔고 500,000 지급</span>
+						<span class='desc red' >※ 관리자 제외 전체 잔고 50,000,000 지급</span>
 					</th>
 					<td>
 						<p style="padding:0;"><input type="checkbox" id="nw_data_test" name="nw_data_test" <?if($nw['nw_data_test']=='Y' ) {echo "checked" ;}?>/><label for="nw_data_test"><span class="ui"></span><span class="nw_data_test_txt">사용 설정</span></label></p>

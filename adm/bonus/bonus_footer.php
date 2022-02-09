@@ -25,6 +25,7 @@
 	.hidden{display:none;}
 	.desc{font-size:11px;color:#777;}
 	.subtitle{font-size:20px;}
+	.item_title{width:100%;display:block;height:20px;border-bottom:1px solid #555;padding-bottom:10px;font-weight:600;margin-bottom:5px;}
 </style>
 
 

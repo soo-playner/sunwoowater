@@ -93,7 +93,7 @@ if($_POST['nw_brecommend_reset'] == 'on'){
 
 if($_POST['nw_data_test'] == 'on'){
     
-    $mb_deposit_point = 500000;
+    $mb_deposit_point = 50000000;
     $member_update_sql = " UPDATE g5_member set mb_deposit_point = {$mb_deposit_point}, mb_deposit_calc = 0 WHERE mb_no > 1 ";
     $result = sql_query($member_update_sql);
    

@@ -154,7 +154,7 @@ function it_item_return($it_id,$func){
     }
 }
 
-function soodang_record($mb_id, $code, $bonus_val,$rec,$rec_adm,$bonus_day,$mb_no='',$mb_level = ''){
+function soodang_record($mb_id, $code, $bonus_val,$rec,$rec_adm,$bonus_day,$exc_count=0,$od_select = 0){
     global $g5,$debug,$now_datetime;
 
     $soodang_sql = " insert `{$g5['bonus']}` set day='".$bonus_day."'";
@@ -163,14 +163,11 @@ function soodang_record($mb_id, $code, $bonus_val,$rec,$rec_adm,$bonus_day,$mb_n
     $soodang_sql .= " ,benefit		=  ".$bonus_val;	
     $soodang_sql .= " ,rec			= '".$rec."'";
     $soodang_sql .= " ,rec_adm		= '".$rec_adm."'";
+    $soodang_sql .= " ,count		= '".$exc_count."'";
+    $soodang_sql .= " ,schedule		= '".$od_select."'";
     $soodang_sql .= " ,datetime		= '".$now_datetime."'";
 
-    if($mb_no != ''){
-        $soodang_sql .= " ,mb_no		= '".$mb_no."'";
-    }
-    if($mb_level != ''){
-        $soodang_sql .= " ,mb_level		= '".$mb_level."'";
-    }
+    
 
     // 수당 푸시 메시지 설정
     /* $mb_push_data = sql_fetch("SELECT fcm_token,mb_sms from g5_member WHERE mb_id = '{$mb_id}' ");
@@ -415,6 +412,30 @@ function mining_limit_check($mb_id,$bonus){
     return array($mb_mining,$mb_pv,$mb_limit,$admin_cash);
 }
 
+// 주문 내역 업데이트  
+function order_update($od_id,$benefit_limit){
+    global $debug;
+
+    $origin_order = sql_fetch("SELECT * FROM g5_shop_order WHERE od_id = {$od_id}");
+    $item_no = $origin_order['no'];
+
+    if($origin_order){
+        $update_order = "UPDATE g5_shop_order set pay_count = pay_count + 1, pay_acc = pay_acc + {$benefit_limit} WHERE no = {$item_no} ";
+        
+        if($debug){
+            echo "<code>";
+            print_r($update_order);
+            echo "</code>";
+            return true;
+        }else{
+            return sql_query($update_order);
+        }
+        
+    }else{
+        return false;
+    }
+
+}
 
 // 원 표시
 function shift_kor($val){
@@ -447,22 +468,7 @@ function shift_auto($val,$coin = '원'){
 	}
 }
 
-// 현재 누적 볼카운트
-$current_count = sql_fetch("SELECT SUM(od_count) as count FROM g5_shop_order")['count'];
-$extra_count = sql_fetch("SELECT rate from wallet_bonus_config WHERE code = 'extra' ")['rate'];
 
-$total_ball_count = $current_count + $extra_count;
-
-return_layer();
-
-// 대수계산
-function return_layer(){
-
-    for($i=1; $i < 10; $i++){
-        echo pow(2, $i);
-        echo "<br>";
-    }
-}
 
 // Not zero express
 function zero_value($val){
@@ -483,3 +489,6 @@ if( !function_exists( 'array_column' ) ):
         return $result;
     }
 endif;
+
+include_once(G5_PATH."/util/core.schedule.php");
+?>

@@ -4,12 +4,10 @@ include_once('./_common.php');
 $g5['title'] = '수당 설정/관리';
 
 include_once('../admin.head.php');
-include_once('./bonus_inc.php');
+include_once(G5_THEME_PATH.'/_include/wallet.php');
 
 auth_check($auth[$sub_menu], 'r');
 $token = get_token();
-
-
 
 ?>
 
@@ -19,9 +17,13 @@ $token = get_token();
 <div class="local_desc01 local_desc">
     <p>
         - 마케팅수당설정 - 관리자외 설정금지<br>
-        - 현재 볼 총합 : <?=Number_format($total_ball_count)?><br>
+        - 현재 누적볼 총합 : <strong><?=Number_format($total_ball_count)?></strong> / 다음대수까지 : <span class="bold">-<?=Number_format($next_layer_remain)?></span><br>
+        - 현재 누적 차수 : <?=$total_layer?> 대
 	</p>
 </div>
+<style>
+    .tbl_head02 tbody .sub_th th{background:turquoise;border:1px solid #34c9ba;}
+</style>
 
 <div class="tbl_head02 tbl_wrap">
     <table >
@@ -29,7 +31,7 @@ $token = get_token();
     <thead>
     <tr>
         <th scope="col" width="30px">No</th>
-        <th scope="col" width="40px">사용설정</th>
+        <th scope="col" width="40px">사용</th>
         <th scope="col" width="100px">수당명</th>	
         <th scope="col" width="80px">수당코드</th>
         <th scope="col" width="80px">수당지급수단</th>
@@ -45,22 +47,22 @@ $token = get_token();
     <tbody>
     <?for($i=0; $row=sql_fetch_array($list); $i++){?>
         <?if($row['used'] == 3){?>
-        <tr style="margin-top:20px;">
+        <tr class='sub_th'>
             <th scope="col" width="30px">No</th>
-            <th scope="col" width="40px">사용설정</th>
+            <th scope="col" width="40px">사용</th>
             <th scope="col" width="100px">수당명</th>	
             <th scope="col" width="80px">수당코드</th>
             <th scope="col" width="80px"></th>
             <th scope="col" width="80px"></th>
-            <th scope="col" width="200px">현재누적볼수량</th>
-            <th scope="col" width="200px"></th>
+            <th scope="col" width="200px">현재 누적볼수량</th>
+            <th scope="col" width="200px">현재 누적 대수(자동) </th>
             <th scope="col" width="80px">수당지급방식</th>
-            <th scope="col" width="100px">수당조건</th>
+            <th scope="col" width="100px">재기부횟수</th>
             <th scope="col" width="auto">수당설명</th>
         </tr>
         <?}?>
 
-        <tr class='<?if($i = 0){echo 'first';}?>'>
+        <tr class='<?if($i == 0){echo 'first';}?>'>
     
         <td style="text-align:center"><input type="hidden" name="idx[]" value="<?=$row['idx']?>"><?=$row['idx']?></td>
         <td style="text-align:center"><input type='checkbox' class='checkbox' name='check' <?php echo $row['used'] > 0?'checked':''; ?>>
@@ -72,7 +74,7 @@ $token = get_token();
         <td style="text-align:center"><input class='bonus_input' name="kind[]"  value="<?=$row['kind']?>"></input></td>
         <td style="text-align:center"><input class='bonus_input' name="limited[]"  value="<?=$row['limited']?>"></input></td>
         <td style="text-align:center"><input class='bonus_input' name="rate[]"  value="<?=$row['rate']?>"></input></td>
-        <td style="text-align:center"><input class='bonus_input' name="layer[]"  value="<?=$row['layer']?>"></input></td>
+        <td style="text-align:center"><input class='bonus_input' name="layer[]"  value="<?if($row['used'] == 3){echo $total_layer;}?>" readonly></input></td>
         <td style="text-align:center">
             <select id="bonus_source" class='bonus_source' name="source[]">
                 <?php echo option_selected(0, $row['source'], "ALL"); ?>
@@ -89,7 +91,8 @@ $token = get_token();
     
     <tfoot>
         <td colspan=12 height="100px" style="padding:20px 0px" class="btn_ly">
-            <input  style="align:center;padding:15px 50px;background:cornflowerblue;" type="submit" class="btn btn_confirm btn_submit" value="저장하기" id="com_send"></input>
+            <input  style="text-align:center;padding:15px 50px;background:cornflowerblue;" type="submit" class="btn btn_confirm btn_submit" value="저장하기" id="com_send"></input>
+            <input  style="text-align:center;padding:15px 50px;background:coral;" type="button" class="btn btn_confirm btn_submit" value="스케쥴미리보기" id="pre_schedule"></input>
         </td>
     </tfoot>
 </table>
@@ -145,6 +148,11 @@ $token = get_token();
             }else{
                 $(this).next().val(0);
             }
+        });
+
+        $("#pre_schedule").on('click',function(){
+            var options = 'top=10, left=10, width=500, height=700, status=no, menubar=no, toolbar=no, resizable=no';
+            window.open("/core/","schedule",options);
         });
         
     });

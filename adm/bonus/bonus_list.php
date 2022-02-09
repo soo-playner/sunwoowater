@@ -142,8 +142,10 @@ include_once(G5_PLUGIN_PATH . '/jquery-ui/datepicker.php');
 <div class="local_desc01 local_desc">
 	<p>
 		공통 : 보너스기준일자로 각 보너스지급버튼 클릭<br>
+		- 현재 누적볼 총합 : <strong><?=Number_format($total_ball_count)?></strong> / 다음대수까지 : <span class="bold">-<?=Number_format($next_layer_remain)?></span><br>
+        - 현재 누적 차수 : <strong><?=$total_layer?> 대</strong><br>
 		<strong>직급승급 : </strong>① 회원직급승급(S1~S5)실행 ② 승급보너스는 <strong><a href='./bonus_mining2.php'>마이닝지급</a></strong>에서 지급 ③ 승급현황은 <strong><a href='./member_upgrade.php'>승급현황</a></strong>에서 확인<br>
-		<strong>센터보너스 : </strong>① 기준일자 기준 전전주 일요일~토요일 매출(PV)로 정산지급 ② 센터별 매출내역과 수동지급은 <strong><a href='.//bonus.center_member.php'>센터관리</a></strong>에서 확인<br>
+		
 	</p>
 </div>
 
@@ -152,7 +154,7 @@ include_once(G5_PLUGIN_PATH . '/jquery-ui/datepicker.php');
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <div class="local_ov01 local_ov white" style="border-bottom:1px dashed black;">
 
-	<li class="right-border outbox{">
+	<li class="outbox">
 		<label for="to_date" class="sound_only">기간 종료일</label>
 		<input type="text" name="to_date" value="<?php if ($to_date) {
 														echo $to_date;
@@ -164,9 +166,14 @@ include_once(G5_PLUGIN_PATH . '/jquery-ui/datepicker.php');
 		<input type="radio" name="price" id="pv" value='pv' checked='true' style="display:none;">
 		<br><span>보너스계산 기준일자</span>
 	</li>
+	<li class="right-border ">
+		<label for="to_date" class="sound_only">차수</label>
+		<input type="text" name="exc_layer" id="exc_layer" class="required frm_input date_input" size="3" value="<?=$total_layer?>">
+		<br><span>보너스지급차수</span>
+	</li>
 
 	<?
-	$sql = "select * from {$g5['bonus_config']} where used = 1 OR used =3 order by no";
+	$sql = "select * from {$g5['bonus_config']} where used = 1  order by no";
 	$list = sql_query($sql);
 
 	for ($i = 0; $row = sql_fetch_array($list); $i++) { ?>
@@ -252,8 +259,8 @@ include_once(G5_PLUGIN_PATH . '/jquery-ui/datepicker.php');
 		<?php echo $listall ?>
 		전체 <?php echo number_format($total_count) ?> 건
 
-		&nbsp&nbsp| 총 누적 보너스지급량 : <strong class='font_red'>$ <?=shift_auto($total_exc_bonus,'$')?></strong>
-		&nbsp&nbsp| 해당기간 보너스 지급량 : <strong class='font_red'>$ <?=shift_auto($search_exc_bonus,'$')?></strong>
+		&nbsp&nbsp| 총 누적 보너스지급량 : <strong class='font_red'><?=shift_auto($total_exc_bonus)?></strong>
+		&nbsp&nbsp| 해당기간 보너스 지급량 : <strong class='font_red'><?=shift_auto($search_exc_bonus)?></strong>
 	</div>
 	<div class="tbl_head01 tbl_wrap">
 		<table>
@@ -264,7 +271,7 @@ include_once(G5_PLUGIN_PATH . '/jquery-ui/datepicker.php');
 					<th scope="col">회원아이디</th>
 					<th scope="col">보너스이름</th>
 					<th scope="col">발생보너스</th>
-					<th scope="col">보너스단위</th>
+					<th scope="col">지급차(대)수</th>
 					<th scope="col">보너스근거</th>
 					<th scope="col">지급시간</th>
 				</tr>
@@ -286,7 +293,7 @@ include_once(G5_PLUGIN_PATH . '/jquery-ui/datepicker.php');
 
 						<td width='80' style='text-align:center'><?= get_text($row['allowance_name']); ?></td>
 						<td width="100" class='bonus'><?= Number_format($soodang, BONUS_NUMBER_POINT) ?></td>
-						<td width="30" class='bonus'><?= $row['currency'] ?></td>
+						<td width="30" class='bonus'><?= $row['count'] ?></td>
 
 
 						<td width="300"><?= $row['rec'] . "<br> <span class='adm'> [" . $row['rec_adm'] . "]</span>" ?></td>
@@ -377,16 +384,26 @@ include_once(G5_PLUGIN_PATH . '/jquery-ui/datepicker.php');
 
 	function bonus_excute(n, name) {
 		// console.log("bonus_excute");
+		if(name == '1차수당' || name == '2차수당'){
+			var exc_layer = $("#exc_layer").val();
+			var exc_txt = exc_layer + "대 :";
+		}else{
+			var exc_layer = '';
+		}
+
 		if (name == '승급') {
 			var tx = '을 실행';
 		} else {
 			var tx = '보너스를 지급';
 		}
-		if (!confirm(document.getElementById("to_date").value + '일 ' + name + tx + ' 하시겠습니까?')) {
+
+
+		if (!confirm(document.getElementById("to_date").value + "일\n" + exc_txt + name + tx + ' 하시겠습니까?')) {
 			return false;
 		}
 
 		str = str + 'to_date=' + document.getElementById("to_date").value;
+		str += "&exc_layer="+exc_layer;
 		location.href = '/adm/bonus/bonus.' + n + '.php?' + str;
 	}
 
