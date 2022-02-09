@@ -53,8 +53,8 @@ $sky-color:#3b86ff;
 
 
 
-.b_main{background:linear-gradient(180deg, $main-button-color,$main-button-color2) !important; color: #fff !important;}
-.b_main:hover{background:linear-gradient(90deg, $sub3-color,$sub3-color) !important;}
+.b_main{background:linear-gradient(180deg, $sub3-color,$sub2-color) !important; color: #fff !important;}
+.b_main:hover{background:linear-gradient(90deg, $main2-color,$main2-color) !important;}
 
 .b_sub{background:linear-gradient(180deg, $sky-color,$navy-color) !important; color: #fff !important;}
 .b_sub:hover{background:linear-gradient(0deg, $sky-color,$sky-color) !important; color: #fff !important;}

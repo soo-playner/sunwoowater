@@ -32,7 +32,7 @@ $(function(){
 	<ul>
 	<?
 		$i = 0;
-		$qry = sql_query(" select mb_id, mb_name from g5_member where mb_leave_date = '' and (mb_id like '%{$_GET[mbid]}%' or mb_name like '%{$_GET[mbid]}%') and mb_level > 2 order by mb_id ");
+		$qry = sql_query(" select mb_id, mb_name from g5_member where mb_leave_date = '' and (mb_id like '%{$_GET[mbid]}%' or mb_nick like '%{$_GET[mbid]}%') and mb_level > 0 order by mb_id ");
 		while ($res = sql_fetch_array($qry)) {
 			if ($res['mb_id']) {
 	?>

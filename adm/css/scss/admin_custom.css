@@ -38,10 +38,8 @@
 .point_font {
   font-size: 11px;
   font-weight: 100;
-  5
 }
 
-.coin .badge{font-size:11px;font-weight:600;}
-.badge.eth{background:navy;color:white;}
-.badge.fil {background:#2b72db;color:white;}
-.badge.dollor{background:gold;color:black;}
+.bold {
+  font-weight: 600;
+}

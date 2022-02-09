@@ -5,14 +5,14 @@
 }
 
 .b_main {
-  background: -webkit-gradient(linear, left top, left bottom, from(#3c8fcd), to(#005596)) !important;
-  background: linear-gradient(180deg, #3c8fcd, #005596) !important;
+  background: -webkit-gradient(linear, left top, left bottom, from(#5a1659), to(#4c124b)) !important;
+  background: linear-gradient(180deg, #5a1659, #4c124b) !important;
   color: #fff !important;
 }
 
 .b_main:hover {
-  background: -webkit-gradient(linear, left top, right top, from(#5a1659), to(#5a1659)) !important;
-  background: linear-gradient(90deg, #5a1659, #5a1659) !important;
+  background: -webkit-gradient(linear, left top, right top, from(#3a0c39), to(#3a0c39)) !important;
+  background: linear-gradient(90deg, #3a0c39, #3a0c39) !important;
 }
 
 .b_sub {

@@ -1,5 +1,6 @@
 <?php
-include_once("../common.php");
+include_once("./_common.php");
+include_once(G5_THEME_PATH.'/_include/wallet.php');
 
 $option1 =0;
 $option2 =0;
@@ -8,93 +9,27 @@ if($_POST){
     $option1 = conv_number($_POST['input_price']);
     $option2 = $_POST['auto_charge'];
 }
+?>
 
-$value_array = [];
-$price_array = [];
-$price2_array = [];
 
-function conv_number($val) {
-    $number = (int)str_replace(',', '', $val);
-    return $number;
-}
-
-function build_schedule($option1, $option2) {
-    global $value_array, $price_array;
-    $arr = [];
-    for ($j = 0;$j <= $option2;$j++) {
-        $value = floor(1 + $j / 2);
-        array_push($arr, $value);
-    }
-    for ($k = $option2 - 1;$k >= 0;$k--) {
-        $value = floor(1 + $k / 2);
-        array_push($arr, $value);
-    }
-    foreach ($arr as $key => $value) {
-        $bonus = $value * ($option1 / 3);
-        if ($key == $option2 - 2) {
-            $bonus = $bonus + $option1;
-        }
-        array_push($value_array, $value);
-        array_push($price_array, $bonus);
-    }
-    if ($option2 == 1) {
-        array_unshift($price_array, $option1);
-    }
-    return array($value_array, $price_array);
-}
-
-function build_schedule2($option1, $option2) {
-    global $price2_array;
-    global $value_array, $price_array;
-
-    if ($option2 == 1) {
-        array_unshift($price2_array, $option1);
-    }
-    for ($i = 0;$i <= ($option2 * 4);$i++) {
-        $calculate = 0;
-        $bonus = 0;
-        for ($j = $i;$j >= 0;$j--) {
-            $k = $i - $j;
-            if ($price_array[$k]) {
-                $calculate += ($price_array[$k] / 3) * $value_array[$j];
-            }
-        }
-        $bonus_cnt = $option2 - 2 + count($price_array);
-        if ($i >= $option2 - 2 && $i < $bonus_cnt) {
-            $bonus+= $price_array[$i - ($option2 - 2) ];
-        } else {
-            $bonus = 0;
-        }
-        $value = $calculate + $bonus;
-        array_push($price2_array, $value);
-    }
-    if ($option2 == 1) {
-        array_push($price2_array, $option1 / 3 / 3);
-    }
-    return $price2_array;
-} ?>
-
+<link rel="stylesheet" href="<?=G5_THEME_URL?>/css/scss/include/schedule.css">
 <style>
     .schedule_table{background:ghostwhite;padding:30px 20px;border-bottom:1px solid #111}
     .schedule_table li{ list-style: none;display:inline-block}
-    .input1{width:150px;padding:5px;font-weight:600;font-size:15px;color:blue}
+    .input1{width:120px;padding:5px;font-weight:600;font-size:15px;color:blue}
     .submit_btn{background:black;border:1px solid black;width:120px;color:white;height:30px;margin-left:10px;}
+    label{display:block}
     .red{color:red;font-weight:600;}
     .green{color:green;font-weight:600;}
     .blue{color:blue;font-weight:600;margin-right:5px;font-size:16px;}
-    
-    .container{width:100%;padding:30px 0;height:100%;}
-    .daul{width:50%;display:inline-block;float: left;}
-    .container li{list-style: none;line-height:22px;border:1px solid #ccc;border-bottom:none; width:150px;text-align:right;padding:3px 10px;font-weight: 600;}
-    .container li:last-child{border-bottom:1px solid #ccc}
-    .li-footer{background:#f1f1f1;color:red}
+    .li-footer{background:#f1f1f1;color:red;display:flex !important}
 </style>
 
 <form name="bonus_schedule_cal" action='./index.php' id="bonus_schedule_cal" class="schedule_table" method="POST">
     <li>
     <label>기부금액</label>
     <input type='text' class='input1' name='input_price' value='' inputmode="numeric"></li>
-    <li>&nbsp&nbsp | &nbsp&nbsp
+    <li>
     <label>재구매횟수</label>
     <input type='text' class='input1' name='auto_charge' value=''></li>
     <li> 
@@ -128,26 +63,27 @@ $(document).on('keyup','input[inputmode=numeric]',function(event){
 </script>
 
 
-<div class='container'>
-    <div class='daul'>
+<div class='schedule'>
+<div class='daul'>
         <p> 1차 수익률 지급스케쥴  </p>
         <?
-        
-        list($valuelist,$price) = build_schedule($option1,$option2);
+        $price = build_schedule($option1,$option2);
         $total_value =0;
         foreach ($price as $key => $value) {
             
             $total_value += $value;
 
             echo "<li>";
-            echo Number_format($value);    
+            echo "<dt>".array_month($key)."월</dt>";
+            echo "<dt>".($current_layer + $key)."대</dt>";
+            echo "<dd>";
+            echo Number_format($value); 
+            echo "</dd>";   
             echo "</li>";
         }
-
-        echo "<li class='li-footer'>";
+        echo "<li class='li-footer'><dd>";
         echo Number_format($total_value);
-        echo "</li>";
-        
+        echo "</dd></li>";
         ?>
     </div>
 
@@ -161,14 +97,17 @@ $(document).on('keyup','input[inputmode=numeric]',function(event){
         foreach ($prices as $key => $value) {
             $total_values += round($value);
             echo "<li>";
-            echo Number_format($value); 
+            echo "<dt>".array_month($key)."월</dt>";
+            echo "<dt>".($current_layer + $key)."대</dt>";
+            echo "<dd>";
+            echo Number_format($value);
+            echo "</dd>";    
             echo "</li>";
         }
 
-        echo "<li class='li-footer'>";
+        echo "<li class='li-footer'><dd>";
         echo Number_format($total_values);
-        echo "</li>";
-
+        echo "</dd></li>";
         ?>
     </div>
 </div>
