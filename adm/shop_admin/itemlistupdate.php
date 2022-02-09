@@ -38,6 +38,7 @@ if ($_POST['act_button'] == "선택수정") {
         */
         $it_price = conv_number($_POST['it_price'][$k]);
         $it_point = conv_number($_POST['it_point'][$k]);
+        $it_supply_point = conv_number($_POST['it_supply_point'][$k]);
         $it_cust_price = conv_number($_POST['it_cust_price'][$k]);
         $it_extra = conv_number($_POST['it_extra'][$k]);
                  
@@ -48,7 +49,7 @@ if ($_POST['act_button'] == "선택수정") {
             it_price       = '{$it_price}',
             it_extra       = '{$it_extra}',
             it_cust_price  = '{$it_cust_price}',
-            it_supply_point       = '{$_POST['it_supply_point'][$k]}',
+            it_supply_point       = '{$it_supply_point}',
             it_point       = '{$it_point}',
             it_use         = '{$_POST['it_use'][$k]}',
             it_order       = '{$_POST['it_order'][$k]}',

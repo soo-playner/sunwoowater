@@ -31,11 +31,12 @@ $total_page  = ceil($total_count / $rows);
 if ($page < 1) $page = 1; // 페이지가 없으면 첫 페이지
 $from_record = ($page - 1) * $rows; // 시작 열
 
-$sql = "SELECT mb_id, od_cart_price, od_receipt_time, od_name, od_cash, od_settle_case, upstair, od_status,od_date,od_rate
+$sql = "SELECT *
 {$sql_common}
 {$sql_search} ";
 
 $sql .= "order by od_receipt_time desc limit {$from_record}, {$rows} ";
+
 $result = sql_query($sql);
 ?>
 
@@ -145,6 +146,12 @@ $result = sql_query($sql);
 		background:#fee500;
 		color:#111;
 	}
+	.item_con{cursor: pointer;background:white;border-radius:5px; box-shadow:0px 3px 1px rgb(0 0 0 / 15%)}
+	.item_con:hover{background:#fee500}
+	.inline_more{line-height: 60px;
+    text-align: right;
+    font-size: 18px;}
+	.hist_sub_price{width:100%;display: inline-block;line-height:30px;}
 </style>
 
 <? include_once(G5_THEME_PATH . '/_include/breadcrumb.php'); ?>
@@ -286,7 +293,7 @@ $result = sql_query($sql);
 					</div>
 
 					<!-- 기부옵션 -->
-					<div class='row select_box' style='margin-top:10px'>
+					<!-- <div class='row select_box' style='margin-top:10px'>
 						<div class='col-12'>
 							<h3 class='tit'> 재기부횟수</h3>
 						</div>
@@ -295,11 +302,12 @@ $result = sql_query($sql);
 							<input type="text" id='recharge' class='input_price' style="text-align:center;font-size:16px">
 							<span class="currency-right coin">회</span>
 						</div>
-					</div>
+					</div> -->
+					<input type="hidden" id='recharge' value="<?=$extra_recharge?>">
 
 					<div class='row select_box' style='margin-top:10px'>
 						<div class='col-12 mb20'>
-							<h3 class='tit'> 기부선택</h3>
+							<h3 class='tit'> 기부유형선택</h3>
 						</div>
 
 						<div class='col-6'>
@@ -312,6 +320,8 @@ $result = sql_query($sql);
 							<label class="box-radio-input">
 							<input type="radio" name="schedule" value="2"><span>2차</span></label>
 						</div>
+
+						
 					</div>
 					<!-- 기부옵션 -->
 					
@@ -325,110 +335,31 @@ $result = sql_query($sql);
 				</div>
 			</div>
 
-			<!--
-		<div class="box-header ">
-			<div class='col-9'>
-				<h3 class="title upper" style='line-height:40px' >내 보유 패키지</h3>
-			</div>
-		</div>
-			
-		 <?
-			$ordered_items = ordered_items($member['mb_id']);
-			if (count($ordered_items) == 0) { ?>
-				<div class="no_data box_on">내 보유 상품이 존재하지 않습니다</div>
-		<? } else { ?>
-				
-		<div class="box-body row slide_product">
-		<?php
-				for ($i = 0; $i < count($ordered_items); $i++) {
-					$color_num = substr($ordered_items[$i]['it_maker'], 1, 1);
 
-					if (count($ordered_items) > 3) {
-						$spread_average = 3;
-					} else {
-						$spread_average = 1;
-					}
-		?>		
-
-			<div class="content-box3 product_buy_wrap pack_<?= $color_num ?> col-11">
-				<li class="row">
-					<p class="title col-12"><?= strtoupper($ordered_items[$i]['it_name']) ?></p>
-				</li>
-				<li class="row">
-					<p class="value col-8">구매일 : <?= $ordered_items[$i]['od_time'] ?></p>
-				</li>
-			</div>
-
-		<?php
-					echo "<script>slide_color('$color_num')</script>";
-				}
-			} ?>
-		</div> 
-		
-			
-			<!-- 내 보유 상품 슬라이드 
-			<script>
-				$(document).ready(function(){
-					var spread_average = '<?= $spread_average ?>';
-					$('.slide_product').slick({
-						slide: 'div',
-						speed: 300,
-						slidesToShow : 1,
-						autoplay: true,
-						infinite: false,
-						arrows : false,
-						dots: true,
-						customPaging: function(slick, index) {
-							return "<div class='product_pagination'></div>"
-						},
-						responsive: [ // 반응형 웹 구현 옵션
-						{  
-							breakpoint: 2600, //화면 사이즈 960px
-							settings: {
-								//위에 옵션이 디폴트 , 여기에 추가하면 그걸로 변경
-								
-								slidesToShow:spread_average 
-							} 
-						},
-						{ 
-							breakpoint: 768, //화면 사이즈 768px
-							settings: {	
-								//위에 옵션이 디폴트 , 여기에 추가하면 그걸로 변경
-								slidesToShow:1 
-							} 
-						}
-						]
-					});
-					
-				});
-			</script>
-			
-		</div>
-		-->
-
-			<!-- <div class="col-sm-12 col-12 content-box round secondary mt20" > -->
-
-			<div class="history_box content-box mt40">
+			<div class="history_box content-box mt40" style="background:transparent;border-radius:5px;">
 				<h3 class="hist_tit">내 보유 구좌</h3>
 
 				<? if (sql_num_rows($result) == 0) { ?>
 					<div class="no_data"> Package 구매 내역이 존재하지 않습니다</div>
 				<? } else { ?>
-
+					
 					<? while ($row = sql_fetch_array($result)) { ?>
-
-						<div class="hist_con">
-							<div class="hist_con_row1">
+						<div class="hist_con item_con" data-id="<?=$row['od_id']?>" >
+							<div class="hist_con_row1" style="background:transparent;">
 								<div class="row">
-									<span class="hist_date"><?= $row['od_receipt_time'] ?></span>
-									<span class="hist_value">￦ <?= Number_format($row['od_cart_price']) ?></span>
+									<div class="col-6 nopadding">
+										<span class="hist_date"><?= $row['od_date'] ?></span>
+										<h2 class="pack_name pack_f_<?= substr($od_name, 1, 1) ?>" style="width:100%;"><?= strtoupper($row['od_name']) ?> : <?=$row['od_rate']?>구좌 / <?=$row['od_select']?>차</h2>
+									</div>
+									<div class="col-5 nopadding">
+										<span class="hist_value" style="width:100%;line-height:30px;">￦ <?= Number_format($row['od_cart_price']) ?></span>
+										<span class='hist_sub_price'><?= Number_format($row['od_cart_price']) ?><?= $row['od_settle_case'] ?></span>
+									</div>
+									<div class='col-1 nopadding inline_more'>
+									<i class="ri-arrow-right-s-line"></i>
+									</div>
 								</div>
 
-								<div class="row">
-
-									<h2 class="pack_name pack_f_<?= substr($od_name, 1, 1) ?>"><?= strtoupper($row['od_name']) ?> </h2>
-									<span class='hist_sub_price'><?= Number_format($row['od_cart_price']) ?><?= $row['od_settle_case'] ?></span>
-								</div>
 							</div>
 						</div>
 					<? } ?>
@@ -662,5 +593,10 @@ $result = sql_query($sql);
 			}
 		});
 
+		// 보유상품 상세 
+		$(".item_con").on('click',function(){
+			var od_id = $(this).data("id");
+			location.href="/dialog.php?id=item_detail&od_id=" +od_id 
+		});
 	});
 </script>

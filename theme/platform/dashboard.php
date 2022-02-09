@@ -26,13 +26,13 @@
 		<div class='container dashboard'>
 				<div class="my_btn_wrap">
 					<div class='row'>
-						<div class='col-lg-4 col-12'>
+						<div class='col-lg-6 col-12'>
 							<button type='button' class='btn wd main_btn b_sub' onclick="go_to_url('mywallet');" > 입출금</button>
 						</div>
 						<!-- <div class='col-lg-4 col-12'>
 							<button type='button' class='btn wd main_btn b_third' onclick="go_to_url('mining');" > 마이닝</button>
 						</div> -->
-						<div class='col-lg-4 col-12'>
+						<div class='col-lg-6 col-12'>
 							<button type='button' class='btn wd main_btn b_main' onclick="go_to_url('upstairs');" >기부</button>
 						</div>
 						<!-- <div class='col-lg-12 col-12'>

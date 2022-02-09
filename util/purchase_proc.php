@@ -6,7 +6,7 @@ include_once(G5_PATH.'/util/recommend.php');
 
 
 /* 상품 팩 구매 프로세스 */
-function purchase_package($mb_id,$pack_id,$return = 0){
+function purchase_package($mb_id,$pack_id,$return = 0,$schedule){
 
     global $g5,$debug,$now_date,$now_datetime,$orderid;
     
@@ -36,7 +36,9 @@ function purchase_package($mb_id,$pack_id,$return = 0){
             $it_name = $pack_table_code."_".$mb_id."_".$count_item_cnt;
 
             $pack_result_sql = "INSERT {$pack_table} SET mb_id = '{$mb_id}', idx= {$count_colum_cnt}, it_name='{$it_name}', nth = {$count_item_cnt}, pdate='0000-00-00', cdate = '{$now_date}', cdatetime = '{$now_datetime}', od_id = {$orderid} ";
-            
+            if($schedule > 1){
+                $pack_result_sql .= ", promote = 1 ";
+            }
             if($debug){
                 $pack_insert = $pack_result_sql;
                 echo "<span class=패키지 상품 생성<br>";
@@ -64,14 +66,14 @@ function purchase_package($mb_id,$pack_id,$return = 0){
                 // $proc_done = process();
                 
                 /* 마이닝큐 등록 처리*/
-                if($pack_table_code > -1){
+                /* if($pack_table_code > -1){
                     $proc_done = mining_process($pack_table_code);
                 }else{
                     $proc_done = 1;
                 }
 
-                $result_data .= $proc_done;
-
+                $result_data .= $proc_done; */
+                $proc_done = 1;
             }
         }
 

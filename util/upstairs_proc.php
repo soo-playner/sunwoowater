@@ -19,47 +19,57 @@ if($func == "admin"){
 	$mb_rank = $member['rank'];
 }
 
+
 $coin_val = PURCHASE_CURENCY;
 $func = $_POST['func'];
-$input_val= $_POST['input_val'];
-$output_val = $_POST['output_val'];
-$it_point = $_POST['it_point'];
+$input_val= $_POST['input_val']; // 결제금액 
+$output_val = $_POST['output_val']; // 구매금액 
+$it_point = $_POST['it_point']; // DSP
 $pack_name= $_POST['select_pack_name'];
-$pack_id = $_POST['select_pack_id'];
-$pack_maker = $_POST['select_maker'];
-$it_supply_point = $_POST['it_supply_point'];
+$pack_id = $_POST['select_pack_id']; 
+$pack_maker = $_POST['select_maker']; // 시스템 상품명
+$it_supply_point = $_POST['it_supply_point']; // 수량
 $recharge = $_POST['recharge']; // 재기부
 $schedule = $_POST['schedule']; // 지급스케쥴
 
-$val = substr($pack_maker,1,1);
 
 if($debug){
 	$mb_id = 'test11';
 	$mb_no = 12;
 	$mb_rank = 0;
-	$func = 'admin';
-	$input_val ='0'; // 결제금액 (부가세포함)
-	$output_val ='0'; // 구매금액 (부가세제외)
-	$pack_name = 'P0';
-	$pack_maker = 'P0';
-	$pack_id = 2021111640;
-	$it_point = 0;
-	$it_supply_point = 0.5;
+	$func = 'new';
+	$input_val ='0'; 
+	$output_val ='30000'; 
+	$pack_name = 'S1'; 
+	$pack_maker = 'P1'; 
+	$pack_id = 2021111641;
+	$it_point = 150; 
+	$it_supply_point = 1;
+	$recharge = 4;
+	$schedule = 1;
 }
 
-$target = "mb_deposit_calc";
-$od_rate = $it_supply_point;
+$val = substr($pack_maker,1,1);
 
+$target = "mb_deposit_calc";
 $orderid = trim(date("mdHis",time()).'0'.substr(trim($pack_id),-2,2).'9'.$mb_no);
 
+// samwoo
+$od_schedule_1 = build_schedule($output_val,$recharge);
+$od_schedule_2 = build_schedule2($output_val,$recharge);
 
+if($schedule == 1){
+	$schedule_endcount = count($od_schedule_1);
+}else{
+	$schedule_endcount = count($od_schedule_2);
+}
 
 $sql = "insert g5_shop_order set
 	od_id				= '{$orderid}'
 	, mb_no             = '{$mb_no}'
 	, mb_id             = '{$mb_id}'
 	, od_cart_price     = '{$output_val}'
-	, od_cash    		= '{$input_val}'
+	, od_cash    		= '{$it_point}'
 	, od_name           = '{$pack_name}'
 	, od_tno            = '{$pack_id}'
 	, od_receipt_time   = '{$now_datetime}'
@@ -67,9 +77,15 @@ $sql = "insert g5_shop_order set
 	, od_date           = '{$now_date}'
 	, od_settle_case    = '{$coin_val}'
 	, od_status         = '{$od_status}'
-	, upstair    		= {$it_point}
-	, od_rate			= {$od_rate} ";
-
+	, upstair    		= {$output_val}
+	, od_rate			= {$it_supply_point}
+	, od_schedule1		= '".json_encode($od_schedule_1)."'
+	, od_schedule2		= '".json_encode($od_schedule_2)."'
+	, od_layer			= '{$total_layer}'
+	, od_recharge		= '{$recharge}'
+	, od_select			= {$schedule}
+	, pay_end			= {$schedule_endcount}
+	";
 if($debug){
 	$rst = 1;
 	echo "구매내역 Invoice 생성<br>";
@@ -79,12 +95,12 @@ if($debug){
 }
 
 
-$logic = purchase_package($mb_id,$pack_id);
+$logic = purchase_package($mb_id,$pack_id,0,$schedule);
 $calc_value = conv_number($output_val);
 
 if($rst && $logic){
 	$mb = sql_fetch("SELECT * from g5_member WHERE mb_id ='{$mb_id}' ");
-
+	$mb_rank = $mb['rank'];
 	$update_point = " UPDATE g5_member set $target = ($target - $calc_value) ";
 
 	if($mb['mb_level'] == 0){
@@ -99,8 +115,9 @@ if($rst && $logic){
 	
 	// $update_point .= ", mb_rate = ( mb_rate + {$od_rate}) ";
 	// 마이닝보류
-	$update_point .= ", mb_pv = ( mb_pv + {$it_point}) ";
+	$update_point .= ", mb_pv = ( mb_pv + {$it_supply_point}) ";
 	$update_point .= ", mb_save_point = ( mb_save_point + {$calc_value}) ";
+	$update_point .= ", cash_point = cash_point + {$it_point} ";
 	$update_point .= ", rank = '{$update_rank}', rank_note = '{$pack_name}', sales_day = '{$now_datetime}' ";
 	$update_point .= " where mb_id ='".$mb_id."'";
 
