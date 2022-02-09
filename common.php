@@ -648,6 +648,7 @@ if(!empty($extend_file) && is_array($extend_file)) {
     unset($file);
 }
 unset($extend_file);
+ob_clean();
 
 ob_start();
 

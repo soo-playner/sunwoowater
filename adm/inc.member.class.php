@@ -850,7 +850,6 @@ function get_recommend_down($mb_id, $m_id, $ca_id)
 
 	}
 
-
 } 
 
 function get_brecommend_down($mb_id, $m_id, $ca_id) 

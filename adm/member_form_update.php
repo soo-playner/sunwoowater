@@ -68,7 +68,7 @@ if($mb_level < 10 &&  $temp_mb_level > $mb_level){
 
 
 $_POST['mb_center'] != "" ? $mb_center = $_POST['mb_center'] : $mb_center = '';
-$_POST['mb_balance'] != "" ? $mb_balance = $_POST['mb_balance'] : $mb_balance = 0;
+$_POST['mb_balance'] != "" ? $mb_balance = conv_number($_POST['mb_balance']) : $mb_balance = 0;
 // $_POST['mb_deposit_point'] != "" ? $mb_deposit_point = conv_number($_POST['mb_deposit_point']) : $mb_deposit_point = 0;
 $_POST['mb_block'] != "" ? $mb_block = $_POST['mb_block'] : $mb_block = 0;
 $_POST['bank_name'] != "" ? $bank_name = $_POST['bank_name'] : $bank_name = '';
@@ -119,7 +119,10 @@ $sql_common = "  mb_name = '{$_POST['mb_name']}',
 				 account_name = '{$account_name}',
 				 center_use = '{$center_use}',
 				 mb_center = '{$mb_center}',
-				 mb_block = '{$mb_block}'";
+				 mb_jisa = '{$_POST['mb_jisa']}',
+				 mb_jijum = '{$_POST['mb_jijum']}',
+				 mb_bonbu = '{$_POST['mb_bonbu']}',
+				 mb_block = '{$mb_block}' ";
 
 if ($w == '')
 {
@@ -227,17 +230,16 @@ else if ($w == 'u')
 		}else{
 			$deposit_adm_code = '차감';
 		}
-		$ASSETS_CURENCY = ASSETS_CURENCY;
+
 		$deposit_adm_value = $deposit_code.$deposit_adm;
-		
-		$deposit_adm_sql = "insert `{$g5['deposit']}` set
+		$deposit_adm_sql = "insert wallet_deposit_request set
 				mb_id             = '{$mb_id}'
 				, txhash     =  '관리자 {$deposit_adm_code} : {$member['mb_id']}'
 				, create_dt         = '{$today}'
 				, create_d    		= '{$today}'
 				, status   			= {$process_code}
 				, update_dt         = '{$todate}'
-				, coin          	= '{$ASSETS_CURENCY}'
+				, coin          	= '원'
 				, fee    			= 0
 				, cost         		= 0
 				, amt    			= {$deposit_adm_value}
@@ -252,6 +254,27 @@ else if ($w == 'u')
 		}
 	}
 
+
+
+	/* if($upstair_2 > 0){
+		$upstair_sql_2 = "insert g5_shop_order set
+				od_id				= '{$od_id}'
+				, mb_no             = '{$mb_no}'
+				, mb_id             = '{$mb_id}'
+				, od_cart_price     =  {$upstair_2}
+				, od_name           = 'MBM'
+				, od_cash    		= '1'
+				, od_receipt_time   = '{$today}'
+				, od_time           = '{$today}'
+				, od_date           = '{$todate}'
+				, od_settle_case    = 'admin'
+				, od_status         = '매출'
+				, upstair    		= {$upstair}
+				, pv				= {$upstair}
+				, od_memo 			= 'admin'  ";
+		
+		sql_query($upstair_sql_2);
+	} */
 
 	
 	if ($mb_password)

@@ -262,10 +262,12 @@ if ($member['mb_org_num']){
 
 $sql       = "select c.c_id,c.c_class from g5_member m join ".$class_name." c on m.mb_id=c.mb_id where c.mb_id='{$tree_id}' and c.c_id='$go_id'";
 $srow      = sql_fetch($sql);
+
+
 $my_depth  = strlen($srow['c_class']);
 $max_depth = ($my_depth+($max_org_num*2));
-?>
 
+?>
 
 
 <div id="div_right" style="width:85%;float:left;min-height:500px">
@@ -292,12 +294,13 @@ $max_depth = ($my_depth+($max_org_num*2));
 		<?
 		//업데이트유무 확인
 		$sql = "select * from ".$class_name."_chk where cc_date='".date("Y-m-d",time())."' order by cc_no desc";
+		// print_R($sql )
 		$mrow = sql_fetch($sql);
-		//print_r($mrow);
+		
 
-		$sql = "select c.c_id,c.c_class,(select grade from g5_member where mb_id=c.c_id) as grade,(select pool_level from g5_member where mb_id=c.c_id) as pool_level,(select mb_name from g5_member where mb_id=c.c_id) as c_name,(select count(*) from g5_member where mb_recommend=c.c_id) as c_child,(select mb_b_child from g5_member where mb_id=c.c_id) as b_child,(select mb_id from g5_member where mb_brecommend=c.c_id and mb_brecommend_type='L' limit 1) as b_recomm,(select mb_id from g5_member where mb_brecommend=c.c_id and mb_brecommend_type='R' limit 1) as b_recomm2,(select count(mb_no) from g5_member where ".$recommend_name."=c.c_id and mb_leave_date = '') as m_child, (select it_pool1 from g5_member where mb_id=c.c_id) as it_pool1, (select it_pool2 from g5_member where mb_id=c.c_id) as it_pool2, (select it_pool3 from g5_member where mb_id=c.c_id) as it_pool3, (select it_pool4 from g5_member where mb_id=c.c_id) as it_pool4, (select it_GPU from g5_member where mb_id=c.c_id) as it_GPU from g5_member m join ".$class_name." c on m.mb_id=c.mb_id where c.mb_id='{$tree_id}' and c.c_class like '{$srow['c_class']}%' and length(c.c_class)<".$max_depth." order by c.c_class";
+		$sql = "select c.c_id,c.c_class,(select grade from g5_member where mb_id=c.c_id) as grade,(select mb_name from g5_member where mb_id=c.c_id) as c_name,(select count(*) from g5_member where mb_recommend=c.c_id) as c_child,(select mb_b_child from g5_member where mb_id=c.c_id) as b_child,(select mb_id from g5_member where mb_brecommend=c.c_id and mb_brecommend_type='L' limit 1) as b_recomm,(select mb_id from g5_member where mb_brecommend=c.c_id and mb_brecommend_type='R' limit 1) as b_recomm2,(select count(mb_no) from g5_member where ".$recommend_name."=c.c_id and mb_leave_date = '') as m_child from g5_member m join ".$class_name." c on m.mb_id=c.mb_id where c.mb_id='{$tree_id}' and c.c_class like '{$srow['c_class']}%' and length(c.c_class)<".$max_depth." order by c.c_class";
 
-		//print_r($sql);
+		// print_r($sql);
 
 		$result = sql_query($sql);
 		for ($i=0; $row=sql_fetch_array($result); $i++) {
@@ -397,22 +400,16 @@ $max_depth = ($my_depth+($max_org_num*2));
 			if($mb_my_sales==''){ $mb_my_sales=0; }
 			if($mb_habu_sum==''){$mb_habu_sum=0;}
 
-			if ($mrow['cc_run']==0){  //업데이트가 안되었으면
+			/* if ($mrow['cc_run']==0){  //업데이트가 안되었으면
 				$sql  = "update g5_member set mb_my_sales=".$mb_my_sales." , mb_habu_sum=".$mb_habu_sum."   where mb_id='".$row['c_id']."'";
 				sql_query($sql);
-			}
+			} */
 
 			if (!$row['b_child']) $row['b_child']=1;
 			//if (!$row['c_child']) $row['c_child']=1;
 
       		$name_line = "<img src='/img/".$row['grade'].".png' class='pool' />";
-      /*xx
-			if($row['it_pool1'] > 0) {$name_line .= "<img src='/img/P1.png' class='pool' />";}
-			if($row['it_pool2'] > 0) {$name_line .= "<img src='/img/P2.png' class='pool' />";}
-			if($row['it_pool3'] > 0) {$name_line .= "<img src='/img/P3.png' class='pool' />";}
-			if($row['it_pool4'] > 0) {$name_line .= "<img src='/img/P4.png' class='pool' />";}
-			if($row['it_GPU'] > 0) {$name_line .= "<img src='/img/P5.png' class='pool' />";}
-			 */
+ 
 			$name_line .="<span class='user_name'>". $row['c_id'] ."</span>"  /*"[".((strlen($row['c_class'])/2)-1)."-".($row['c_child'])."-".($row['b_child']-1)."]".$row['c_name']."(".$row['c_id'].")  <img src='/adm/img/dot.gif' /> 누적매출".number_format($row3['tpv']/$order_split)."<img src='/adm/img/dot.gif' /> 30일매출 ".number_format($row5['tpv']/$order_split)."<img src='/adm/img/dot.gif' /> 바이너리레그매출".number_format($row6['tpv']/$order_split)."-".number_format($row7['tpv']/$order_split);*/
 		?>
 			zNodes.push({ id:"<?=$row['c_class']?>", pId:"<?=$parent_id?>", name:"<?php echo $name_line;?>", open:true, click:false});
