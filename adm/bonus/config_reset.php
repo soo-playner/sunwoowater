@@ -9,8 +9,8 @@ include_once(G5_ADMIN_PATH . '/admin.head.php');
 
 <link rel="stylesheet" href="/adm/css/switch.css">
 <style>
-	th{font-size:18px;font-family: 'Nanum-Gothic';letter-spacing: -0.5px;}
-	.desc{font-size:11px;font-weight:300;display:block;margin:5px 0;}
+	th{font-size:18px;font-family: 'Nanum-Gothic';letter-spacing: 0px;}
+	.desc{font-size:12px;font-weight:500;display:block;margin:5px 0;}
 	.red{color:red}
 </style>
 <div class="local_desc01 local_desc">
@@ -30,19 +30,21 @@ include_once(G5_ADMIN_PATH . '/admin.head.php');
 			<caption><?php echo $g5['title']; ?></caption>
 			<tbody>
 				<tr>
-					<th scope="row"><label for="nw_soodang_reset"> 수당 초기화<strong class="sound_only"> 필수</strong></label></th>
+					<th scope="row"><label for="nw_soodang_reset"> 수당 초기화</label>
+					<span class='desc' >※ 회원수당보너스 및 수당지급내역</span>
+					</th>
 					<td>
 						<p style="padding:0;"><input type="checkbox" id="nw_soodang_reset" name="nw_soodang_reset" <?if($nw['nw_soodang_reset']=='Y' ) {echo "checked" ;}?>/><label for="nw_soodang_reset"><span class="ui"></span><span class="nw_soodang_reset_txt">사용 설정</span></label></p>
 					</td>
 
-					<th scope="row"><label for="nw_member_reset"> 회원포인트내역 및 구매내역 초기화<strong class="sound_only"> 필수</strong></label></th>
+					<th scope="row"><label for="nw_member_reset"> 회원포인트내역 및 구매내역 초기화</label></th>
 					<td>
 						<p style="padding:0;"><input type="checkbox" id="nw_member_reset" name="nw_member_reset" <?if($nw['nw_member_reset']=='Y' ) {echo "checked" ;}?>/><label for="nw_member_reset"><span class="ui"></span><span class="nw_member_reset_txt">사용 설정</span></label></p>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="nw_asset_reset"> 입출금 내역 초기화<strong class="sound_only"> 필수</strong></label>
-						<span class='desc' >※ 수당,마이닝 입출금</span>
+					<th scope="row"><label for="nw_asset_reset"> 입출금 내역 초기화</label>
+						<span class='desc' >※ 입출금 내역</span>
 					</th>
 					<td>
 						<p style="padding:0;"><input type="checkbox" id="nw_asset_reset" name="nw_asset_reset" <?if($nw['nw_asset_reset']=='Y' ) {echo "checked" ;}?>/><label for="nw_asset_reset"><span class="ui"></span><span class="nw_asset_reset_txt">사용 설정</span></label></p>
@@ -50,8 +52,8 @@ include_once(G5_ADMIN_PATH . '/admin.head.php');
 					
 
 					<th scope="row">
-						<label for="nw_mining_reset"> 마이닝 내역 초기화<strong class="sound_only"> 필수</strong></label>
-						<!-- <span class='desc' >※ 마이닝수당 지급내역 초기화</span> -->
+						<label for="nw_mining_reset"> 회원 직급 및 등급 초기화</label>
+						<span class='desc red' >※ 관리자 제외 전원 일반회원직급으로 </span>
 					</th>
 					<td>
 						<p style="padding:0;"><input type="checkbox" id="nw_mining_reset" name="nw_mining_reset" <?if($nw['nw_mining_reset']=='Y' ) {echo "checked" ;}?>/><label for="nw_mining_reset"><span class="ui"></span><span class="nw_mining_reset_txt">사용 설정</span></label></p>
@@ -59,14 +61,14 @@ include_once(G5_ADMIN_PATH . '/admin.head.php');
 				</tr>
 				<tr><td style="height:30px;"></td></tr>
 				<tr>
-					<th scope="row" ><label for="nw_brecommend_reset"> 후원조직도 초기화<strong class="sound_only"> 필수</strong></label>
-						<span class='desc red' >※ 관리자 제외 전체 후원인 초기화</span>
+					<th scope="row" ><label for="nw_brecommend_reset"> 조직구성 초기화</label>
+						<span class='desc red' >※ 등록된 추천인 제외 센터,지점,지사,본부 등록 정보 초기화</span>
 					</th>
 					<td>
 						<p style="padding:0;"><input type="checkbox" id="nw_brecommend_reset" name="nw_brecommend_reset" <?if($nw['nw_brecommend_reset']=='Y' ) {echo "checked" ;}?>/><label for="nw_brecommend_reset"><span class="ui"></span><span class="nw_brecommend_reset_txt">사용 설정</span></label></p>
 					</td>
 
-					<th scope="row"><label for="nw_data_test"> 테스트환경 생성 <strong class="sound_only"> 필수</strong></label>
+					<th scope="row"><label for="nw_data_test"> 테스트환경 생성 </label>
 						<span class='desc red' >※ 관리자 제외 전체 잔고 50,000,000 지급</span>
 					</th>
 					<td>
@@ -149,7 +151,7 @@ include_once(G5_ADMIN_PATH . '/admin.head.php');
 		// console.log($('#nw_data_reset').is(":checked") + ' / ' + $('#nw_data_test').is(":checked"));
 
 		if ($('#nw_brecommend_reset').is(":checked")) {
-			if (confirm('후원조직도를 정말 초기화하겠습니까?')) {} else {
+			if (confirm('조직구성정보를 정말 초기화하겠습니까?')) {} else {
 				return false;
 			}
 		}
