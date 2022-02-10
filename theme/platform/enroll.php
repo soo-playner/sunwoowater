@@ -467,10 +467,11 @@ if ($_GET['recom_referral']){
 								vHtml.append($("<label style='color:red'>").addClass('mb_nick').html(obj.mb_nick));
 							}
 						}else{
-							if(obj.mb_level >= 0){
+
+							if(obj.mb_level < 1){
 								vHtml.append($("<div>").addClass('user').html(obj.mb_id));
 							}else{
-								vHtml.append($("<div style='color:red;>").addClass('non_user').html(obj.mb_id));
+								vHtml.append($("<div style='color:red;'>").addClass('non_user').html(obj.mb_id));
 							}
 						}
 						
@@ -693,7 +694,7 @@ if ($_GET['recom_referral']){
 
 
 			<!-- 추천인 정보 -->
-			<p class="check_appear_title mt10"><span data-i18n="signUp.추천인정보">recommend's Information</span></p>
+			<p class="check_appear_title mt10"><span >추천인 등록</span></p>
 			<section class='referzone'>
 				<div class="btn_input_wrap">
 					<input type="text" name="mb_recommend" id="reg_mb_recommend" value="<?= $mb_recommend ?>" required placeholder="추천인 아이디" />
@@ -702,22 +703,21 @@ if ($_GET['recom_referral']){
 					</div>
 					
 				</div>
-				
 			</section>
 
 			<!-- 센터 정보 -->
-			<!--p class="check_appear_title mt20"><span data-i18n="signUp.센터정보">Referrer's Information</span></p>
-				<section class='referzone'>
-					<div class="btn_input_wrap">
-						<input type="hidden" name="mb_center_nick" id="reg_mb_center_nick" value=""  required  />
-						<input type="text" name="mb_center" id="reg_mb_center" value="" placeholder="센터명 또는 센터아이디" required  />
+			<!-- <p class="check_appear_title mt20"><span data-i18n="signUp.센터정보">Referrer's Information</span></p>
+			<section class='referzone'>
+				<div class="btn_input_wrap">
+					<input type="hidden" name="mb_center_nick" id="reg_mb_center_nick" value=""  required  />
+					<input type="text" name="mb_center" id="reg_mb_center" value="" placeholder="센터명 또는 센터아이디" required  />
 
-						<div class='in_btn_ly2'>
-							<button type='button' class="btn_round check " onclick="getUser('#reg_mb_center',2);"
-							><span data-i18n="signUp.검색">Search</span></button>
-						</div>
+					<div class='in_btn_ly2'>
+						<button type='button' class="btn_round check " onclick="getUser('#reg_mb_center',2);"
+						><span data-i18n="signUp.검색">Search</span></button>
 					</div>
-				</section-->
+				</div>
+			</section> -->
 
 
 			<!-- <p class="check_appear_title mt40"><span data-i18n='signUp.일반정보'>General Information</span></p> -->
