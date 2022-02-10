@@ -6,6 +6,9 @@ define('ASSETS_CURENCY','원');
 $now_datetime = date('Y-m-d H:i:s');
 $now_date = date('Y-m-d');
 
+if($_GET['debug']){
+    $debug = 1;
+}
  
 $bonus_sql = "select * from {$g5['bonus_config']} WHERE used > 0 order by no asc";
 $list = sql_query($bonus_sql);
@@ -19,6 +22,7 @@ $admin_condition = " and "." mb_level < 10 ";
 $file_name = explode(".",basename($_SERVER['PHP_SELF']));
 $code=$file_name[1];
 $bonus_day = $_GET['to_date'];
+$bonus_exc_layer = $_GET['exc_layer'];
 
 if(!$debug && $sub_menu == "600299"){
     if($category == 'mining'){
@@ -27,7 +31,8 @@ if(!$debug && $sub_menu == "600299"){
         $check_target = $g5['bonus'];
     }
 
-    $dupl_check_sql = "select mb_id from {$check_target} where day='".$bonus_day."' and allowance_name = '{$code}' ";
+    // $dupl_check_sql = "select mb_id from {$check_target} where day='".$bonus_day."' and count ={$bonus_exc_layer} and allowance_name = '{$code}' ";
+    $dupl_check_sql = "select mb_id from {$check_target} where count ={$bonus_exc_layer} and allowance_name = '{$code}' ";
     $get_today = sql_fetch( $dupl_check_sql);
 
     if($get_today['mb_id']){

@@ -1,7 +1,7 @@
 <?php
 $sub_menu = "600299";
 include_once('./_common.php');
-$debug = 1;
+// $debug = 1;
 include_once('./bonus_inc.php');
 
 auth_check($auth[$sub_menu], 'r');
@@ -98,36 +98,31 @@ function  excute(){
 
         echo "▶▶지급계산액 : <span class='blue'>".Number_format($od_bonus)."</span>";
 
-        if($od_bonus > 0){
-            
-            echo "<br><span class=blue> ▶▶▶ 수당 지급 : ".Number_format($od_bonus)."</span>";
+          
+        echo "<br><span class=blue> ▶▶▶ 수당 지급 : ".Number_format($od_bonus)."</span>";
 
-            $benefit = $od_bonus;
-            $benefit_limit = $od_bonus;
-            $rec = $bonus_layer." 대 기부수당 지급 : ".Number_format($od_bonus);
-            $rec_adm = "스케쥴2 수당지급 (".$pay_count."/".count($od_schedule).") - ".Number_format($od_bonus);
+        $benefit = $od_bonus;
+        $benefit_limit = $od_bonus;
+        $rec = $bonus_layer." 대 기부수당 지급 : ".Number_format($od_bonus);
+        $rec_adm = "스케쥴2 수당지급 (".$pay_count."/".count($od_schedule).") - ".Number_format($od_bonus);
 
-            if($benefit > 0 && $benefit_limit > 0){
+        if($benefit > -1 && $benefit_limit > -1){
+            $record_result = soodang_record($mb_id, $code, $benefit_limit,$rec,$rec_adm,$bonus_day,$bonus_layer);
+            $order_update_result = order_update($od_id,$benefit_limit);
 
-                $record_result = soodang_record($mb_id, $code, $benefit_limit,$rec,$rec_adm,$bonus_day,$bonus_layer);
-                $order_update_result = order_update($od_id,$benefit_limit);
+            if($record_result && $order_update_result){
+                $balance_up = "update g5_member set mb_balance = mb_balance + {$benefit_limit}  where mb_id = '".$mb_id."'";
 
-                if($record_result && $order_update_result){
-                    $balance_up = "update g5_member set mb_balance = mb_balance + {$benefit_limit}  where mb_id = '".$mb_id."'";
-
-                    // 디버그 로그
-                    if($debug){
-                        echo "<code>";
-                        print_R($balance_up);
-                        echo "</code>";
-                    }else{
-                        sql_query($balance_up);
-                    }
+                // 디버그 로그
+                if($debug){
+                    echo "<code>";
+                    print_R($balance_up);
+                    echo "</code>";
+                }else{
+                    sql_query($balance_up);
                 }
             }
-
         }
-
 
     } // for
 }
