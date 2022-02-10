@@ -13,12 +13,30 @@
 }
 
 .t_white{color:white;font-weight:600;font-size:11px;}
-.strong{font-weight:600}
 
-.f_blue{color:blue}
+.color0 {background: #696878 !important;}
+.color1 {background: #373cbc !important;}
+.color2 {background: #09c4d4 !important;}
+.color3 {background: #0e7e21 !important;}
+.color4 {background: #c52e7b !important;}
+.color5 {background: #779cfe !important;}
+.color6 {background: #6214ab !important;}
+.color7 {background: #f65463 !important;}
+.color8 {background: #1ac7ff !important;}
+.color9 {background: #272733 !important;}
 
-.nanum{font-family:'Nanum-Gothic';}
 
-.value_font{font-size:13px;font-weight:600;}
-.point_font{font-size:11px;font-weight:100;}
-.bold{font-weight: 600;}
+.inline_btn{
+  background:rgba(255,255,255,0.5);
+  border:1px solid #ccc;
+  padding:3px 5px;
+  margin:2px;
+  box-shadow: 1px 1px 0px rgba(0,0,0,0.25);
+  cursor: pointer;
+  font-size: 11px;
+}
+.inline_btn:hover{
+  background:black;
+  border:1px solid black;
+  color:white;
+}
