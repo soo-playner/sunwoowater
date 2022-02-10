@@ -105,29 +105,34 @@ $title = 'Dashboard';
 					<ul class="row">
 						<li class="col-4">
 							<dt class="title" >나의 구좌</dt>
-							<dd class="value"><?=$direct_reffer?></dd>
+							<dd class="value"><?=shift_auto($member['mb_pv'])?>
+							<?
+							if($member['mb_save_point'] > 0){
+								echo "<span class='currency'>(".shift_auto($member['mb_save_point']).ASSETS_CURENCY.")</span>";
+							}?>
+							</dd>
 						</li>
 						<li class="col-4">
 							<dt class="title" data-i18n="dashboard.추천산하">추천산하</dt>
 							<dd class="value"><?=division_count($member['mb_child'] - 1)?>명</dd>
 						</li>
 						<li class="col-4">
-							<dt class="title" data-i18n="dashboard.추천산하매출">추천산하구좌</dt>
+							<dt class="title">추천산하구좌</dt>
 							<dd class="value"><?=Number_format($recom_sale)?> </dd>
 						</li>
 					</ul>
 					<ul class="row">
 						<li class="col-4">
 							<dt class="title" >센터</dt>
-							<dd class="value"><?=secure_id($member['mb_brecommend'])?></dd>
+							<dd class="value"><?=secure_id($member['mb_center'])?></dd>
 						</li>
 						<li class="col-4">
 							<dt class="title">지점</dt>
-							<dd class="value"><?=division_count($member['mb_b_child'] -1)?>명</dd>
+							<dd class="value"><?=secure_id($member['mb_jijum'])?></dd>
 						</li>
 						<li class="col-4">
 							<dt class="title">지사</dt>
-							<dd class="value"><?=Number_format($brecom_sale)?> </dd>
+							<dd class="value"><?=secure_id($member['mb_jisa'])?> </dd>
 						</li>
 					</ul>
 
@@ -135,28 +140,28 @@ $title = 'Dashboard';
 						
 						<li class="col-4">
 							<dt class="title">본부</dt>
-							<dd class="value"><?=$mining_total?> <span style='font-size:12px;'><?=$minings[0]?></span></dd>
+							<dd class="value"><?=secure_id($member['mb_bonbu'])?></dd>
 						</li>
 
 						<li class="col-4">
 							<dt class="title" >나의 직급</dt>
-							<dd class="value"><?=$member['rank']?><?=rank_name($member['rank'])?></dd>
+							<dd class="value"><?=$member_level_array[$member['mb_level']]?></dd>
 						</li>
 
 						<li class="col-4">
 							<dt class="title" >나의 DSP</dt>
-							<dd class="value"><?=$member['rank']?><?=rank_name($member['rank'])?></dd>
+							<dd class="value"><?=shift_auto($member['cash_point'])?></dd>
 						</li>
 					</ul>
 
-					<ul class="row">
+					<!-- <ul class="row">
 						<li class="col-4">
 							<dt class="title" >보너스한계</dt>
 							<dd><?=$bonus_per*10?> % <span class='desc_small'>($ <?=Number_format($member['mb_pv'] * $limited/100,2)?>)</span></dd>
 						</li>
 
 						<li class="col-8" style="padding:10px 20px 10px">
-							<!-- <dt class="title" >보너스한계</dt> -->
+							<dt class="title" >보너스한계</dt>
 							<dd class="value">
 								<div class='bonus_state_bg' data-per='<?=$bonus_per?>'>
 									<div class='bonus_state_bar' id='total_B_bar'></div>
@@ -168,7 +173,7 @@ $title = 'Dashboard';
 								</div>
 							</dd>
 						</li>
-					</ul>
+					</ul> -->
 
 					<ul class="row" style="margin-bottom:-20px;">
 						<li class="rank_title">승급조건달성</li>

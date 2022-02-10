@@ -455,20 +455,21 @@ $rank_sql = "select * from rank where mb_id = '{$mb['mb_id']}' and rank = '{$mb[
 			<span class="btn flexible btn2 member_auto_regist" data-category="center" data-category_value="2">자동등록</span>
 		</td>
 
-		<th scope="row">지사회원</th>
-		<td colspan="1">
-			<input type="text" name="mb_jisa" id="mb_jisa" value="<?=$mb['mb_jisa']?>" class="frm_input " />
-			<span class="btn flexible member_search" data-category="jisa">검색</span>
-			<span class="btn flexible btn2 member_auto_regist" data-category="jisa" data-category_value="3">자동등록</span>
-		</td>
-	</tr>
-
-	<tr>
 		<th scope="row">지점회원</th>
 		<td colspan="1">
 			<input type="text" name="mb_jijum" id="mb_jijum" value="<?=$mb['mb_jijum']?>" class="frm_input " />
 			<span class="btn flexible member_search" data-category="jijum">검색</span>
-			<span class="btn flexible btn2 member_auto_regist" data-category="jijum" data-category_value="4">자동등록</span>
+			<span class="btn flexible btn2 member_auto_regist" data-category="jijum" data-category_value="3">자동등록</span>
+		</td>
+		
+	</tr>
+
+	<tr>
+		<th scope="row">지사회원</th>
+		<td colspan="1">
+			<input type="text" name="mb_jisa" id="mb_jisa" value="<?=$mb['mb_jisa']?>" class="frm_input " />
+			<span class="btn flexible member_search" data-category="jisa">검색</span>
+			<span class="btn flexible btn2 member_auto_regist" data-category="jisa" data-category_value="4">자동등록</span>
 		</td>
 	
 		<th scope="row">본부회원</th>

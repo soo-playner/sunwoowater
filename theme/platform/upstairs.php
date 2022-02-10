@@ -349,7 +349,9 @@ $result = sql_query($sql);
 								<div class="row">
 									<div class="col-6 nopadding">
 										<span class="hist_date"><?= $row['od_date'] ?></span>
-										<h2 class="pack_name pack_f_<?= substr($od_name, 1, 1) ?>" style="width:100%;"><?= strtoupper($row['od_name']) ?> : <?=$row['od_rate']?>구좌 / <?=$row['od_select']?>차</h2>
+										<h2 class="pack_name pack_f_<?= substr($od_name, 1, 1) ?>" style="width:100%;">
+											<?= strtoupper($row['od_name']) ?> : <span style='color:#3b86ff'><?=$row['od_rate']?>구좌</span> / <?=$row['od_select']?>차
+										</h2>
 									</div>
 									<div class="col-5 nopadding">
 										<span class="hist_value" style="width:100%;line-height:30px;">￦ <?= Number_format($row['od_cart_price']) ?></span>

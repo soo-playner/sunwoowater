@@ -549,7 +549,11 @@ function timeshift3($time)
 // 아이디 별표시
 function secure_id($mb_id)
 {
-	$strim = substr($mb_id, 0, 3) . "***";
+	if($mb_id != ''){
+		$strim = substr($mb_id, 0, 3) . "***";
+	}else{
+		$strim = '-';
+	}
 	echo $strim;
 }
 
