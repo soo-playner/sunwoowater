@@ -116,6 +116,7 @@ if($rst && $logic){
 	// $update_point .= ", mb_rate = ( mb_rate + {$od_rate}) ";
 	// 마이닝보류
 	$update_point .= ", mb_pv = ( mb_pv + {$it_supply_point}) ";
+	$update_point .= ", mb_rate = ( mb_rate + {$it_supply_point}) ";
 	$update_point .= ", mb_save_point = ( mb_save_point + {$calc_value}) ";
 	$update_point .= ", cash_point = cash_point + {$it_point} ";
 	$update_point .= ", rank = '{$update_rank}', rank_note = '{$pack_name}', sales_day = '{$now_datetime}' ";

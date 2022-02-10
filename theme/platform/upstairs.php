@@ -384,7 +384,7 @@ $result = sql_query($sql);
 <!-- <script src="<?= G5_THEME_URL ?>/_common/js/timer.js"></script> -->
 <script>
 	$(function() {
-		$(".top_title h3").html("<span data-i18n=''>패키지구매</span>")
+		$(".top_title h3").html("<span >기부</span>")
 	});
 
 	$(function() {

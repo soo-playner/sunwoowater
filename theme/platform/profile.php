@@ -95,11 +95,11 @@
 					<ul class='row person_info'>
 						<li class='col-12 mt20 '>
 							<label>모바일</label>  
-							<p class='mb20'><?=format_phone($member['mb_hp'])?></p>
+							<p ><?=format_phone($member['mb_hp'])?></p>
 							
 						</li>
 
-						<li class='col-12 mt20'>
+						<li class='col-12'>
 							<label data-i18n="profile.이메일">Email</label>  
 							<p><?=$member['mb_email']?></p>
 							<!-- <?if($member['mb_email_certify'] != ''){?>
@@ -151,21 +151,35 @@
 				<div class='col-sm-12 col-12 profile-box'>
 					<h3 class='title b_line'>
 						<i><img src="<?=G5_THEME_URL?>/img/recommendation_information.png" alt=""></i>
-						<span data-i18n="profile.추천인 정보">Referral</<i>
+						<span>조직정보 <span>
 					</h3>
 					<ul class='row'>
-						<li class='col-sm-12 col-12'>
+						<li class='col-xs-12 col-sm-6 mb10'>
 							<label data-i18n="profile.나의 추천">My Referral</label>
-							<p ><?=$member['mb_recommend']?></p>
-						</li>
-					</ul>
+							<p><?=$member['mb_recommend']?></p>
 
-					<!-- <ul class='row'>
-						<li class='col-sm-12 col-12'>
-							<label data-i18n="profile.나의 센터">My Center</label>
+						</li>
+					
+						<li class='col-6 mb10'>
+							<label>센터정보</label>
 							<p ><?=get_name($member['mb_center'])?></p>
 						</li>
-					</ul> -->
+					
+						<li class='col-6 mb10'>
+							<label>지점정보</label>
+							<p ><?=get_name($member['mb_jijum'])?></p>
+						</li>
+					
+						<li class='col-6 mb10'>
+							<label>지사정보</label>
+							<p ><?=get_name($member['mb_jisa'])?></p>
+						</li>
+					
+						<li class='col-6 mb10'>
+							<label>본부정보</label>
+							<p ><?=get_name($member['mb_bonbu'])?></p>
+						</li>
+					</ul>
 
 					<!-- <div class="google-auth-top-qr" id="qrcode"></div> -->
 				</div>

@@ -15,7 +15,8 @@ $direct_reffer_result = sql_fetch($direct_reffer_sql);
 $direct_reffer = $direct_reffer_result['cnt'];
 
 //추천산하매출 
-$recom_sale =  refferer_habu_sales($member['mb_id']);
+// $recom_sale =  refferer_habu_sales($member['mb_id']);
+$recom_sale = $member['recom_sales'];
 
 //후원산하매출
 $brecom_sale =  refferer_habu_sales($member['mb_id'],'b');
@@ -124,15 +125,15 @@ $title = 'Dashboard';
 					<ul class="row">
 						<li class="col-4">
 							<dt class="title" >센터</dt>
-							<dd class="value"><?=secure_id($member['mb_center'])?></dd>
+							<dd class="value"><?=get_name($member['mb_center'])?></dd>
 						</li>
 						<li class="col-4">
 							<dt class="title">지점</dt>
-							<dd class="value"><?=secure_id($member['mb_jijum'])?></dd>
+							<dd class="value"><?=get_name($member['mb_jijum'])?></dd>
 						</li>
 						<li class="col-4">
 							<dt class="title">지사</dt>
-							<dd class="value"><?=secure_id($member['mb_jisa'])?> </dd>
+							<dd class="value"><?=get_name($member['mb_jisa'])?> </dd>
 						</li>
 					</ul>
 
@@ -140,7 +141,7 @@ $title = 'Dashboard';
 						
 						<li class="col-4">
 							<dt class="title">본부</dt>
-							<dd class="value"><?=secure_id($member['mb_bonbu'])?></dd>
+							<dd class="value"><?=get_name($member['mb_bonbu'])?></dd>
 						</li>
 
 						<li class="col-4">

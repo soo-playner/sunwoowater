@@ -106,7 +106,7 @@ function coin_prices($income, $category = 'cost')
 }
 
 //회원 레벨 
-$member_level_array = array('일반회원', '정회원', '센터회원', '인정회원', '정회원', '', '', '', '', '관리자', '슈퍼관리자');
+$member_level_array = array('일반회원', '정회원', '센터', '지점', '지사', '본부', '', '', '', '관리자', '슈퍼관리자');
 
 
 /* 회원분류(등급 - level)*/
@@ -550,7 +550,8 @@ function timeshift3($time)
 function secure_id($mb_id)
 {
 	if($mb_id != ''){
-		$strim = substr($mb_id, 0, 3) . "***";
+		// $strim = substr($mb_id, 0, 3) . "***";
+		$strim = $mb_id;
 	}else{
 		$strim = '-';
 	}

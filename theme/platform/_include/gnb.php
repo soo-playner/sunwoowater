@@ -85,7 +85,7 @@ $(document).ready(function(){
 			<li class="profile_icon"><a href="/page.php?id=profile"><span>개인정보&보안설정</span></a></li>
 			<li class="mywallet_icon"><a href="/page.php?id=mywallet"><span>입출금</span></a></li> 
 			<!--<li class="mining_icon"><a href="/page.php?id=mining"><span>마이닝</span></a></li>-->
-			<li class="upstairs_icon"><a href="/page.php?id=upstairs"><span>패키지구매</span></a></li>
+			<li class="upstairs_icon"><a href="/page.php?id=upstairs"><span>기부</span></a></li>
 			<li class="bonus_history_icon"><a href="/page.php?id=bonus_history"><span>보너스내역</span></a></li>
 			<?
 				if($member['center_use'] == 1){?>
