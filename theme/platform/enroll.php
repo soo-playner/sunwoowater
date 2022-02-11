@@ -468,7 +468,7 @@ if ($_GET['recom_referral']){
 							}
 						}else{
 
-							if(obj.mb_level < 1){
+							if(obj.mb_level > 0){
 								vHtml.append($("<div>").addClass('user').html(obj.mb_id));
 							}else{
 								vHtml.append($("<div style='color:red;'>").addClass('non_user').html(obj.mb_id));
