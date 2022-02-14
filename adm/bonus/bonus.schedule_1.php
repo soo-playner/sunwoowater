@@ -82,10 +82,6 @@ function  excute(){
 
         echo "<br><br><span class='title block' style='font-size:30px;'>".$mb_id."</span><br>";
         
-        /* echo "<code>";
-        print_R($row);
-        echo "</code>"; */
-
 
         echo "<div class='item_title'>";
         echo "상품 : ".$it_name;
@@ -106,12 +102,17 @@ function  excute(){
         $benefit = $od_bonus;
         $benefit_limit = $od_bonus;
         $rec = $bonus_layer." 대 기부수당 지급 : ".Number_format($od_bonus);
-        $rec_adm = "스케쥴1 수당지급 (".$pay_count."/".count($od_schedule).") - ".Number_format($od_bonus);
+        $rec_adm = "스케쥴1 수당지급 (".($pay_count+1)."/".count($od_schedule).") - ".Number_format($od_bonus);
 
-        if($benefit > -1 && $benefit_limit > -1){
+        if($pay_count < count($od_schedule) ){
+
+            $extra_bonus = $od_schedule[$pay_count];
 
             $record_result = soodang_record($mb_id, $code, $benefit_limit,$rec,$rec_adm,$bonus_day,$bonus_layer,$od_select);
-            $order_update_result = order_update($od_id,$benefit_limit);
+            if($extra_bonus > -1){
+                $record_result = soodang_extra($mb_id, $extra_bonus,$bonus_day,$bonus_layer,$od_select);
+            }
+            $order_update_result = order_update($od_id,$benefit_limit,$pay_count);
 
             if($record_result && $order_update_result){
                 $balance_up = "update g5_member set mb_balance = mb_balance + {$benefit_limit}  where mb_id = '".$mb_id."'";

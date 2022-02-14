@@ -6,9 +6,6 @@ define('ASSETS_CURENCY','원');
 $now_datetime = date('Y-m-d H:i:s');
 $now_date = date('Y-m-d');
 
-if($_GET['debug']){
-    $debug = 1;
-}
  
 $bonus_sql = "select * from {$g5['bonus_config']} WHERE used > 0 order by no asc";
 $list = sql_query($bonus_sql);
@@ -194,17 +191,32 @@ function soodang_record($mb_id, $code, $bonus_val,$rec,$rec_adm,$bonus_day,$exc_
     }
 }
 
-function soodang_extra($mb_id, $code, $bonus_val,$rec,$rec_adm,$bonus_day){
+function soodang_extra($mb_id, $bonus_val, $bonus_day,$exc_count,$od_select){
     global $g5,$debug,$now_datetime;
 
-    $soodang_sql = " insert `soodang_extra` set day='".$bonus_day."'";
-    $soodang_sql .= " ,mb_id			= '".$mb_id."'";
-    $soodang_sql .= " ,allowance_name	= '".$code."'";
-    $soodang_sql .= " ,benefit		=  ".$bonus_val;	
-    $soodang_sql .= " ,rec			= '".$rec."'";
-    $soodang_sql .= " ,rec_adm		= '".$rec_adm."'";
-    $soodang_sql .= " ,datetime		= '".$now_datetime."'";
-    sql_query($soodang_sql);
+    if($mb_id != ''){
+        $mb = sql_fetch("SELECT * FROM g5_member WHERE mb_id = '{$mb_id}' ");
+    }
+    if($mb){
+
+        $soodang_extra_sql = " insert `soodang_extra` set day='".$bonus_day."'";
+        $soodang_extra_sql .= " ,mb_id			= '".$mb_id."'";
+        $soodang_extra_sql .= " ,count	        = '".$exc_count."'";
+        $soodang_extra_sql .= " ,bonus		    =  ".$bonus_val;	
+        $soodang_extra_sql .= " ,center			= '{$mb['mb_center']}'";
+        $soodang_extra_sql .= " ,jijum			= '{$mb['mb_jijum']}'";
+        $soodang_extra_sql .= " ,jisa			= '{$mb['mb_jisa']}'";
+        $soodang_extra_sql .= " ,bonbu			= '{$mb['mb_bonbu']}'";
+        $soodang_extra_sql .= " ,datetime		= '".$now_datetime."'";
+    }
+    if($debug){
+        echo "<code>";
+        print_r($soodang_extra_sql);
+        echo "</code>";
+        return true;
+    }else{
+        return  sql_query($soodang_extra_sql);
+    }
 }
 
 
@@ -246,7 +258,7 @@ if(strpos($bonus_row['bonus_condition'],',')>0){
 
 
 
-
+if( !function_exists( 'get_shop_item' ) ):
 function get_shop_item($table=null){
 	$array = array();
 	$sql = "SELECT * FROM g5_shop_item";
@@ -265,7 +277,9 @@ function get_shop_item($table=null){
 
 	return $array;
 }
+endif;
 
+if( !function_exists( 'ordered_items' ) ):
 function ordered_items($mb_id, $table=null){
 
 	$item = get_shop_item($table);
@@ -311,6 +325,7 @@ function ordered_items($mb_id, $table=null){
 
 	return $upgrade_array;
 }
+endif;
 
 
 // 배열키찾기 
@@ -418,14 +433,21 @@ function mining_limit_check($mb_id,$bonus){
 }
 
 // 주문 내역 업데이트  
-function order_update($od_id,$benefit_limit){
+function order_update($od_id,$benefit_limit,$pay_count){
     global $debug;
 
     $origin_order = sql_fetch("SELECT * FROM g5_shop_order WHERE od_id = {$od_id}");
     $item_no = $origin_order['no'];
+    $pay_end = $origin_order['pay_end'];
+
+    if(($pay_count+1) == $pay_end){
+        $pay_end_tx = ", od_test = 1 ";
+    }else{
+        $pay_end_tx = '';
+    }
 
     if($origin_order){
-        $update_order = "UPDATE g5_shop_order set pay_count = pay_count + 1, pay_acc = pay_acc + {$benefit_limit} WHERE no = {$item_no} ";
+        $update_order = "UPDATE g5_shop_order set pay_count = pay_count + 1, pay_acc = pay_acc + {$benefit_limit} {$pay_end_tx} WHERE no = {$item_no} ";
         
         if($debug){
             echo "<code>";
@@ -443,26 +465,35 @@ function order_update($od_id,$benefit_limit){
 }
 
 // 원 표시
+if( !function_exists( 'shift_kor' ) ):
 function shift_kor($val){
 	return Number_format($val, 0);
 }
+endif;
 
 // 달러 표시
+if( !function_exists( 'shift_doller' ) ):
 function shift_doller($val){
 	return Number_format($val, 2);
 }
+endif;
 
 // 코인 표시
+if( !function_exists( 'shift_coin' ) ):
 function shift_coin($val){
 	return Number_format($val, COIN_NUMBER_POINT);
 }
+endif;
 
 // 소수점 지수-상수 변환표시 
+if( !function_exists( 'point_number' ) ):
 function point_number($val){
 	return sprintf('%f',$val);
 }
+endif;
 
 // 달러 , ETH 코인 표시
+if( !function_exists( 'shift_auto' ) ):
 function shift_auto($val,$coin = '원'){
 	if($coin == '$'){
 		return shift_doller($val);
@@ -472,6 +503,7 @@ function shift_auto($val,$coin = '원'){
 		return shift_coin($val);
 	}
 }
+endif;
 
 
 

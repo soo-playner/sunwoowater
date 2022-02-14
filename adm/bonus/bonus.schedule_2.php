@@ -67,22 +67,25 @@ function  excute(){
 
     for ($i=0; $row=sql_fetch_array($result); $i++) {   
 
+        $extra_bonus = -1;
+
         $mb_id = $row['mb_id'];
         $it_id = $row['od_tno'];
         $od_id = $row['od_id'];
         $it_bonus = $row['upstair'];
         $it_name = $row['od_name'];
 
+        $od_select = $row['od_select'];
+
         $pay_count = $row['pay_count'];
         $pay_acc = $row['pay_acc'];
+        
         $od_schedule = json_decode($row['od_schedule2'],true);
         $od_bonus = $od_schedule[$pay_count];
 
+
         echo "<br><br><span class='title block' style='font-size:30px;'>".$mb_id."</span><br>";
         
-        /* echo "<code>";
-        print_R($row);
-        echo "</code>"; */
 
 
         echo "<div class='item_title'>";
@@ -104,11 +107,25 @@ function  excute(){
         $benefit = $od_bonus;
         $benefit_limit = $od_bonus;
         $rec = $bonus_layer." 대 기부수당 지급 : ".Number_format($od_bonus);
-        $rec_adm = "스케쥴2 수당지급 (".$pay_count."/".count($od_schedule).") - ".Number_format($od_bonus);
+        $rec_adm = "스케쥴2 수당지급 (".($pay_count+1)."/".count($od_schedule).") - ".Number_format($od_bonus);
 
-        if($benefit > -1 && $benefit_limit > -1){
-            $record_result = soodang_record($mb_id, $code, $benefit_limit,$rec,$rec_adm,$bonus_day,$bonus_layer);
-            $order_update_result = order_update($od_id,$benefit_limit);
+        if($pay_count < count($od_schedule)){
+
+            $extra_schedule = json_decode($row['od_schedule1'],true);
+
+            
+
+            $record_result = soodang_record($mb_id, $code, $benefit_limit,$rec,$rec_adm,$bonus_day,$bonus_layer,$od_select);
+
+            if($pay_count < count($extra_schedule)){
+                $extra_bonus = $extra_schedule[$pay_count];
+                
+                if($extra_bonus > -1){
+                    $record_result = soodang_extra($mb_id, $extra_bonus,$bonus_day,$bonus_layer,$od_select);
+                }
+            }
+            
+            $order_update_result = order_update($od_id,$benefit_limit,$pay_count);
 
             if($record_result && $order_update_result){
                 $balance_up = "update g5_member set mb_balance = mb_balance + {$benefit_limit}  where mb_id = '".$mb_id."'";
