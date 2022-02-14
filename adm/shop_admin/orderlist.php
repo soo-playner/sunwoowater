@@ -124,7 +124,7 @@ $qstr = "$qstr1&amp;sort1=$sort1&amp;sort2=$sort2&amp;page=$page";
 $listall = '<a href="'.$_SERVER['SCRIPT_NAME'].'" class="ov_listall">전체목록</a>';
 
 // 통계 데이터 산출
-$stats_sql = "select od_name, COUNT(*) AS cnt, SUM(od_cash) AS amt ".$sql_common."group by od_name ";
+$stats_sql = "select od_name, COUNT(*) AS cnt, SUM(od_cart_price) AS amt,SUM(od_rate) AS ball_cnt ".$sql_common."group by od_name ";
 $stats_result = sql_query($stats_sql);
 
 // 구매상품명 리턴
@@ -288,7 +288,7 @@ if(!sql_query(" select mb_id from {$g5['g5_shop_order_delete_table']} limit 1 ",
         echo "<a href='./orderlist.php?".$qstr."&od_name=".$stats['od_name']." '><span class='tit'>";
         echo $stats['od_name'];
         echo "</span> : ".$stats['cnt'];
-        echo "건 = <strong>".Number_format($stats['amt'])."</strong></a>|";
+        echo "건 = <strong>￦".Number_format($stats['amt'])."</strong> / <span style='font-weight:600;color:green'>".Number_format($stats['ball_cnt'])."</span></a>|";
     }
     ?>
 </div>

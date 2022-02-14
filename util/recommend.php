@@ -51,11 +51,15 @@ function recommend_uptree($mb_id){
     return array($result['mb_recommend'],$result['mb_level']);
 }
 
+
+
 /* 상부회원중 해당 조건 만족 회원 찾기*/ 
 function return_org_member($mb_id,$category){
     $org_list = return_up_manager($mb_id,0);
+	// print_r($org_list);
     $key = array_search($category,array_column($org_list, 'mb_level'));
-	if($key){
+	
+	if($key > -1){
 		$result = $org_list[$key]['mb_id'];
 	}else{
 		$result ='';

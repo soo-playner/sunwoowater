@@ -290,7 +290,7 @@ $rank_sql = "select * from rank where mb_id = '{$mb['mb_id']}' and rank = '{$mb[
 
 <div class="local_desc01 local_desc">
     <p>
-		- 최초 센터지정시 체크시 <strong>회원닉네임 등록</strong> : 회원레벨 자동변경 (닉네임으로 센터,지사,지점,본부 동일 검색사용)<br>
+		- 최초 닉네임지정시 체크시 <strong>닉네임 등록</strong> : (닉네임으로 센터,지사,지점,본부 동일 검색사용)<br>
 		- 센터/지사/지점/본부 회원은 직접검색-등록하거나 <strong>자동(상위에 해당직급이 있는경우)으로 등록</strong> 가능 <br>
 		- <strong>마케팅-승급처리시</strong> 센터/지사/지점/본부 회원은 자동 업데이트 
 	</p>
@@ -432,7 +432,7 @@ $rank_sql = "select * from rank where mb_id = '{$mb['mb_id']}' and rank = '{$mb[
 			<span><?=$mb['mb_bre_time'] ? "등록일 : ".$mb['mb_bre_time'] : "" ?></span>
 		</td> 
 		-->
-		<th scope="row">센터지정</th>
+		<th scope="row">닉네임지정</th>
 		<td colspan="1">
 			<input type="checkbox" style='width:24px;height:24px;text-align:left' name="center_use" id="center_use" value=" <?=$mb['center_use']?> " class="" <? if($mb['center_use'] == '1') {echo "checked";}?> />
 			<?if($mb['center_use']>0){ $center_regist_class = 'active';}else{$center_regist = '';}?>

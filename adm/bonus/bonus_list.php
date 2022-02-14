@@ -88,8 +88,14 @@ if ($stx) {
 	$sql_search .= " ) ";
 }
 
+
+
 $sql_common = " from {$g5['bonus']} where (1) ";
 $sql_order = 'order by day desc';
+
+if($_GET['sst'] == "od_count"){
+	$sql_order .= " , count {$sod} ";
+}
 
 
 $sql = " select count(*) as cnt
@@ -144,7 +150,7 @@ include_once(G5_PLUGIN_PATH . '/jquery-ui/datepicker.php');
 		공통 : 보너스기준일자로 각 보너스지급버튼 클릭<br>
 		- 현재 누적볼 총합 : <strong><?=Number_format($total_ball_count)?></strong> / 다음대수까지 : <span class="bold">-<?=Number_format($next_layer_remain)?></span><br>
         - 현재 누적 차수 : <strong><?=$total_layer?> 대</strong><br>
-		<strong>직급승급 : </strong>① 회원직급승급(S1~S5)실행 ② 승급보너스는 <strong><a href='./bonus_mining2.php'>마이닝지급</a></strong>에서 지급 ③ 승급현황은 <strong><a href='./member_upgrade.php'>승급현황</a></strong>에서 확인<br>
+		<!-- <strong>직급승급 : </strong>① 회원직급승급(S1~S5)실행 ② 승급보너스는 <strong><a href='./bonus_mining2.php'>마이닝지급</a></strong>에서 지급 ③ 승급현황은 <strong><a href='./member_upgrade.php'>승급현황</a></strong>에서 확인<br> -->
 		
 	</p>
 </div>
@@ -271,7 +277,7 @@ include_once(G5_PLUGIN_PATH . '/jquery-ui/datepicker.php');
 					<th scope="col">회원아이디</th>
 					<th scope="col">보너스이름</th>
 					<th scope="col">발생보너스</th>
-					<th scope="col">지급차(대)수</th>
+					<th scope="col"><?php echo subject_sort_link('od_count') ?>지급차(대)수</th>
 					<th scope="col">보너스근거</th>
 					<th scope="col">지급시간</th>
 				</tr>
@@ -383,14 +389,9 @@ include_once(G5_PLUGIN_PATH . '/jquery-ui/datepicker.php');
 	}
 
 	function bonus_excute(n, name) {
-		// console.log("bonus_excute");
-		if(name == '1차수당' || name == '2차수당'){
-			var exc_layer = $("#exc_layer").val();
-			var exc_txt = exc_layer + "대 :";
-		}else{
-			var exc_layer = '';
-		}
-
+		var exc_layer = $("#exc_layer").val();
+		var exc_txt = exc_layer + "대 :";
+		
 		if (name == '승급') {
 			var tx = '을 실행';
 		} else {
@@ -419,79 +420,6 @@ include_once(G5_PLUGIN_PATH . '/jquery-ui/datepicker.php');
 			window.open(file_path);
 		} else {
 			alert('해당내역이 없습니다.');
-		}
-
-	}
-
-	function bonus_cancle() {
-
-		date = document.getElementById("to_date").value;
-
-		var pre = confirm(date + ' 보너스지급 전으로 되돌립니다.');
-
-		if (pre == true) {
-			$.ajax({
-				type: "POST",
-				url: "./bonus_cancle.php",
-				data: {
-					to_date: date
-				},
-				error: function() {
-					alert('실패!!');
-				},
-				success: function(data) {
-					alert(data);
-					location.reload();
-				}
-			});
-		} else {
-			return;
-		}
-	}
-
-
-	function bonus_reset() {
-
-		date = document.getElementById("to_date").value;
-		var pre = confirm('보너스내역,보너스지급,주문내역,지급로그,G테이블 내역을 초기화합니다');
-		if (pre == true) {
-			$.ajax({
-				type: "POST",
-				url: "./bonus_reset.php",
-				error: function() {
-					alert('실패!!');
-				},
-				success: function(data) {
-					if (data.code == '0000') {
-						alert('삭제처리되었습니다.');
-						location.reload();
-					}
-				}
-			});
-		} else {
-			return;
-		}
-
-	}
-
-	function bonus_dumy() {
-
-		date = document.getElementById("to_date").value;
-		var pre = confirm('0. 관리자 제외 멤버 test1부터 test10까지 10ETH 잔고 부여  \n1. 관리자 제외 멤버 test1부터 test10까지 ETH > Package3 구매\n2. G0 아바타 더미데이터 5개생성\n ');
-		if (pre == true) {
-			$.ajax({
-				type: "POST",
-				url: "./bonus_dumy.php",
-				error: function() {
-					alert('실패!!');
-				},
-				success: function(data) {
-					alert(data);
-					location.reload();
-				}
-			});
-		} else {
-			return;
 		}
 
 	}
