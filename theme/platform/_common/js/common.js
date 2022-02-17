@@ -147,6 +147,7 @@ function commonModal(title, htmlBody, bodyHeight){
 	$('#commonModal').modal('show');
 	$('#commonModal .modal-header .modal-title').html(title);
 	$('#commonModal .modal-body').html(htmlBody);
+	
 	if(bodyHeight){
 		$('#commonModal .modal-body').css('height',bodyHeight+'px');
 	} 

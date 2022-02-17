@@ -20,16 +20,14 @@ if ($_GET['recom_referral']){
 	$mb_recommend = $recom_result['mb_id'];
 }
 ?>
-<style>
-	.gflag{display:none !important;}
-</style>
+
 <link href="<?=G5_THEME_URL ?>/css/scss/enroll.css" rel="stylesheet">
-<script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <link href="<?=G5_THEME_URL ?>/css/dd.css" rel="stylesheet">
 <script src="<?=G5_THEME_URL?>/_common/js/jquery.dd.min.js"></script>
 
 <style>
+	.gflag{display:none !important;}
 	/* 센터 닉네임 사용 추가 0720  by arcthan */
 	.dd{border:2px solid #006df3}
 	.dd .ddTitle{height:40px;line-height:27px;}
@@ -58,29 +56,13 @@ if ($_GET['recom_referral']){
 	if (recommned) {
 		recommend_search = true;
 	}
-	//console.log(recommend_search);
 
 	$(function() {
 
 		$("#nation_number").msDropDown();
 
-		/* $("#nation_number").on('change',function(){
-			var select_nation = $("#nation_number option:selected").val();
-			console.log(select_nation);
-		}); */
-
 		onlyNumber('reg_mb_hp');
 		onlyNumber('bank_account');
-
-		// 공통함수로 이전 common.js
-		/* $('.cabinet').on('click',function(){
-			$(this).next().css('display','contents');
-		});
-
-		$('.cabinet').on('mouseout',function(){
-			$(this).next().css('display','none');
-		}); */
-
 
 		/*초기설정*/
 		//$('.agreement_ly').hide();
@@ -123,11 +105,6 @@ if ($_GET['recom_referral']){
 				});
 			});
 		}
-	
-	/* 메일발송 로더 */
-	/* var loading = $('<div id="loading" class="loading"></div><img id="loading_img" src="/img/Spinner-1s-200px2.gif" />');
-	loading.appendTo(document.body).hide(); */
- 	
 
 		/*이메일 체크*/
 		$('#EmailChcek').on('click',function(){
@@ -155,48 +132,9 @@ if ($_GET['recom_referral']){
 				}
 
 			});
-
 		});
 
-		/* 로더 테스트
-		$(document).ajaxStart(function() {
-			// loading.show();
-			console.log('loading-start');
-
-		}).ajaxStop(function() {
-			console.log('loading-end');
-			// loading.hide();
-		}); */
-
-
-		/* 사전인증 메일발송 - 사용안함 */
-		/* $('#sendMail').on('click', function(e) {
-			//console.log('sendmail');
-			if (!$('#reg_mb_email').val()) {
-				commonModal('Mail authentication', '<p>Please enter your mail</p>', 80);
-				return;
-			}
-			$.ajax({
-				url: '/bbs/register.mail.verify.php',
-				type: 'GET',
-				async: false,
-				data: {
-					"mb_email": $('#reg_mb_email').val()
-				},
-				dataType: 'json',
-				success: function(result) {
-					console.log(result);
-					key = result.key;
-
-					commonModal('Mail authentication', '<p>Sent a authentication code to your mail.</p>', 80);
-				},
-				error: function(e) {
-					console.log(e);
-				}
-			});
-		}); */
-
-
+		
 
 		// 메일 인증 코드 성공
 		$('#vCode').on('change', function(e) {
@@ -244,7 +182,6 @@ if ($_GET['recom_referral']){
 		// 아이디 중복 체크
 		$('#id_check').click(function() {
 			
-
 			var registerId = $('#reg_mb_id').val();
 
 			var idReg = /^[a-z]+[a-z0-9]{5,19}$/g;
@@ -276,6 +213,7 @@ if ($_GET['recom_referral']){
 				});
 			}
 		});
+		
 
 		$("#reg_mb_id").bind("keyup", function() {
 			re = /[~!@\#$%^&*\()\-=+_']/gi;
@@ -286,16 +224,7 @@ if ($_GET['recom_referral']){
 			check_id = 0;
 		});
 
-		/*이용약관동의*/
-		/* $('.agreement_ly').click(function() {
-			if ($("#agree").is(":checked") == true) {
-				$('#agree').prop("checked", false);
-				$('.agreement_ly > span').css('text-decoration', 'none');
-			} else {
-				$('#agree').prop("checked", true);
-				$('.agreement_ly > span').css('text-decoration', 'underline');
-			}
-		}); */
+		
 
 
 		$('#reg_mb_password').on('keyup', function(e) {
@@ -305,42 +234,15 @@ if ($_GET['recom_referral']){
 			chkPwd_1($('#reg_mb_password').val(), $('#reg_mb_password_re').val());
 		});
 
-		/* 
-		지갑주소 입력
-		$('#wallet_addr_check').click(function() {
-			var wallet_addr_len = $('#wallet_addr').val().length;
-			console.log(wallet_addr_len);
-			if (wallet_addr_len <= 40) {
-				dialogModal("wallet check", "Please check wallet address again ", 'failed');
-			} else {
-
-				$.ajax({
-					type: "POST",
-					dataType: "json",
-					url: "/bbs/register_check_id.php",
-					data: {
-						"registerId": $('#wallet_addr').val(),
-						check: "wallet"
-					},
-					success: function(res) {
-
-						if (res.code == '000') {
-							check_wallet = 0;
-							wallet = "";
-							dialogModal("WALLET CHECK", res.response, 'failed');
-						} else {
-							check_wallet = 1;
-							wallet = res.wallet;
-							dialogModal("WALLET CHECK", res.response, 'success');
-						}
-					}
-				});
-
-
-			}
-		}); */
+		// submit 최종 폼체크
+		$("#enroll_btn").on('click',function(){
+			fregisterform_submit();
+		});
 
 	});
+
+	
+	
 
 	/* 패스워드 확인*/
 	function chkPwd_1(str, str2) {
@@ -360,28 +262,12 @@ if ($_GET['recom_referral']){
 			pw_rule += 1;
 		}
 
-		// if(eng < 0 || num < 0){
-		// 	$("#pm_3").attr('class','x_li');
-		// }else{
-		// 	$("#pm_3").attr('class','o_li');
-		// 	pw_rule += 1;
-		// }
-
 		if (!pattern.test(pw)) {
 			$("#pm_3").attr('class', 'x_li');
 		} else {
 			$("#pm_3").attr('class', 'o_li');
 			pw_rule += 1;
 		}
-
-
-		// if(spe < 0 ){
-		// 	$("#pm_3").attr('class','x_li');
-		// }else{
-		// 	$("#pm_3").attr('class','o_li');
-		// 	pw_rule += 1;
-		// }
-
 
 		if (pw_rule == 2 && str == str2) {
 			$("#pm_5").attr('class', 'o_li');
@@ -427,6 +313,8 @@ if ($_GET['recom_referral']){
 			return false;
 		}
 	}
+
+	
 
 
 	/*추천인, 센터멤버 등록*/
@@ -474,22 +362,7 @@ if ($_GET['recom_referral']){
 								vHtml.append($("<div style='color:red;'>").addClass('non_user').html(obj.mb_id));
 							}
 						}
-						
-						/* 
-						if (obj.mb_level > 0) {
-							
-
-							if(type == 2){
-								vHtml.append($("<label>").addClass('mb_nick').html(obj.mb_nick));
-							}
-
-						} else {
-							if(type == 2){
-								
-							}else{
-								vHtml.append($("<div style='color:red;>").addClass('non_user').html(obj.mb_id));
-							}
-						} */
+					
 					});
 			
 					$(target_type + ' .modal-body').html(vHtml.html());
@@ -539,16 +412,12 @@ if ($_GET['recom_referral']){
 
 
 
-	// submit 최종 폼체크
-	function fregisterform_submit() {
+	
+
+	function fregisterform_submit(){
+		console.log(recommend_search);
+
 		var f = $('#fregisterform')[0];
-		//console.log(recommend_search);
-		/*
-		if(key != sha256($('#vCode').val())){
-		 	commonModal('Do not match','<p>Please enter the correct code</p>',80);
-		 	return false;
-		}
-		*/
 
 		/* 국가선택 검사*/
 		var select_nation = $("#nation_number option:selected").val();
@@ -557,13 +426,6 @@ if ($_GET['recom_referral']){
 			commonModal('country check', '<strong>please select country.</strong>', 80);
 			return false;
 		}
-
-		/* 이사멤버 검사
-		if (f.mb_director.value == '' || f.mb_director.value == 'undefined') {
-			commonModal('recommend check', '<strong>please check recommend search Button and choose recommend.</strong>', 80);
-			return false;
-		}
-		*/
 
 		//추천인 검사
 		if (f.mb_recommend.value == '' || f.mb_recommend.value == 'undefined') {
@@ -600,7 +462,13 @@ if ($_GET['recom_referral']){
 			return false;
 		}
 
-		// 연락처
+		// 이메일 주소 체크
+		if(f.reg_mb_email.value =='' || f.reg_mb_email.value == 'undefined'){
+			commonModal('이메일주소확인', '<strong>이메일주소가 잘못되거나 누락되었습니다. </strong>', 80);
+			return false;
+		}
+
+		// 휴대폰
 		if (f.mb_hp.value == '' || f.mb_hp.value == 'undefined') {
 			commonModal('휴대폰번호확인', '<strong>휴대폰 번호가 잘못되거나 누락되었습니다. </strong>', 80);
 			return false;
@@ -645,7 +513,7 @@ if ($_GET['recom_referral']){
 		}
 	
 		// 메일인증 체크
-		$.ajax({
+		/* $.ajax({
 			type: "POST",
 			url: "/mail/check_mail_for_register.php",
 			cache: false,
@@ -668,9 +536,10 @@ if ($_GET['recom_referral']){
 			error: function(e) {
 				console.log(e)
 			}
-		});
+		}); */
 
-
+		f.submit();
+		
 	}
 </script>
 
@@ -734,7 +603,7 @@ if ($_GET['recom_referral']){
 				<div class='phone_set mt20'>
 					<input type="email"  id="reg_mb_email" name="mb_email" class='cabinet' style='padding:15px'placeholder="Email address" required data-i18n='[placeholder]signUp.이메일 주소' />
 					<span class='cabinet_inner' style=''>※수신가능한 이메일주소를 직접 입력해주세요</span>
-					<div class='in_btn_ly'><input type="button" id='EmailChcek' class='btn_round check' value="Eamil" data-i18n='[value]signUp.이메일 전송'></div>
+					<!-- <div class='in_btn_ly'><input type="button" id='EmailChcek' class='btn_round check' value="Eamil" data-i18n='[value]signUp.이메일 전송'></div> -->
 					<input type="text" name="mb_hp"  id="reg_mb_hp" class='cabinet'  pattern="[0-9]*" style='padding:15px' required  placeholder="휴대폰번호"/>
 					<span class='cabinet_inner' style=''>※'-'를 제외한 숫자만 입력해주세요</span>
 				</div>
@@ -815,11 +684,6 @@ if ($_GET['recom_referral']){
 			</section>
 			-->
 
-			<!--
-			<hr>
-			<div class="agreement_btn"> <button type="button" class="agreeement_show btn"><span data-i18n='register.회원가입 약관보기'>Read Terms and Conditions</span></button></div>
-			-->
-
 			<p class="check_appear_title mt40"><span >회원가입 약관동의 </span></p>
 			<div class="mt20">
 				<div class="term_space">
@@ -844,8 +708,8 @@ if ($_GET['recom_referral']){
 			
 
 			<div class="btn2_wrap mb40" style='width:100%;height:60px'>
-				<input class="btn btn_double enroll_cancel_pop_open btn_cancle pop_open" type="button" value="Cancel" data-i18n='[value]signUp.취소'>
-				<input class="btn btn_double btn_primary" type="button" onclick="fregisterform_submit();" value="Enroll new member" data-i18n='[value]signUp.신규 회원 등록하기'>
+				<input type="button" class="btn btn_double enroll_cancel_pop_open btn_cancle pop_open" value="취소">
+				<input type="button" class="btn btn_double btn_primary" id="enroll_btn" value="신규 회원 등록하기">
 			</div>
 		</form>
 	</div>
@@ -858,7 +722,7 @@ if ($_GET['recom_referral']){
 
 <script>
 	$(function() {
-		$(".top_title h3").html("<span data-i18n='title.신규 회원등록' style='font-size:16px;margin-left:20px'>Create a new account</span>");
+		$(".top_title h3").html("<span  style='font-size:16px;margin-left:20px'>신규 회원등록</span>");
 
 		const map_wrap = document.getElementById('map_wrap');
 		const mb_addr1 = document.getElementById("mb_addr1");
