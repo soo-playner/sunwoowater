@@ -353,10 +353,10 @@ if ($w == '') {
 
 
 	if($result){
-		$recent_sql = "SELECT id FROM auth_email WHERE email='{$mb_email}' ORDER BY id DESC LIMIT 0,1";
+		/* $recent_sql = "SELECT id FROM auth_email WHERE email='{$mb_email}' ORDER BY id DESC LIMIT 0,1";
 		$row = sql_fetch($recent_sql);
 		$update_sql = "UPDATE auth_email set auth_check = '2' WHERE email = '{$mb_email}' AND id = {$row['id']}";
-		sql_query($update_sql);
+		sql_query($update_sql); */
 
         // 센터찾기 
         $mb_center = return_org_member($mb_id,2);

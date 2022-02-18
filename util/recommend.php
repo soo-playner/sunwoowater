@@ -22,12 +22,6 @@ function return_up_manager($mb_id,$cnt=0,$key=''){
 			}while( 
 				$manager != 'samwoo'
 			);
-		
-			/* if(count($manager_list) < 2){
-				return $origin;
-			}else{
-				return $manager_list[count($manager_list)-2];
-			} */
 
 			return $manager_list;
 
@@ -56,7 +50,9 @@ function recommend_uptree($mb_id){
 /* 상부회원중 해당 조건 만족 회원 찾기*/ 
 function return_org_member($mb_id,$category){
     $org_list = return_up_manager($mb_id,0);
+
 	// print_r($org_list);
+
     $key = array_search($category,array_column($org_list, 'mb_level'));
 	
 	if($key > -1){
@@ -69,10 +65,11 @@ function return_org_member($mb_id,$category){
 
 
 /* 추천하부매니저 검색 */
-function return_down_manager($mb_no,$cnt=0){
+function return_down_manager($mb_id,$cnt=0){
 	global $config,$g5,$mem_list;
 
-	$mb_result = sql_fetch("SELECT mb_id,mb_level,grade,mb_rate,rank,recom_sales from g5_member WHERE mb_no = '{$mb_no}' ");
+	$mb_result = sql_fetch("SELECT mb_id,mb_level,grade,mb_rate,rank,recom_sales from g5_member WHERE mb_id = '{$mb_id}' ");
+	
 	$list = [];
 	$list['mb_id'] = $mb_result['mb_id'];
 	$list['mb_level'] = $mb_result['mb_level'];
@@ -88,6 +85,7 @@ function return_down_manager($mb_no,$cnt=0){
 	$list['noo'] = $mb_add['noo'];
 
 	$mem_list = [$list];
+	
 	$result = recommend_downtree($mb_result['mb_id'],1,$cnt);
 	// print_R(arr_sort($result,'count'));
 	// prinT_R($result);

@@ -22,7 +22,7 @@ if ($_GET['end_dt']) {
 }
 
 
-$sql = "select * from {$g5['bonus_config']} where used = 1 order by no asc";
+$sql = "select * from {$g5['bonus_config']} where used > 0 AND used < 3 order by no asc";
 $list = sql_query($sql);
 
 
@@ -32,16 +32,15 @@ $list = sql_query($sql);
 $allowcnt = 0;
 for ($i = 0; $row = sql_fetch_array($list); $i++) {
 
-	if ($i != 0) {
-		$nnn = "allowance_chk" . $i;
-		$html .= "<input type='checkbox' class='search_item' name='" . $nnn . "' id='" . $nnn . "'";
+	$nnn = "allowance_chk" . $i;
+	$html .= "<input type='checkbox' class='search_item' name='" . $nnn . "' id='" . $nnn . "'";
 
-		if ($$nnn != '') {
-			$html .= " checked='true' ";
-		}
-
-		$html .= " value='" . $row['code'] . "'><label for='" . $nnn . "' class='allow_btn'>" . $row['name'] . "보너스</label>";
+	if ($$nnn != '') {
+		$html .= " checked='true' ";
 	}
+
+	$html .= " value='" . $row['code'] . "'><label for='" . $nnn . "' class='allow_btn'>" . $row['name'] . "보너스</label>";
+	
 
 	if (${"allowance_chk" . $i} != '') {
 		if ($allowcnt == 0) {
@@ -67,15 +66,24 @@ if (($allowance_name)) {
 	$sql_search .= " )";
 }
 
-// 검색기간검색
-if ($fr_date) {
-	$sql_search .= " and day >= '{$fr_date}' ";
-	$qstr .= "&start_dt=" . $fr_date;
-}
-if ($to_date) {
-	$sql_search .= " and day <= '{$to_date}'";
-	$qstr .= "&end_dt=" . $to_date;
-}
+//지급차수 여부 
+$slayer = $_GET['slayer'];
+if($slayer){
+	$fr_date ='';
+	$to_date ='';
+	$sql_search .= " and count = {$slayer} ";
+}else{
+	// 검색기간검색
+	if ($fr_date) {
+		$sql_search .= " and day >= '{$fr_date}' ";
+		$qstr .= "&start_dt=" . $fr_date;
+	}
+	if ($to_date) {
+		$sql_search .= " and day <= '{$to_date}'";
+		$qstr .= "&end_dt=" . $to_date;
+	}
+};
+
 
 // 이름검색
 if ($stx) {
@@ -134,12 +142,11 @@ $qstr .= '&aaa=' . $aaa;
 
 
 // 누적통계
-
 $total_exc_bonus = sql_fetch("SELECT sum(benefit) as total from soodang_pay")['total'];
 $search_sql = "SELECT sum(benefit) as total from soodang_pay WHERE day >= '{$start_dt}' AND day <= '{$end_dt}'";
 $search_exc_bonus = sql_fetch($search_sql)['total'];
-include_once(G5_PLUGIN_PATH . '/jquery-ui/datepicker.php');
 
+include_once(G5_PLUGIN_PATH . '/jquery-ui/datepicker.php');
 ?>
 
 
@@ -162,11 +169,7 @@ include_once(G5_PLUGIN_PATH . '/jquery-ui/datepicker.php');
 
 	<li class="outbox">
 		<label for="to_date" class="sound_only">기간 종료일</label>
-		<input type="text" name="to_date" value="<?php if ($to_date) {
-														echo $to_date;
-													} else {
-														echo date("Ymd");
-													} ?>" id="to_date" required class="required frm_input date_input" size="13" maxlength="10">
+		<input type="text" name="to_date" value="<?=$to_date?$to_date:date("Ymd")?>" id="to_date" required class="required frm_input date_input" size="13" maxlength="10">
 
 
 		<input type="radio" name="price" id="pv" value='pv' checked='true' style="display:none;">
@@ -182,54 +185,16 @@ include_once(G5_PLUGIN_PATH . '/jquery-ui/datepicker.php');
 	$sql = "select * from {$g5['bonus_config']} where used = 1  order by no";
 	$list = sql_query($sql);
 
-	for ($i = 0; $row = sql_fetch_array($list); $i++) { ?>
-		<?
+	for ($i = 0; $row = sql_fetch_array($list); $i++) {
 		$code = $row['code'];
-		if ($i != 0) {
 		?>
-
-			<? if ($code != 'rank') { ?>
-				<li class='outbox'>
-					<input type='submit' name="act_button" value="<?= $row['name'] ?> 보너스 지급" class="frm_input benefit" onclick="bonus_excute('<?= $code ?>','<?= $row['name'] ?>');">
-					<br><input type="submit" name="act_button" value="<?= $row['name'] ?> 보너스 내역" class="view_btn" onclick="bonus_view('<?= $code ?>');">
-				</li>
-			<? } else { ?>
-				<li class='outbox left-border'>
-					<button type='button' name="act_button" class="frm_input benefit" onclick="bonus_excute('<?= $code ?>','<?= $row['name'] ?>');"> <i class="ri-medal-fill" style='font-size:16px; vertical-align:sub'></i> 직급 승급 </button>
-					<br><input type="submit" name="act_button" value="회원 <?= $row['name'] ?> 내역" class="view_btn" onclick="bonus_view('<?= $code ?>');">
-				</li>
-			<? } ?>
-
-		<? } ?>
+			<li class='outbox'>
+				<input type='submit' name="act_button" value="<?= $row['name'] ?> 보너스 지급" class="frm_input benefit" onclick="bonus_excute('<?= $code ?>','<?= $row['name'] ?>');">
+				<br><input type="submit" name="act_button" value="<?= $row['name'] ?> 보너스 내역" class="view_btn" onclick="bonus_view('<?= $code ?>');">
+			</li>
 	<? } ?>
 
-	<!-- <li class="outbox left-border">
-		<input type="submit" name="act_button" value=" 보너스지급 취소(되돌리기)"  class="frm_input benefit red" onclick="bonus_cancle();">
-	</li> -->
-	<!-- <? if ($member['mb_id'] == 'admin') { ?>
-		<li class="outbox left-border">
-			<input type="submit" name="act_button" value="보너스초기화"  class="frm_input benefit red" onclick="bonus_reset();">
-		</li>
-		<li class="outbox left-border">
-			<input type="submit" name="act_button" value="승급테스트DB생성"  class="frm_input benefit black" onclick="bonus_dumy();">
-		</li>
-	<? } ?> -->
 </div>
-
-
-<!--
-<? if ($member['mb_id'] = 'admin') { ?>
-<div class="sysbtn">
-	수동관리 :: 
-	<a href="./member_grade.php" class="btn btn2" >멤버 등급(grade) 수동 갱신</a>
-	
-	<a href="#" class="btn btn2" onclick="clear_db('balance');">멤버 보너스,V7,매출전환,level 초기화(출금,전환 제외)</a>
-	<a href="#" class="btn btn2" onclick="clear_db('amt');">멤버 출금, 전환 내역 초기화</a>-->
-<!--<a href="#" class="btn btn3" onclick="clear_db('pack_order');">B팩,Q팩 구매 DB 초기화</a>
-	<a href="#" class="btn btn2" onclick="clear_db('soodang');">보너스지급 내역 전체 초기화</a>
-</div>
-<? } ?>
--->
 
 
 <form name="fsearch" id="fsearch" class="local_sch01 local_sch" style="clear:both;padding:10px 20px 20px;" method="get">
@@ -238,18 +203,23 @@ include_once(G5_PLUGIN_PATH . '/jquery-ui/datepicker.php');
 	<select name="sfl" id="sfl">
 		<option value="mb_id" <?php echo get_selected($_GET['sfl'], "mb_id"); ?>>회원아이디</option>>
 		<option value="mb_name" <?php echo get_selected($_GET['sfl'], "mb_name"); ?>>회원이름</option>
+		<option value="mb_nick" <?php echo get_selected($_GET['sfl'], "mb_nick"); ?>>회원닉네임</option>
 	</select>
 
-	<label for="stx" class="sound_only">검색어<strong class="sound_only"> 필수</strong></label>
+	
+	<label for="stx" class="sound_only">기간검색<strong class="sound_only"> 필수</strong></label>
 	<input type="text" name="stx" value="<?php echo $stx ?>" id="stx" class="frm_input">
-	| 검색 기간 : <input type="text" name="start_dt" id="start_dt" placeholder="From" class="frm_input" value="<?= $fr_date ?>" />
-	~ <input type="text" name="end_dt" id="end_dt" placeholder="To" class="frm_input" value="<?= $to_date ?>" />
+	검색 기간 : <input type="text" name="start_dt" id="start_dt" placeholder="From" class="frm_input date" value="<?= $fr_date ?>" />
+	~ <input type="text" name="end_dt" id="end_dt" placeholder="To" class="frm_input date" value="<?= $to_date ?>" />
+	
 
-	<?= $html ?>
+	|<label for="stx" class="sound_only">검색차수<strong class="sound_only"> 필수</strong></label>
+	<input type="text" name="slayer" value="<?=$slayer?>" id="slayer" class="frm_input text" placeholder="지급차수">
 
 	<input type="submit" class="btn_submit search" value="검색" />
 	<input type="button" class="btn_submit excel" value="엑셀" onclick="document.location.href='/excel/benefit_list_excel_down.php?excel_sql=<? echo $excel_sql ?>&start_dt=<?= $_GET['start_dt'] ?>&end_dt=<?= $_GET['end_dt'] ?>'" />
-
+	|
+	<?= $html ?>
 	</div>
 </form>
 
@@ -282,8 +252,8 @@ include_once(G5_PLUGIN_PATH . '/jquery-ui/datepicker.php');
 					<th scope="col">지급시간</th>
 				</tr>
 			</thead>
-			<tbody>
 
+			<tbody>
 				<?php
 				for ($i = 0; $row = sql_fetch_array($result); $i++) {
 					$bg = 'bg' . ($i % 2);
@@ -411,8 +381,9 @@ include_once(G5_PLUGIN_PATH . '/jquery-ui/datepicker.php');
 
 	function bonus_view(n) {
 		console.log("bonus_view");
-		var strdate = document.getElementById("to_date").value;
-		file_src = n + "_" + strdate + ".html";
+		// var strdate = document.getElementById("to_date").value;
+		var str_layer = document.getElementById("exc_layer").value;
+		file_src = n + "_" + str_layer + ".html";
 		file_path = g5_url + "/data/log/" + n + "/" + file_src; //롤다운
 		console.log(file_path);
 

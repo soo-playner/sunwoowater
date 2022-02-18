@@ -35,7 +35,7 @@
 
     // 센터수당 
     $center_bonus_rate_val = sql_fetch("SELECT rate FROM wallet_bonus_config WHERE code = 'center' ")['rate'];
-    $center_bonus_rate = $center_bonus_rate_val * 0.01;
+    $center_bonus_rate = $center_bonus_rate_val * 0.04;
 ?>
 
 
@@ -120,7 +120,7 @@ $(function($){
                         <div class='col-7 text-left'>
                             <span class='lvl-icon'><?=user_icon($row['mb_id'],'icon')?></span>
                             <span class='user_id'><?=$row['mb_id']?></span>
-                            <span class="mygrade badge color<?=$row['grade']?>"><?=$row['grade']?> STAR</span>
+                            <!-- <span class="mygrade badge color<?=$row['grade']?>"><?=$row['grade']?> STAR</span> -->
                         </div>
 
                         <div class='col-5 text-right'>

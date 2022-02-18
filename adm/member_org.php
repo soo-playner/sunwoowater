@@ -131,7 +131,6 @@ else
 ?>
 
 
-<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 
 
 <div style="padding:0px 0px 0px 10px;">
@@ -412,12 +411,12 @@ tbody td{border:0;}
 	background:#cbd2de;width:100%;height:100%;
 	text-align:center;display:block;border-radius:50%;
 	display: inline-block;
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     vertical-align: middle;
     line-height: 20px;
 	margin-right:5px;
-	font-size:13px;
+	font-size:19px;
 }
 .user_icon > i{font-weight: 300;}
 
@@ -429,18 +428,29 @@ tbody td{border:0;}
 	color:white;
 	}
 .user_icon.lv2{
-	background:#2b3a6d;
-	color:gold;
+	background:#61b5ff;
+	color:#1a4158;
 	}
 .user_icon.lv3{
-	background:#2b3a6d;
-	color:#40d0fb;
+	background:red;
+	color:white;
 }
+.user_icon.lv4{
+	background:green;
+	color:white;
+}
+.user_icon.lv5{
+	background:black;
+	color:gold;
+}
+
 .user_icon.lv9{
-	color:black;
+	background:black;
+	color:white;
 }
 .user_icon.lv10{
-	color:black;
+	background:black;
+	color:white;
 }
 .badge{padding:3px 6px;color:white;font-weight:600;}
 

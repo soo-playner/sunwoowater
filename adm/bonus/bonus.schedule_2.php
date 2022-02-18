@@ -121,7 +121,7 @@ function  excute(){
                 $extra_bonus = $extra_schedule[$pay_count];
                 
                 if($extra_bonus > -1){
-                    $record_result = soodang_extra($mb_id, $extra_bonus,$bonus_day,$bonus_layer,$od_select);
+                    $record_result = soodang_extra($mb_id, $extra_bonus,$bonus_day,$bonus_layer,$od_select,$od_id);
                 }
             }
             
@@ -151,7 +151,7 @@ function  excute(){
 if($debug){}else{
     $html = ob_get_contents();
     //ob_end_flush();
-    $logfile = G5_PATH.'/data/log/'.$code.'/'.$code.'_'.$bonus_day.'.html';
+    $logfile = G5_PATH.'/data/log/'.$code.'/'.$code.'_'.$bonus_layer.'.html';
     fopen($logfile, "w");
     file_put_contents($logfile, ob_get_contents());
 }

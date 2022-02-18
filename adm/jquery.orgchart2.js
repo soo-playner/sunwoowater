@@ -1068,10 +1068,23 @@
         html += '</div>';
 
         // html += "<div class='lv_icon'><span class='user_icon lv"+trim(temp[6])+"'><i class='ri-vip-crown-line'></i></span></div>";
-        html +='<p class="mb" >'
-        +"<span class='user_icon lv"+trim(temp[6])+"'><i class='ri-vip-crown-line'></i></span>"
-        // +'<img style="width:20px;" src="/img/'+temp[6]+'.png" align=absmiddle> '
-        + temp[2] + '</p>' ;
+        
+        if(Number(temp[6]) == 2){
+          var user_icon = "<i class='ri-team-fill'></i>";
+        }else if(temp[6] == 3){
+          var user_icon = "<i class='ri-store-2-line'></i>";
+        }else if(temp[6] == 4){
+          var user_icon = "<i class='ri-building-2-line'></i>";
+        }else if(temp[6] == 5){
+          var user_icon = "<i class='ri-government-line'></i>";
+        }else if(temp[6] > 8){
+          var user_icon = "<i class='ri-user-settings-line'></i>";
+        }else{
+          var user_icon = "<i class='ri-vip-crown-line'></i>";
+        }
+
+
+        html +="<p class='mb'><span class='user_icon lv"+trim(temp[6])+"'>"+user_icon+"</span>" + temp[2] + "</p>" ;
 
         var badge_color = 'color'+temp[12];
         html += "<div class='dec' style='margin-bottom:5px;'>등급: <span class='badge "+badge_color+"' style='font-size:11px;'>"+temp[12]+"S</span></div>";

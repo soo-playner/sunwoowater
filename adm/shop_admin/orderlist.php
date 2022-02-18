@@ -398,9 +398,9 @@ if(!sql_query(" select mb_id from {$g5['g5_shop_order_delete_table']} limit 1 ",
 
         // 주문 번호에 에스크로 표시
         $od_paytype = '';
-        if($row['od_test'])
+        /* if($row['od_test'])
             $od_paytype .= '<span class="list_test">테스트</span>';
-
+ */
         if($default['de_escrow_use'] && $row['od_escrow'])
             $od_paytype .= '<span class="list_escrow">에스크로</span>';
 
@@ -414,6 +414,12 @@ if(!sql_query(" select mb_id from {$g5['g5_shop_order_delete_table']} limit 1 ",
         if($row['od_cancel_price'] > 0) {
             $bg .= 'cancel';
             $td_color = 1;
+        }
+
+        if($row['od_test']){
+            $od_complete = '<span class="list_test">지급완료</span>';
+        }else{
+            $od_complete = '';
         }
     ?>
 
@@ -455,7 +461,7 @@ if(!sql_query(" select mb_id from {$g5['g5_shop_order_delete_table']} limit 1 ",
         <td class="bg_<?=$row['od_select']?>"> <?=$row['od_select']?>차</td>
         <td > <?=$row['od_recharge']?></td>
         <td > <?=$row['od_layer']?>대</td>
-        <td > <?=$row['pay_count']?> / <?=$row['pay_end']?></td>
+        <td > <?=$row['pay_count']?> / <?=$row['pay_end']?><?=$od_complete?></td>
         <td class="td_numsum" style='text-align:right'> <?=number_format($row['pay_acc'])?></td>
         <td > <input type='button' class='btn od_cancle' value='구매취소' data-id="<?=$row['od_id']?>"></td>
        

@@ -10,6 +10,8 @@ $now_date = date('Y-m-d');
 $bonus_sql = "select * from {$g5['bonus_config']} WHERE used > 0 order by no asc";
 $list = sql_query($bonus_sql);
 
+
+
 $pre_setting = sql_fetch($bonus_sql);
 $pre_condition ='';
 $admin_condition = " and "." mb_level < 10 ";
@@ -191,7 +193,7 @@ function soodang_record($mb_id, $code, $bonus_val,$rec,$rec_adm,$bonus_day,$exc_
     }
 }
 
-function soodang_extra($mb_id, $bonus_val, $bonus_day,$exc_count,$od_select){
+function soodang_extra($mb_id, $bonus_val, $bonus_day,$exc_count,$od_select,$od_id){
     global $g5,$debug,$now_datetime;
 
     if($mb_id != ''){
@@ -202,7 +204,8 @@ function soodang_extra($mb_id, $bonus_val, $bonus_day,$exc_count,$od_select){
         $soodang_extra_sql = " insert `soodang_extra` set day='".$bonus_day."'";
         $soodang_extra_sql .= " ,mb_id			= '".$mb_id."'";
         $soodang_extra_sql .= " ,count	        = '".$exc_count."'";
-        $soodang_extra_sql .= " ,bonus		    =  ".$bonus_val;	
+        $soodang_extra_sql .= " ,bonus		    =  ".$bonus_val;
+        $soodang_extra_sql .= " ,recommend		= '{$mb['mb_recommend']}'";
         $soodang_extra_sql .= " ,center			= '{$mb['mb_center']}'";
         $soodang_extra_sql .= " ,jijum			= '{$mb['mb_jijum']}'";
         $soodang_extra_sql .= " ,jisa			= '{$mb['mb_jisa']}'";
@@ -466,23 +469,23 @@ function order_update($od_id,$benefit_limit,$pay_count){
 
 // 원 표시
 if( !function_exists( 'shift_kor' ) ):
-function shift_kor($val){
-	return Number_format($val, 0);
-}
+    function shift_kor($val){
+        return Number_format($val, 0);
+    }
 endif;
 
 // 달러 표시
 if( !function_exists( 'shift_doller' ) ):
-function shift_doller($val){
-	return Number_format($val, 2);
-}
+    function shift_doller($val){
+        return Number_format($val, 2);
+    }
 endif;
 
 // 코인 표시
 if( !function_exists( 'shift_coin' ) ):
-function shift_coin($val){
-	return Number_format($val, COIN_NUMBER_POINT);
-}
+    function shift_coin($val){
+        return Number_format($val, COIN_NUMBER_POINT);
+    }
 endif;
 
 // 소수점 지수-상수 변환표시 

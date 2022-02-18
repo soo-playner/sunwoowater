@@ -45,7 +45,7 @@ $mining_acc = $member['mb_mining_1'];
 $mining_amt = $member['mb_mining_1_amt'];
 $mining_total = ($mining_acc - $mining_amt);
 
-$bonus_sql = "select * from {$g5['bonus_config']} order by idx";
+$bonus_sql = "select * from {$g5['bonus_config']} order by no asc";
 $list = sql_query($bonus_sql);
 $pre_setting = sql_fetch($bonus_sql);
 

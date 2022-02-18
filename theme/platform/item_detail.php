@@ -21,11 +21,34 @@
 header .top_title h3{margin-lefT:20px;}
 header .top_title{padding:10px 20px}
 header .top_title h3 img{margin-top:0;}
+
 .schedule li{width:100% !important;}
 .schedule li.header{font-size:12px !important}
-.schedule li.li-footer{padding-right:18%;}
+.schedule li.li-footer{display:flex;}
 .schedule li dt{width:20%;}
-.schedule li dd:last-child{width:25%;}
+.schedule li dd:last-child{width:100px;}
+
+.box-body ul {
+    margin: 15px 0;
+    border-bottom: 2px dotted #ccc;
+    padding-bottom: 10px;
+}
+.box-body .mining {
+    font-size: 17px;
+    font-weight: 700;
+    font-family: Montserrat, Arial, sans-serif;
+    line-height: 30px;
+    color: #1a1a1a;
+}
+.box-body .date {
+    font-size: 12px;
+    letter-spacing: -0.5px;
+    color: #0c4ddf;
+}
+.box-body .rec_adm {
+    font-size: 11px;
+    color: #777;
+}
 </style>
 
 <main>
@@ -39,10 +62,10 @@ header .top_title h3 img{margin-top:0;}
                 </div>
             </div>
             <div class='row'>
-                <div class='col-6' style="font-size:13px;"> 
+                <div class='col-7' style="font-size:13px;"> 
                     <span>기부일 : <?=$sub_result['od_time']?></span>
                 </div>
-                <div class='col-6 text-right hist_value'>
+                <div class='col-5 text-right hist_value'>
                     <span><?=shift_auto($sub_result['upstair'])?> <?=PURCHASE_CURENCY?></span>
                 </div>
             </div>
@@ -60,7 +83,7 @@ header .top_title h3 img{margin-top:0;}
                     $value_month = date("m",time($sub_result['od_date']));
                     $value_layer = $sub_result['od_layer'];
 
-                    echo "<li class='header'><dt>월</dt><dt>대수</dt><dd>지급수익</dd><dd>수익지급</dd></li>";
+                    echo "<li class='header'><dt>월</dt><dt>대수</dt><dd>지급보너스</dd><dd>지급</dd></li>";
 
                     foreach ($price as $key => $value) {
                         
@@ -75,16 +98,41 @@ header .top_title h3 img{margin-top:0;}
                         echo "<dd>";
                         if($key < $sub_result['pay_count']){
                             echo "<i class='ri-check-fill font_green'></i>";
+                        }else{
+                            echo "<span style='color:#999;font-weight:300;font-size:13px;'>예정</span>";
                         }
                         echo "</dd>";
                         echo "</li>";
                     }
 
-                    echo "<li class='li-footer'>";
+                    echo "<li class='li-footer'><dt></dt><dt></dt><dd>";
                     echo Number_format($total_value);
-                    echo "</li>";
+                    echo "</dd><dd></dd></li>";
                     ?>
                 </div>
+            </div>
+
+        </div>
+
+        <div class="col-sm-12 col-12 content-box mining_history round  mb20">
+            <div class="box-header">
+                지급 받은 보너스
+            </div>
+
+            <div class="box-body">
+                <?
+                    $bonus_history_sql = "SELECT * from soodang_pay WHERE mb_id = '{$member['mb_id']}' order by day,count desc ";
+                    $bonus_history_result = sql_query($bonus_history_sql);
+
+                    while($row = sql_fetch_array($bonus_history_result)){
+                ?>
+                <ul>
+                    <li class="date"><?=$row['day']?></li>
+                    <li class="mining"> <?=shift_auto($row['benefit'])?>원</li>
+                    <li class="rec_adm">[ <?=$row['count']?>차 ] <?=$row['rec']?></li>
+                </ul>
+                <?}?>
+                
             </div>
 
         </div>

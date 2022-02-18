@@ -6,10 +6,10 @@ include_once(G5_LIB_PATH.'/mailer.lib.php');
 
 include_once(G5_THEME_PATH.'/_include/wallet.php');
 
+
 ?>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-
 <?
 include_once(G5_THEME_PATH.'/_include/head.php');
 include_once(G5_THEME_PATH.'/_include/gnb.php');
@@ -26,16 +26,18 @@ include_once(G5_PATH.'/util/recommend.php');
 	return $randomString;
 } */
 
+// 리퍼러 체크
+referer_check();
 
 // 테스팅 
-/* $_POST['nation_number'] = '1';
-$_POST['mb_recommend'] = 'test8';
-$_POST['mb_name'] = '한은수';
-$_POST['mb_id'] = 'arcthan8';
+$_POST['nation_number'] = '81';
+$_POST['mb_recommend'] = 'dumy';
+$_POST['mb_name'] = '한은수4';
+$_POST['mb_id'] = 'arcthan4';
 $_POST['mb_email'] = 'arcthan@naver.com';
 $_POST['mb_hp'] = '01090009000';
-$_POST['mb_addr1'] = '서울 강남구 테헤란로5길 24';
-$_POST['mb_addr2'] = '25';
+$_POST['mb_addr1'] = '서울 강남구 테헤란로5길 25';
+$_POST['mb_addr2'] = '602호 (코너스톤)';
 $_POST['bank_name'] = '국민은행';
 $_POST['account_name'] = '한은수';
 $_POST['bank_account'] = '123456789123456';
@@ -44,11 +46,7 @@ $_POST['mb_password_re'] = 'zx235689';
 $_POST['reg_tr_password'] = '235689';
 $_POST['reg_tr_password_re'] = '235689';
 $_POST['term'] = 'on';
-$_POST['term'] = 'on'; */
-
-
-// 리퍼러 체크
-referer_check();
+$_POST['term'] = 'on';
 
 if (!($w == '' || $w == 'u')) {
 	alert('w 값이 제대로 넘어오지 않았습니다.');
@@ -73,6 +71,7 @@ if ($wx=="Y"){
 		alert('잘못된 접근입니다', G5_URL);
 }
 
+//print_R($_POST);
 
 /*## 회원아이디 자동생성 ################################################*/
 /*
@@ -300,6 +299,11 @@ if ($config['cf_cert_use'] && $cert_type && $md5_cert_no) {
 }
 
 
+/* Dfine  추천스폰서 */
+// $sponsor =return_up_manager($mb_id);
+$sponsor = '';
+
+
 /* OTP
 $Base32 = new Base32();
 $encoded = $Base32->encode(str_pad($mb_id, 20 , "!&%"));
@@ -364,43 +368,38 @@ if ($w == '') {
 		$sql .= " , mb_email_certify = '".G5_TIME_YMDHIS."' ";
 
 	print_r($sql);
-    
-    $result = sql_query($sql);
-
+	// $result = sql_query($sql);
+	
+	
 
 	if($result){
-		$recent_sql = "SELECT id FROM auth_email WHERE email='{$mb_email}' ORDER BY id DESC LIMIT 0,1";
+		// 메일인증
+		/* $recent_sql = "SELECT id FROM auth_email WHERE email='{$mb_email}' ORDER BY id DESC LIMIT 0,1";
 		$row = sql_fetch($recent_sql);
-		$update_sql = "UPDATE auth_email set auth_check = '2' WHERE email = '{$mb_email}' AND id = {$row['id']}";
-		sql_query($update_sql);
 
-        
-        echo "<br>";
-        echo "=====================";
-        print_R($mb_id);
-        echo "=====================";
-        echo "<br>";
+		$update_sql = "UPDATE auth_email set auth_check = '2' WHERE email = '{$mb_email}' AND id = {$row['id']}";
+		sql_query($update_sql); */
+		// $mb_center = return_org_member($mb_id,2);
 
         // 센터찾기 
-        $mb_center = return_org_member($mb_id,2);
-        echo "센터 : ".$mb_center;
-        
+        /* $mb_center = return_org_member($mb_id,2);
+       
         // 지점찾기 
         $mb_jijum = return_org_member($mb_id,3);
-        echo "지점 : ".$mb_jijum;
         
         // 지사찾기 
         $mb_jisa = return_org_member($mb_id,4);
-        echo "지사 : ".$mb_jisa;
         
         // 본부찾기 
-        $mb_bonbu = return_org_member($mb_id,5);
-        echo "본부 : ".$mb_bonbu;
-
+        $mb_bonbu = return_org_member($mb_id,5); */
+ 		
         $update_org_sql = "UPDATE g5_member set mb_center = '{$mb_center}', mb_jijum = '{$mb_jijum}', mb_jisa = '{$mb_jisa}', mb_bonbu = '{$mb_bonbu}' WHERE mb_id = '{$mb_id}' ";
-        echo $update_org_sql;
-		sql_query($update_org_sql);
+		// sql_query($update_org_sql);
+		echo "<br><br>";
+		print_R($update_org_sql);
 	}
+
+	
 	
 	/////////////////////////////////////////////////////////////////// 아바타 생성 코드
 	/*
@@ -564,8 +563,7 @@ if ($w == '') {
 					{$sql_email_certify}
 					{$sql_certify}
 			  where mb_id = '$mb_id' ";
-	// sql_query($sql);
-    print_R($sql);
+	sql_query($sql);
 }
 
 // 회원 아이콘
@@ -724,8 +722,6 @@ if ($msg)
 
 if ($w == '') {
 	// goto_url(G5_THEME_URL.'/register_result.php');
-
-    echo "<br><br><br> 회원가입완료 ";
 
 	// echo "<script>
 	// 	function enroll_result(){

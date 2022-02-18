@@ -46,7 +46,7 @@ $token = get_token();
 
     <tbody>
     <?for($i=0; $row=sql_fetch_array($list); $i++){?>
-        <?if($row['used'] == 3){?>
+        <?if($row['code'] == 'extra'){?>
         <tr class='sub_th'>
             <th scope="col" width="30px">No</th>
             <th scope="col" width="40px">사용</th>
@@ -74,7 +74,7 @@ $token = get_token();
         <td style="text-align:center"><input class='bonus_input' name="kind[]"  value="<?=$row['kind']?>"></input></td>
         <td style="text-align:center"><input class='bonus_input' name="limited[]"  value="<?=$row['limited']?>"></input></td>
         <td style="text-align:center"><input class='bonus_input' name="rate[]"  value="<?=$row['rate']?>"></input></td>
-        <td style="text-align:center"><input class='bonus_input' name="layer[]"  value="<?if($row['used'] == 3){echo $total_layer;}?>" readonly></input></td>
+        <td style="text-align:center"><input class='bonus_input' name="layer[]"  value="<?if($row['used'] == 9){echo $total_layer;}?>" readonly></input></td>
         <td style="text-align:center">
             <select id="bonus_source" class='bonus_source' name="source[]">
                 <?php echo option_selected(0, $row['source'], "ALL"); ?>

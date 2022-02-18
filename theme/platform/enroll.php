@@ -399,6 +399,7 @@ if ($_GET['recom_referral']){
 							$(target).val($(target_type + ' .modal-body .user.selected').html());
 						}
 						$(target_type).modal('hide');
+						$(target).attr("readonly",true);
 					});
 
 				} else {

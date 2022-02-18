@@ -71,7 +71,9 @@ $title = 'Dashboard';
 				<div>
 					<span class='userid user_level'><?=$user_icon?></span>
 					<h4 class='bold'><?=$member['mb_id']?>님</h4>
-					<h4 class='mygrade badge color<?=user_grade($member['mb_id'])?>'><?=user_grade($member['mb_id'])?> STAR</h4>
+					<!-- <h4 class='mygrade badge color<?=user_grade($member['mb_id'])?>'>
+						<?=user_grade($member['mb_id'])?> STAR
+					</h4> -->
 					<h4 class='mygrade badge' style="margin-left:0;"><?=$user_level?></h4>
 
 					<?if($notice_result_num > 0){ ?>

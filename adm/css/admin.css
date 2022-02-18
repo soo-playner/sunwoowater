@@ -134,7 +134,7 @@ h3 {margin:0 20px}
 
 
 .btn_submit {margin:0;padding:0;border:0;background:#ff3061;color:#fff;cursor:pointer}
-.btn_submit:hover{background:#1a1a1a !important;}
+.btn_submit:hover{background:#1a1a1a !important;color:white !important;}
 
 .btn_confirm .btn_submit {padding:0 15px;border:0;height:30px;color:#fff}
 .btn_cancel {display:inline-block;padding:0 15px;height:30px;border:0;background:#617d46;color:#fff;text-decoration:none}
