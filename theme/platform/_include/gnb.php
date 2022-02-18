@@ -111,6 +111,10 @@ $(document).ready(function(){
 			<a href="javascript:void(0);" class="logout_pop_open"><i class="ri-logout-box-r-line"></i><span>로그아웃</span></a>
 			<a href="/page.php?id=member_term"><i class="ri-git-repository-line"></i><span>회원약관</span></a>
 		</div>	
+
+		<div class="gnb-footer">
+			<p class="copyright">Copyright ⓒ SUNWOO Co. ALL right reserved.</p>
+		</div>
 	</nav>
 	<?}?>
 

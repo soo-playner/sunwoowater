@@ -11,7 +11,6 @@
 		$tree_id = $member['mb_id'];
 		$tree_no = $member['mb_no'];
 	}
-
 	login_check($member['mb_id']);
 
 	///bbs/level_structure_upgraded.list.php 로드
@@ -61,104 +60,6 @@ var gradeMap = {
 	var $selected;
 	var mb_no = '<?=$tree_no?>';
 	//var xhr;
-
-	$(function() {
-		// 상세보기
-
-		$(document).on('click','.lvl' ,function(e) {
-			$(this).toggleClass('lvl-is-open');
-			$selected = $(this).next();
-			if($selected.css('max-height') != '0px' ){
-				$selected.css('max-height','0px');
-			}else{
-				$selected.css('max-height', $selected.prop('scrollHeight') + 'px');
-			}
-			// console.log($(this).attr('mb_no'));
-			if($(this).hasClass('lvl-is-open')){
-				$.get( "/util/level_structure_upgraded.mem.php", {
-					mb_no: $(this).attr('mb_no')
-				}).done(function( data ) {
-					if(data){
-						$selected.find('.name').text(data.mb_id);
-						$selected.find('.sponsor').text(data.mb_recommend);
-						$selected.find('.enroll').text(daΩta.enrolled);
-						if(data.mb_level > 1 && data.mb_level < 9){
-							$selected.find('.rank').text((data.mb_level -2) + ' Star');
-						}
-						/* $selected.find('.email').text(data.mb_email);
-						$selected.find('.pool1').text(data.it_pool1);
-						$selected.find('.pool2').text(data.it_pool2);
-						$selected.find('.pool3').text(data.it_pool3);
-						$selected.find('.gpu').text(data.it_gpu); */
-					}
-				}).fail(function(e) {
-					console.log( e );
-				});
-			}
-		});
-
-		 $(document).on('click','.lvl-username' ,function(e) {
-			// console.log($(this).text());
-
-			getList($(this).text(), 'name');
-			getLeg('<?=$tree_id?>', $(this).text());
-			$('.search_container').removeClass("active");
-		 });
-/*
-		 $(document).on('click','.lv' ,function(e) {
-			var search_mb_id = $(this).parent().find('.lvl-username').text();
-			getList(search_mb_id, 'name');
-			getLeg('<?=$tree_id?>', $(this).attr('mb_id'));
-			e.stopPropagation();
-		});
-*/
-
-		// $(document).on('click','._lvl > .lv' ,togglebar);
-		// $(document).on('click','._lvl > .toggle' ,togglebar);
-
-		/* function togglebar() {
-			var con = $(this).parents('.lvl-container');
-			var level = con.attr('class').replace('lvl-container ','');
-
-			if(con.hasClass('closed')){
-				con.nextUntil( "." + level ).removeClass('closed').show();
-				con.removeClass('closed');
-				// $(this).parent().find('.toggle').css('color','black');
-			}else{
-				// $(this).parent().find('.toggle').css('color','#ccc');
-				con.nextUntil( "." + level ).hide();
-				con.addClass('closed');
-			}
-			event.stopPropagation();
-		} */
-
-
-		$(document).on('click','.go' ,function(e) {
-			var search_mb_id = $(this).parent().parent().find('.lvl-username').text();
-
-			// console.log(search_mb_id);
-
-			getList(search_mb_id, 'name');
-			getLeg('<?=$tree_id?>', $(this).attr('mb_id'));
-			event.stopPropagation();
-		});
-
-		
-
-		// 엔터키
-		$('#now_id').keydown(function (key) {
-			if(key.keyCode == 13){
-				key.preventDefault();
-				//$('button.search-button').trigger('click');
-				member_search();
-			}
-		});
-
-		// 조직도 데이터 가져오기
-		getList(Number(mb_no),'num');
-		getLeg('<?=$tree_id?>', "<?=$tree_id?>");
-
-	});
 
 
 	function depthFirstTreeSort(arr, cmp) {
@@ -227,51 +128,51 @@ var gradeMap = {
 
 	function member_search(){
 		// console.log('member_search');
-			if($("#now_id").val() == ""){
-				//alert("Please enter a keyword.");
-				commonModal('Notice','Please enter a keyword.',80);
-				$("#now_id").focus();
-				return;
-			}
-
-			dimShow();
-
-			$.get("/util/level_structure_upgraded.search.php", {
-				keyword: $("#now_id").val()
-			}).done(function( data ) {
-				
-				$('.structure_search_container').addClass("active");
-				var vHtml = $('<div class=rows>');
-				$.each(data, function( index, member ) {
-					var line = $('<div class=rows>').append($('<strong>').addClass('mbId').html(member.mb_id));
-
-					/* if(member.mb_name != ''){
-						line.append('<br>');
-						line.append( '(' + member.mb_email + ')');
-					}else{
-						line.css('line-height','50px');
-					} */
-					vHtml.append(line);
-				});
-
-				$("#structure_search_result").html(vHtml.html());
-				$(".structure_search_container .result_btn").click(function(){
-					dimHide();
-					$('.structure_search_container').removeClass("active");
-				});
-			}).fail(function(e) {
-				console.log( e );
-			});
+		if($("#now_id").val() == ""){
+			//alert("Please enter a keyword.");
+			commonModal('Notice','Please enter a keyword.',80);
+			$("#now_id").focus();
+			return;
 		}
+
+		dimShow();
+
+		$.get("/util/level_structure_upgraded.search.php", {
+			keyword: $("#now_id").val()
+		}).done(function( data ) {
+			
+			$('.structure_search_container').addClass("active");
+			var vHtml = $('<div class=rows>');
+			$.each(data, function( index, member ) {
+				var line = $('<div class=rows>').append($('<strong>').addClass('mbId').html(member.mb_id));
+
+				/* if(member.mb_name != ''){
+					line.append('<br>');
+					line.append( '(' + member.mb_email + ')');
+				}else{
+					line.css('line-height','50px');
+				} */
+				vHtml.append(line);
+			});
+
+			$("#structure_search_result").html(vHtml.html());
+			$(".structure_search_container .result_btn").click(function(){
+				dimHide();
+				$('.structure_search_container').removeClass("active");
+			});
+		}).fail(function(e) {
+			console.log( e );
+		});
+	}
 	
 
-		// 검색결과 클릭
-		$(document).on('click','.mbId' ,function(e) {
-			getList($(this).text(), 'name');
-			getLeg('<?=$tree_id?>', $(this).text());
-			dimHide();
-			$('.structure_search_container').removeClass("active");
-		});
+	// 검색결과 클릭
+	$(document).on('click','.mbId' ,function(e) {
+		getList($(this).text(), 'name');
+		getLeg('<?=$tree_id?>', $(this).text());
+		dimHide();
+		$('.structure_search_container').removeClass("active");
+	});
 	
 
 	
@@ -506,6 +407,104 @@ var gradeMap = {
 			console.log( e );
 		});
 	}
+
+	$(function() {
+		// 상세보기
+
+		$(document).on('click','.lvl' ,function(e) {
+			$(this).toggleClass('lvl-is-open');
+			$selected = $(this).next();
+			if($selected.css('max-height') != '0px' ){
+				$selected.css('max-height','0px');
+			}else{
+				$selected.css('max-height', $selected.prop('scrollHeight') + 'px');
+			}
+			// console.log($(this).attr('mb_no'));
+			if($(this).hasClass('lvl-is-open')){
+				$.get( "/util/level_structure_upgraded.mem.php", {
+					mb_no: $(this).attr('mb_no')
+				}).done(function( data ) {
+					if(data){
+						$selected.find('.name').text(data.mb_id);
+						$selected.find('.sponsor').text(data.mb_recommend);
+						$selected.find('.enroll').text(daΩta.enrolled);
+						if(data.mb_level > 1 && data.mb_level < 9){
+							$selected.find('.rank').text((data.mb_level -2) + ' Star');
+						}
+						/* $selected.find('.email').text(data.mb_email);
+						$selected.find('.pool1').text(data.it_pool1);
+						$selected.find('.pool2').text(data.it_pool2);
+						$selected.find('.pool3').text(data.it_pool3);
+						$selected.find('.gpu').text(data.it_gpu); */
+					}
+				}).fail(function(e) {
+					console.log( e );
+				});
+			}
+		});
+
+		 $(document).on('click','.lvl-username' ,function(e) {
+			// console.log($(this).text());
+
+			getList($(this).text(), 'name');
+			getLeg('<?=$tree_id?>', $(this).text());
+			$('.search_container').removeClass("active");
+		 });
+/*
+		 $(document).on('click','.lv' ,function(e) {
+			var search_mb_id = $(this).parent().find('.lvl-username').text();
+			getList(search_mb_id, 'name');
+			getLeg('<?=$tree_id?>', $(this).attr('mb_id'));
+			e.stopPropagation();
+		});
+*/
+
+		// $(document).on('click','._lvl > .lv' ,togglebar);
+		// $(document).on('click','._lvl > .toggle' ,togglebar);
+
+		/* function togglebar() {
+			var con = $(this).parents('.lvl-container');
+			var level = con.attr('class').replace('lvl-container ','');
+
+			if(con.hasClass('closed')){
+				con.nextUntil( "." + level ).removeClass('closed').show();
+				con.removeClass('closed');
+				// $(this).parent().find('.toggle').css('color','black');
+			}else{
+				// $(this).parent().find('.toggle').css('color','#ccc');
+				con.nextUntil( "." + level ).hide();
+				con.addClass('closed');
+			}
+			event.stopPropagation();
+		} */
+
+
+		$(document).on('click','.go' ,function(e) {
+			var search_mb_id = $(this).parent().parent().find('.lvl-username').text();
+
+			// console.log(search_mb_id);
+
+			getList(search_mb_id, 'name');
+			getLeg('<?=$tree_id?>', $(this).attr('mb_id'));
+			event.stopPropagation();
+		});
+
+		
+
+		// 엔터키
+		$('#now_id').keydown(function (key) {
+			if(key.keyCode == 13){
+				key.preventDefault();
+				//$('button.search-button').trigger('click');
+				member_search();
+			}
+		});
+
+		// 조직도 데이터 가져오기
+		getList('<?=$tree_id?>', 'name')
+		getLeg('<?=$tree_id?>', "<?=$tree_id?>");
+	});
+
 	</script>
 
 	<style>

@@ -1675,3 +1675,34 @@ a.gray_close{background:#6c757d; color:#fff; text-align: center; padding: 8px 10
 }
 
 
+.company {
+	font-size: 11px;
+	color: rgba(0, 0, 0, 0.5);
+	letter-spacing: 0px;
+}
+.copyright {
+	font-size: 11px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: rgba(255, 255, 255, 0.75);
+	line-height: 22px;
+}
+.copyright.text-shadow {
+	color: white;
+	text-shadow: 1px 2px rgba(0, 0, 0, 0.5);
+}
+.gnb-footer .copyright {
+	color: rgba(255, 255, 255, 0.75);
+	font-size: 10px;
+}
+
+.footer {
+	position: absolute;
+	bottom: 10px;
+	width: 100%;
+	text-align: center;
+}
+.footer .copyright {
+	color: rgba(0, 0, 0, 0.5);
+	font-weight: 500;
+}
+

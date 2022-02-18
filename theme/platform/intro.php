@@ -43,7 +43,7 @@ body{overflow-y: hidden;}
 }
 
 .intro_title{
-	color:white;position:fixed;bottom:50px;text-align:center;width:100%;
+	color:rgba(255,255,255,0.85);position:fixed;bottom:30px;text-align:center;width:100%;font-size:12px;
 }
 .intro_title p {line-height:26px;letter-spacing:0;}
 
@@ -204,8 +204,9 @@ body{overflow-y: hidden;}
 		</div>
 	</div>
 
-	<div class='intro_title'>
-		<p><?=CONFIG_TITLE?></p>
+	<div class="intro_title">
+	<!-- <p class="company" style="line-height:16px;color:#6a6306"> </p> -->
+	<p class="copyright" >Copyright ⓒ SUNWOO Co. ALL right reserved.</p>
 	</div>
 </div>
 

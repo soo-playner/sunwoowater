@@ -23,7 +23,7 @@ $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
 $header = substr($res, 0, $header_size);
 $short_URL_row = substr($res, $header_size);
 
-$short_URL_p = preg_replace("/\s+/", "", (substr($short_URL_row,2)));
+$short_URL_p = preg_replace("/\s+/", "", (substr($short_URL_row,0)));
 
 $short_URL = str_replace(array('www.'), '', $short_URL_p);
 
