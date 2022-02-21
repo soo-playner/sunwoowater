@@ -22,15 +22,15 @@ if ($_GET['end_dt']) {
 }
 
 
-$sql = "select * from {$g5['bonus_config']} where used > 0 AND used < 3 order by no asc";
+$sql = "select * from {$g5['bonus_config']} where used > 0 AND used < 4 order by no asc";
 $list = sql_query($sql);
-
-
-
+$soodang_name = [];
 
 // 보너스검색 필터 
 $allowcnt = 0;
 for ($i = 0; $row = sql_fetch_array($list); $i++) {
+	
+	array_push($soodang_name,$row['name']);
 
 	$nnn = "allowance_chk" . $i;
 	$html .= "<input type='checkbox' class='search_item' name='" . $nnn . "' id='" . $nnn . "'";
@@ -146,19 +146,47 @@ $total_exc_bonus = sql_fetch("SELECT sum(benefit) as total from soodang_pay")['t
 $search_sql = "SELECT sum(benefit) as total from soodang_pay WHERE day >= '{$start_dt}' AND day <= '{$end_dt}'";
 $search_exc_bonus = sql_fetch($search_sql)['total'];
 
+function get_soodang_name($val){
+	global $soodang_name;
+	$name_num = substr($val,-1,1);
+	if(is_numeric($name_num)){
+		$result = $soodang_name[$name_num-1];
+	}else{
+		$result = $soodang_name[2];
+	}
+	return $result;
+}
+
 include_once(G5_PLUGIN_PATH . '/jquery-ui/datepicker.php');
 ?>
 
-
 <link href="<?= G5_ADMIN_URL ?>/css/scss/bonus/bonus_list.css" rel="stylesheet">
+
+<style>
+.benefit{width:inherit}
+.outbox{margin-right:0 !important;}
+
+.outbox.rank_bonus .benefit {
+	background: darkorange;
+}
+.outbox +li{
+	
+}
+.view_btn{
+	margin-left:-5px;
+	height:36px;
+	margin-right:10px;
+}
+</style>
+
+
+
 
 <div class="local_desc01 local_desc">
 	<p>
 		공통 : 보너스기준일자로 각 보너스지급버튼 클릭<br>
-		- 현재 누적볼 총합 : <strong><?=Number_format($total_ball_count)?></strong> / 다음대수까지 : <span class="bold">-<?=Number_format($next_layer_remain)?></span><br>
-        - 현재 누적 차수 : <strong><?=$total_layer?> 대</strong><br>
-		<!-- <strong>직급승급 : </strong>① 회원직급승급(S1~S5)실행 ② 승급보너스는 <strong><a href='./bonus_mining2.php'>마이닝지급</a></strong>에서 지급 ③ 승급현황은 <strong><a href='./member_upgrade.php'>승급현황</a></strong>에서 확인<br> -->
-		
+		- 현재 누적볼 총합 : <span class='green'><?=Number_format($total_ball_count)?></span> / 다음대수까지 : <strong>-<?=Number_format($next_layer_remain)?></strong><br>
+        - 현재 누적 차수 : <strong><?=$total_layer?> 대</strong>
 	</p>
 </div>
 
@@ -169,16 +197,15 @@ include_once(G5_PLUGIN_PATH . '/jquery-ui/datepicker.php');
 
 	<li class="outbox">
 		<label for="to_date" class="sound_only">기간 종료일</label>
+		<span>기준일자</span>
 		<input type="text" name="to_date" value="<?=$to_date?$to_date:date("Ymd")?>" id="to_date" required class="required frm_input date_input" size="13" maxlength="10">
-
-
 		<input type="radio" name="price" id="pv" value='pv' checked='true' style="display:none;">
-		<br><span>보너스계산 기준일자</span>
 	</li>
 	<li class="right-border ">
 		<label for="to_date" class="sound_only">차수</label>
+		| <span>지급차수</span>
 		<input type="text" name="exc_layer" id="exc_layer" class="required frm_input date_input" size="3" value="<?=$total_layer?>">
-		<br><span>보너스지급차수</span>
+		
 	</li>
 
 	<?
@@ -186,11 +213,12 @@ include_once(G5_PLUGIN_PATH . '/jquery-ui/datepicker.php');
 	$list = sql_query($sql);
 
 	for ($i = 0; $row = sql_fetch_array($list); $i++) {
+
 		$code = $row['code'];
 		?>
 			<li class='outbox'>
 				<input type='submit' name="act_button" value="<?= $row['name'] ?> 보너스 지급" class="frm_input benefit" onclick="bonus_excute('<?= $code ?>','<?= $row['name'] ?>');">
-				<br><input type="submit" name="act_button" value="<?= $row['name'] ?> 보너스 내역" class="view_btn" onclick="bonus_view('<?= $code ?>');">
+				<input type="submit" name="act_button" value="<?= $row['name'] ?> 지급 내역" class="view_btn" onclick="bonus_view('<?= $code ?>');">
 			</li>
 	<? } ?>
 
@@ -267,7 +295,7 @@ include_once(G5_PLUGIN_PATH . '/jquery-ui/datepicker.php');
 							<a href='/adm/member_form.php?w=u&mb_id=<?= $row['mb_id'] ?>'><?php echo get_text($row['mb_id']); ?></a>
 						</td>
 
-						<td width='80' style='text-align:center'><?= get_text($row['allowance_name']); ?></td>
+						<td width='80' style='text-align:center'><?= get_soodang_name($row['allowance_name']); ?></td>
 						<td width="100" class='bonus'><?= Number_format($soodang, BONUS_NUMBER_POINT) ?></td>
 						<td width="30" class='bonus'><?= $row['count'] ?></td>
 

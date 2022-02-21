@@ -31,12 +31,12 @@
 
 <script>
  function bonus_url($val){
-	 if($val == 'mining'){
-		location.href = '/adm/bonus/bonus_mining2.php?to_date=<?=$bonus_day?>';
+	 if($val == 'rank_bonus'){
+		location.href = '/adm/bonus/bonus.level_org.php?to_date=<?=$bonus_day?>&exc_layer=<?=$exc_layer ?>';
 	 }else if($val == "rank"){
-		location.href = '/adm/bonus/member_upgrade.php?to_date=<?=$bonus_day?>&&exc_layer=<?=$exc_layer ?>';
+		location.href = '/adm/bonus/member_upgrade.php?to_date=<?=$bonus_day?>&exc_layer=<?=$exc_layer ?>';
 	 }else{
-		location.href = '/adm/bonus/bonus_list.php?to_date=<?=$bonus_day?>';
+		location.href = '/adm/bonus/bonus_list.php??to_date=<?=$bonus_day?>&exc_layer=<?=$exc_layer ?>';
 	 }
  }
 </script>
