@@ -179,12 +179,18 @@ function fvisit_submit(act)
 	.black_btn{background:#333 !important; border:1px solid black !important; color:white;}
     .cellbg_0{color:dodgerblue}
     .cellbg_1{color:brown;}
-
-    .outbox:nth-child(3) .benefit {
+    .outbox{margin-right:0 !important;}
+    .outbox.rank .benefit {
         background: dodgerblue;
     }
+    .outbox +li{
+        margin-left:-3px;
+    }
+    .outbox +li input{
+        height:36px;
+    }
 
-    .outbox:nth-child(4) .benefit {
+    .outbox.with_rank .benefit {
         background: brown;
     }
 </style>
@@ -197,7 +203,6 @@ function fvisit_submit(act)
         | 지점:     <strong><?=member_cnt('3')?></strong> 명
         | 지사:     <strong><?=member_cnt('4')?></strong> 명
         | 본부:     <strong><?=member_cnt('5')?></strong> 명
-		<!-- <strong>직급승급 : </strong>① 회원직급승급(S1~S5)실행 ② 승급보너스는 <strong><a href='./bonus_mining2.php'>마이닝지급</a></strong>에서 지급 ③ 승급현황은 <strong><a href='./member_upgrade.php'>승급현황</a></strong>에서 확인<br> -->
 		
 	</p>
 </div>
@@ -223,9 +228,11 @@ function fvisit_submit(act)
 	for ($i = 0; $row = sql_fetch_array($ranklist); $i++) { 
 		$code = $row['code'];
 	?>
-        <li class='outbox'>
+        <li class='outbox <?=$code?>'>
             <input type='submit' name="act_button" value="<?= $row['name'] ?> 실행" class="frm_input benefit" onclick="bonus_excute('<?= $code ?>','<?= $row['name'] ?>');">
-            <br><input type="submit" name="act_button" value="<?= $row['name'] ?> 보너스 내역" class="view_btn" onclick="bonus_view('<?= $code ?>');">
+        </li>
+        <li>
+            <input type="submit" name="act_button" value="<?= $row['name'] ?> 내역" class="view_btn" onclick="bonus_view('<?= $code ?>');">
         </li>
 	<? } ?>
 
@@ -324,8 +331,6 @@ echo $pagelist;
 		var exc_layer = $("#exc_layer").val();
 		var exc_txt = exc_layer + "대 :";
 		var tx = '을 실행';
-		
-
 
 		if (!confirm(document.getElementById("to_date").value + "일\n" + exc_txt + name + tx + ' 하시겠습니까?')) {
 			return false;
@@ -351,6 +356,32 @@ echo $pagelist;
 			}
 		});
 	});
+
+    
+	function bonus_view(n) {
+		console.log("bonus_view");
+		// var strdate = document.getElementById("to_date").value;
+		var str_layer = document.getElementById("exc_layer").value;
+
+		file_src = n + "_" + str_layer + ".html";
+		file_path = g5_url + "/data/log/" + n + "/" + file_src; //롤다운
+		console.log(file_path);
+
+		if (UrlExists(file_path)) {
+			window.open(file_path);
+		} else {
+			alert('해당내역이 없습니다.');
+		}
+    }
+
+    
+	function UrlExists(url) {
+		var http = new XMLHttpRequest();
+		http.open('HEAD', url, false);
+		http.send();
+		return http.status != 404;
+	}
+
 
 </script>
 

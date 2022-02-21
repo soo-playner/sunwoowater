@@ -5,7 +5,7 @@ include_once('./bonus_inc.php');
 
 $debug = 1;
 
-$g5['title'] = '센터수당(멤버)';
+$g5['title'] = '조직 관리 및 직급보너스';
 $code = 'center';
 
 include_once(G5_ADMIN_PATH.'/admin.head.php');
