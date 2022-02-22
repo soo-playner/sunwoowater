@@ -25,6 +25,15 @@ $value_array = [];
 $price_array = [];
 $price2_array = [];
 
+function od_selected($val,$recharge = 1){
+	if($recharge == 0){
+        $result = "1차 [재구매없음]";
+	}else{
+        $result = $val."차";
+	}
+
+	return $result;
+}
 
 function between_layer($val){
     global $layer_array;
@@ -68,7 +77,12 @@ function build_schedule($option1, $option2) {
     if ($option2 == 1) {
         array_unshift($price_array, $option1);
     }
-	$schedule_array = array_merge([0,0,0],$price_array);
+    
+    if ($option2 == 0) {
+        $schedule_array = array_merge([0,(int)$option1,0],$price_array);
+    }else{
+	    $schedule_array = array_merge([0,0,0],$price_array);
+    }
     return $schedule_array;
 }
 
@@ -100,7 +114,12 @@ function build_schedule2($option1, $option2) {
     if ($option2 == 1) {
         array_push($price2_array, $option1 / 3 / 3);
     }
-	$schedule2_array = array_merge([0,0,0,0,0,0],$price2_array);
+
+    if($option2 == 0){
+        $schedule2_array = []    ;
+    }else{
+	    $schedule2_array = array_merge([0,0,0,0,0,0],$price2_array);
+    }
 
     return $schedule2_array;
 }

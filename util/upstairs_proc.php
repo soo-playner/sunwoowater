@@ -45,8 +45,8 @@ if($debug){
 	$pack_id = 2021111641;
 	$it_point = 150; 
 	$it_supply_point = 1;
-	$recharge = 4;
-	$schedule = 1;
+	$recharge = 0;
+	$schedule = 3;
 }
 
 $val = substr($pack_maker,1,1);

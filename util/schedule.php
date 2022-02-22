@@ -10,6 +10,12 @@ if($_POST){
     $option2 = $_POST['pre_recharge'];
     $option3 = $_POST["pre_schedule"];
 }
+
+if($option2 == 0){
+    $class = '';
+}else{
+    $class ='duel';
+}
 ?>
 
 
@@ -27,7 +33,7 @@ if($_POST){
 
 
 <div class='schedule'>
-    <div class='daul'>
+    <div class='<?=$class?>'>
         <p> 1차 수익률 지급스케쥴  </p>
         <?
         $price = build_schedule($option1,$option2);
@@ -50,7 +56,8 @@ if($_POST){
         ?>
     </div>
 
-    <div class='daul'>
+    <?if($option3 != 3){?>
+    <div class='<?=$class?>'>
         <p> 2차 수익률 지급스케쥴  </p>
         <?
 
@@ -73,4 +80,5 @@ if($_POST){
         echo "</dd></li>";
         ?>
     </div>
+    <?}?>
 </div>
