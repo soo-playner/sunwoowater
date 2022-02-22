@@ -1072,7 +1072,7 @@
         if(Number(temp[6]) == 2){
           var user_icon = "<i class='ri-team-fill'></i>";
         }else if(temp[6] == 3){
-          var user_icon = "<i class='ri-store-2-line'></i>";
+          var user_icon = "<i class='ri-community-line'></i>";
         }else if(temp[6] == 4){
           var user_icon = "<i class='ri-building-2-line'></i>";
         }else if(temp[6] == 5){

@@ -140,10 +140,12 @@ function out_check($val){
 }
 
 // 통계수치
-$stats_sql = "SELECT COUNT(*) as cnt, SUM(mb_deposit_point) AS deposit, SUM(mb_balance) AS balance, SUM(mb_deposit_point+mb_deposit_calc) AS fund {$sql_common} {$sql_search}";
+$stats_sql = "SELECT COUNT(*) as cnt, SUM(mb_deposit_point) AS deposit, SUM(mb_balance) AS balance, SUM(mb_deposit_point+mb_deposit_calc) AS fund, SUM(mb_pv) AS total_pv,SUM(cash_point) as total_cash {$sql_common} {$sql_search}";
 $stats_result = sql_fetch($stats_sql);
 ?>
-
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 .local_ov strong{color:red; font-weight:600;}
 .local_ov .tit{color:black; font-weight:600;}
@@ -165,7 +167,7 @@ $stats_result = sql_fetch($stats_sql);
 		text-decoration: none;}
 	.nation_item:hover{background:#3e4452;color:white;}
 	.nation_item.active{background:#f9a62e;border:1px solid #f9a62e; color:black;}
-	.nation_icon{vertical-align:bottom;margin-right:3px;}
+	.nation_icon{vertical-align:bottom;margin-right:3px;max-width:26px;}
 
 	.total{background:#555 !important;color:white !important;}
 	.bonus_total{background:teal !important;color:white !important;}
@@ -192,9 +194,11 @@ $stats_result = sql_fetch($stats_sql);
 	.center {text-align:center !important;}
 	
 	.td_mail{font-size:11px;letter-spacing:-0.5px;}
+	.td_id{color:black;font-size:14px;padding-left:8px;font-weight:600;font-family:Montserrat, Arial, sans-serif}
+	.td_mbname{color:#555}
 	.bonus_eth a {color:white !important}
 
-	.icon,.icon img{width:26px;height:26px;}
+	.icon,.icon img{width:26px;height:26px;font-size:18px;}
 
 	.badge.over{    position: absolute;
     padding: 2px 5px;
@@ -209,6 +213,7 @@ $stats_result = sql_fetch($stats_sql);
 	.td_mbstat{text-align:right;padding-right:10px !important;font-size:12px;}
 	.icon{display:inline-block;vertical-align: bottom;}
 	.icon i{vertical-align: -webkit-baseline-middle;}
+	.gray{color:#666}
 </style>
 
 <div class="local_ov01 local_ov">
@@ -216,9 +221,11 @@ $stats_result = sql_fetch($stats_sql);
 	총회원수 <strong><?php echo number_format($total_count) ?></strong>명|
 	<?
 		if($member['mb_id'] == 'admin'){
-			echo "<span style='padding-left:10px;'>회원 총 자산 합계 <strong>".Number_format($stats_result['fund'])."</strong></span> | ";
-			echo "<span style='padding-left:10px;'>회원 총 입금 합계 <strong>".Number_format($stats_result['deposit'])."</strong></span> | ";
-			echo "<span style='padding-left:10px;'>회원 총 수당 합계 <strong>".Number_format($stats_result['balance'])."</strong></span> | ";
+			echo "<span style='padding-left:10px;'>총 구매가능잔고 <strong>".Number_format($stats_result['fund'])."</strong></span> | ";
+			echo "<span style='padding-left:10px;'>총 입금 합계 <strong>".Number_format($stats_result['deposit'])."</strong></span> | ";
+			echo "<span style='padding-left:10px;'>총 수당 합계 <strong>".Number_format($stats_result['balance'])."</strong></span> | ";
+			echo "<span style='padding-left:10px;'>총 볼(B) 합계 <span class='green'>".Number_format($stats_result['total_pv'])."</span></span> | ";
+			echo "<span style='padding-left:10px;'>총 DSP 합계 <strong>".Number_format($stats_result['total_cash'])."</strong></span> | ";
 		}
 	?>
 	
@@ -296,7 +303,6 @@ $stats_result = sql_fetch($stats_sql);
 	<div class="btn_add01 btn_add">
 		<a href="./member_table_fixtest.php">추천관계검사</a>
 		<a href="./member_table_depth.php" id="member_depth">회원추천관계갱신</a>
-		<!-- <a href="./member_table_sponsor.php" style='background:antiquewhite'>추천상위스폰서갱신</a> -->
 		<a href="./member_form.php" id="member_add">회원직접추가</a>
 		<a href="../excel/excel_with_eth.php">회원엑셀다운로드</a> 
 		<!-- <a href="#" onclick="javascript:document.myForm.submit();">회원엑셀다운로드</a>
@@ -325,20 +331,19 @@ $stats_result = sql_fetch($stats_sql);
 	<caption><?php echo $g5['title']; ?> 목록</caption>
 	<colgroup>
 		<col width="40"/>
-		<col width="40" />
+		<col width="30"/>
+		<col width="140" />
+		<col width="200" />
+		<col width="160" />
+		<col width="150" />
+		<col width="180" />
+		<col width="180" />
+		<col width="160" />
+		<col width="180" />
+		<col width="180" />
+		<col width="150" />
 		<col width="150" />
 		<col width="120" />
-		<col width="120" />
-		<col width="180" />
-		<col width="180" />
-		<col width="180" />
-		<col width="180" />
-		<col width="180" />
-		<col width="180" />
-		<!-- <col width="180" /> -->
-		<col width="140" />
-		<col width="100" />
-		<col width="140" />
 		<col width="120" />
 		<col width="100" />
 	</colgroup>
@@ -348,25 +353,22 @@ $stats_result = sql_fetch($stats_sql);
 			<label for="chkall" class="sound_only">회원 전체</label>
 			<input type="checkbox" name="chkall" value="1" id="chkall" onclick="check_all(this.form)">
 		</th>
-		<th scope="col" rowspan="2" id="" class="td_chk" style='max-width:30px;width:40px !important;'><?php echo subject_sort_link('grade') ?>회원등급</th>
-		<th scope="col" rowspan="2" id="mb_list_id" class="td_name center"><?php echo subject_sort_link('mb_id') ?>아이디</a></th>
-		<!--<th scope="col" rowspan="2"  id="mb_list_cert"><?php echo subject_sort_link('mb_certify', '', 'desc') ?>메일인증확인</a></th>-->
-
-		<!-- <th scope="col" rowspan="2" id="mb_list_mobile" class="td_mail">추천상위스폰서</th> -->
-		<th scope="col" rowspan="2" id="mb_list_mobile" class="td_mail">추천인</th>
-		<th scope="col" rowspan="2" id="mb_list_mobile" class="td_mail">후원인</th>
-		<th scope="col" id="mb_list_auth"  class="bonus_eth" rowspan="2"><?php echo subject_sort_link('total_fund') ?>현재잔고<br></a></th>
+		<!-- <th scope="col" rowspan="2" id="" class="td_chk" style='max-width:30px;width:40px !important;'><?php echo subject_sort_link('grade') ?>회원등급</th> -->
+		<th scope="col" rowspan="2" id="mb_list_id" class="center"><?php echo subject_sort_link('nation_number') ?>국가</a></th>
+		<th scope="col" id="mb_list_authcheck" style='min-width:130px;' rowspan="2"><?php echo subject_sort_link('mb_level', '', 'desc') ?>직급</a></th>
+		<th scope="col" rowspan="2" id="mb_list_id" class="td_name center" ><?php echo subject_sort_link('mb_id') ?>아이디</a></th>
+		<th scope="col" rowspan="2" id="mb_list_id" class="td_name center"><?php echo subject_sort_link('mb_name') ?>이름/닉네임</a></th>
+		<th scope="col" rowspan="2" id="mb_list_mobile" class="td_mail"><?php echo subject_sort_link('mb_recommend') ?>추천인</th>
+		<th scope="col" id="mb_list_auth"  class="bonus_eth" rowspan="2"><?php echo subject_sort_link('total_fund') ?>구매가능잔고</th>
 		<th scope="col" id="mb_list_auth2" class="bonus_calc"  rowspan="2"><?php echo subject_sort_link('deposit_point') ?>총입금액 <br></th>
-		<th scope="col" id="mb_list_auth2" class="bonus_bb"  rowspan="2"><?php echo subject_sort_link('deposit_calc') ?>사용금액<br>(출금포함)<br></th>
-		<th scope="col" id="mb_list_auth2" class="bonus_usdt" style='color:white !important' rowspan="2"><?php echo subject_sort_link('mb_shift_amt') ?>출금총액<br>(+수수료)<br></th>
+		<th scope="col" id="mb_list_auth2" class="bonus_usdt" style='color:white !important' rowspan="2"><?php echo subject_sort_link('mb_shift_amt') ?>출금총액</th>
 		
 		<th scope="col" id="mb_list_auth2" class="bonus_bb bonus_benefit"  rowspan="2"><?php echo subject_sort_link('mb_balance') ?> 수당합계</th>
-		<th scope="col" id="mb_list_auth2" class="bonus_aa"  rowspan="2"><?php echo subject_sort_link('mb_pv') ?> 누적매출(PV)</th>
-		<!-- <th scope="col" id="mb_list_auth2" class=""  rowspan="2"><?php echo subject_sort_link('mb_rate') ?> 마이닝해쉬(<?=$mining_hash[0]?>)</th> -->
-		<th scope="col" id="mb_list_auth2" class="bonus_bb bonus_out"  rowspan="2">수당/한계<br>(100%)</th>
-		
+		<th scope="col" id="mb_list_auth2" class="bonus_cc"  rowspan="2"><?php echo subject_sort_link('mb_save_point') ?> 구매실적(PV)</th>
+		<th scope="col" id="mb_list_auth2" class="bonus_aa"  rowspan="2"><?php echo subject_sort_link('mb_rate') ?> 보유볼(B)</th>
+		<th scope="col" id="mb_list_auth2" class="bonus_bb bonus_out"  rowspan="2">DSP</th>
 		<th scope="col" rowspan="2" id="" class="item_title">상위보유패키지</th>
-		<th scope="col" id="mb_list_authcheck" style='min-width:130px;' rowspan="2">상태/<?php echo subject_sort_link('mb_level', '', 'desc') ?>회원레벨</a></th>
+		
 		<th scope="col" id="mb_list_member"><?php echo subject_sort_link('mb_today_login', '', 'desc') ?>최종접속</a></th>
 		<th scope="col" rowspan="2" id="mb_list_mng">관리</th>
 	</tr>
@@ -385,19 +387,7 @@ $stats_result = sql_fetch($stats_sql);
 		// 접근가능한 그룹수
 		$sql2 = " select count(*) as cnt from {$g5['group_member_table']} where mb_id = '{$row['mb_id']}' ";
 		$row2 = sql_fetch($sql2);
-
-		$group = '';
-		if ($row2['cnt'])
-			$group = '<a href="./boardgroupmember_form.php?mb_id='.$row['mb_id'].'">'.$row2['cnt'].'</a>';
-
-		if ($is_admin == 'group') {
-			$s_mod = '';
-		} else {
-			$s_mod = '<a href="./member_form.php?'.$qstr.'&amp;w=u&amp;mb_id='.$row['mb_id'].'">회원수정</a>';
-			// $s_mod_binary = '<a href="./modify_binary.php?'.$qstr.'&amp;w=u&amp;mb_id='.$row['mb_id'].'">바이너리 수정</a>';
-
-		}
-		// $s_grp = '<a href="./boardgroupmember_form.php?mb_id='.$row['mb_id'].'">그룹</a>';
+		$s_mod = '<a href="./member_form.php?'.$qstr.'&amp;w=u&amp;mb_id='.$row['mb_id'].'">회원수정</a>';
 
 		$leave_date = $row['mb_leave_date'] ? $row['mb_leave_date'] : date('Ymd', G5_SERVER_TIME);
 		$intercept_date = $row['mb_intercept_date'] ? $row['mb_intercept_date'] : date('Ymd', G5_SERVER_TIME);
@@ -408,7 +398,13 @@ $stats_result = sql_fetch($stats_sql);
 		// 현재잔고
 		$total_deposit = $row['mb_deposit_point'] + $row['mb_deposit_calc'];
 		$total_bonus = $row['mb_balance'];
-		$total_fund = $total_deposit;
+		$total_shift_amt = $row['mb_shift_amt'];
+
+		// 출금가능금액 :: 총보너스 - 기출금
+		$total_withraw = $total_bonus - $total_shift_amt;
+
+		// 구매가능잔고 :: 입금액 - 구매금액 = 남은금액
+		$available_fund = $total_deposit;
 		
 		$bonus_per = bonus_per($row['mb_id'],$row['mb_balance'],$row['mb_pv']);
 
@@ -431,24 +427,6 @@ $stats_result = sql_fetch($stats_sql);
 
 		$bg = 'bg'.($i%2);
 
-		switch($row['mb_certify']) {
-			case 'hp':
-				$mb_certify_case = '휴대폰';
-				$mb_certify_val = 'hp';
-				break;
-			case 'ipin':
-				$mb_certify_case = '아이핀';
-				$mb_certify_val = '';
-				break;
-			case 'admin':
-				$mb_certify_case = '관리자';
-				$mb_certify_val = 'admin';
-				break;
-			default:
-				$mb_certify_case = '&nbsp;';
-				$mb_certify_val = 'admin';
-				break;
-		}
 	?>
 
 
@@ -458,100 +436,35 @@ $stats_result = sql_fetch($stats_sql);
 			<label for="chk_<?php echo $i; ?>" class="sound_only"><?php echo get_text($row['mb_name']); ?> <?php echo get_text($row['mb_nick']); ?>님</label>
 			<input type="checkbox" name="chk[]" value="<?php echo $i ?>" id="chk_<?php echo $i ?>">
 		</td>
-		<td headers="mb_list_id" rowspan="2" class="td_num" >
-			<input type='hidden' name='grade[]' value= "<?=$row['grade']?>" />
-			<?echo "<img src='/img/".$row['grade'].".png' class='icon'>";?>
-			<div class='badge over'><?=$row['grade']?></div>
+		<td rowspan="2" class="center">
+			<img src='<?=national_flag($row['nation_number'])?>' class='nation_icon'/>
 		</td>
-		<td headers="mb_list_id" rowspan="2" class="td_name sv_use" style="center">
-		
-		<?php echo $mb_id ?></td>
-		<!-- <td rowspan="2" class="center"><?php echo $sponsor ?></td> -->
-		<td rowspan="2" class="center"><?php echo $row['mb_recommend'] ?></td>
-		<td rowspan="2" class="center"><?php echo $row['mb_brecommend'] ?></td>
-		<!--
-			<td headers="mb_list_name" class="td_mbname"><?php echo get_text($row['mb_name']); ?></td>
-			<td headers="mb_list_name" class="td_mbname"><?php echo get_text($row['first_name']); ?></td>-->
-			<!--
-			<td headers="mb_list_otp" class="td_chk">
-				<label for="otp_flag<?php echo $i; ?>" class="sound_only">OTP인증</label>
-				<input type="checkbox" name="otp_flag[<?php echo $i; ?>]" <?php echo $row['otp_flag'] == 'Y' ?'checked':''; ?> value="Y" id="otp_flag<?php echo $i; ?>">
-			</td>
-			<td headers="mb_list_mailc" class="td_chk"><?php echo preg_match('/[1-9]/', $row['mb_email_certify'])?'<span class="txt_true">Yes</span>':'<span class="txt_false">No</span>'; ?></td>
-			<td headers="mb_list_open" class="td_chk">
-				<label for="mb_open_<?php echo $i; ?>" class="sound_only">정보공개</label>
-				<input type="checkbox" name="mb_open[<?php echo $i; ?>]" <?php echo $row['mb_open']?'checked':''; ?> value="1" id="mb_open_<?php echo $i; ?>">
-			</td>
-			-->
-			<!--
-			<td headers="mb_list_mailr" rowspan="2"class="td_chk">
-				<label for="mb_mailling_<?php echo $i; ?>" class="sound_only">메일수신</label>
-				<input type="checkbox"  name="mb_mailling[<?php echo $i; ?>]" <?php echo $row['mb_mailling']?'checked':''; ?> value="1" id="mb_mailling_<?php echo $i; ?>">
-			</td>
-			-->
-			<!--
-			<td headers="mb_list_sms" class="td_chk">
-				<label for="mb_sms_<?php echo $i; ?>" class="sound_only">SMS수신</label>
-				<input type="checkbox" name="mb_sms[<?php echo $i; ?>]" <?php echo $row['mb_sms']?'checked':''; ?> value="1" id="mb_sms_<?php echo $i; ?>">
-			</td>
-			<td headers="mb_list_adultc" class="td_chk">
-				<label for="mb_adult_<?php echo $i; ?>" class="sound_only">성인인증</label>
-				<input type="checkbox" name="mb_adult[<?php echo $i; ?>]" <?php echo $row['mb_adult']?'checked':''; ?> value="1" id="mb_adult_<?php echo $i; ?>">
-			</td>
-			<td headers="mb_list_deny" class="td_chk">
-				<?php if(empty($row['mb_leave_date'])){ ?>
-				<input type="checkbox" name="mb_intercept_date[<?php echo $i; ?>]" <?php echo $row['mb_intercept_date']?'checked':''; ?> value="<?php echo $intercept_date ?>" id="mb_intercept_date_<?php echo $i ?>" title="<?php echo $intercept_title ?>">
-				<label for="mb_intercept_date_<?php echo $i; ?>" class="sound_only">접근차단</label>
-				<?php } ?>
-			</td>
-		-->
-		<!-- <td headers="mb_list_mobile" rowspan="2" class="td_mail"><?php echo get_text($row['mb_email']); ?></td> -->
-
-
-
-		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><strong><?=shift_auto_zero($total_fund)?></strong></td>
-		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><strong><?=shift_auto_zero($row['mb_deposit_point'])?> </strong></td>
-		<td headers="mb_list_auth" class="td_mbstat" style='color:red' rowspan="2"><?=shift_auto_zero($row['mb_deposit_calc'])?></td>
-		<td headers="mb_list_auth" class="td_mbstat" style='color:red' rowspan="2"><?=shift_auto_zero($row['mb_shift_amt'])?></td>
-		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><strong><?= shift_auto_zero($total_bonus) ?> </strong></td>
-		<!-- <td headers="mb_list_auth" class="td_mbstat" rowspan="2"><?= shift_auto_zero($row['mb_save_point']) ?></td> -->
-		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><?= shift_auto_zero($row['mb_pv']) ?></td>
-		<!-- <td headers="mb_list_auth" class="td_mbstat" rowspan="2"><?= shift_auto_zero($row['mb_rate']) ?></td> -->
-		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"> <?=$bonus_per?><?if($bonus_per != 0){echo "%";}?></td>
-		<td headers="mb_list_auth" class="td_mbstat text-center" rowspan="2"><span class='badge t_white color<?=$row['rank']?>'><?if($row['rank']){echo 'P'.$row['rank'];}?></span></td>
-		
 		<td headers="mb_list_member" class="td_mbgrade" rowspan="2">
 			<span class='icon'><?=user_icon($row['mb_id'],'icon')?></span>
 			<?php echo get_member_level_select("mb_level[$i]", 0, $member['mb_level'], $row['mb_level']) ?>
 		</td>
+		<td headers="mb_list_id" rowspan="2" class="td_id"><?=get_text($mb_id)?></td>
+		<td rowspan="1" headers="mb_list_name" class="td_mbname center" ><?php echo get_text($row['mb_name']); ?></td>
+		<td rowspan="2" class="td_mbname center"><?php echo $row['mb_recommend'] ?></td>
+
+		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><strong><?=shift_auto_zero($available_fund)?></strong></td>
+		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><strong><?=shift_auto_zero($row['mb_deposit_point'])?> </strong></td>
+		<td headers="mb_list_auth" class="td_mbstat" style='color:red' rowspan="2"><?=shift_auto_zero($row['mb_shift_amt'])?></td>
+		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><strong><?= shift_auto_zero($total_bonus) ?> </strong></td>
+		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><?= shift_auto_zero($row['mb_save_point']) ?></td>
+		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><?= shift_auto_zero($row['mb_pv']) ?></td>
+		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><?= shift_auto_zero($row['cash_point']) ?></td>
+		<td headers="mb_list_auth" class="td_mbstat text-center" rowspan="2"><span class='badge t_white color<?=$row['rank']?>'><?if($row['rank']){echo 'S'.$row['rank'];}?></span></td>
+		
+		
 		<td headers="mb_list_lastcall" class="td_date"><?php echo substr($row['mb_today_login'],2,8); ?></td>
 		<!--<td headers="mb_list_grp" rowspan="1" class="td_numsmall"><?php echo $group ?></td>-->
 		<td headers="mb_list_mng" rowspan="2" class="td_mngsmall" style="width:100px;"><?php echo $s_mod ?> <?php echo $s_grp ?></br> <?php echo $s_mod_binary ?></td>
 
 	</tr>
 	<tr class="<?php echo $bg; ?>">
-		<!-- <td headers="mb_list_nick" class="td_name sv_use"><div><?php echo $mb_nick ?></div></td> -->
-		<!--<td headers="mb_list_nick" class="td_name sv_use"><div><?php echo get_text($row['last_name']); ?></div></td>-->
-			<!--<td headers="mb_list_cert" colspan="6" class="td_mbcert">-->
-			<!-- <input type="radio" name="mb_certify[<?php echo $i; ?>]" value="ipin" id="mb_certify_ipin_<?php echo $i; ?>" <?php echo $row['mb_certify']=='ipin'?'checked':''; ?>>
-			<label for="mb_certify_ipin_<?php echo $i; ?>">아이핀</label>
-			<input type="radio" name="mb_certify[<?php echo $i; ?>]" value="hp" id="mb_certify_hp_<?php echo $i; ?>" <?php echo $row['mb_certify']=='hp'?'checked':''; ?>>
-			<label for="mb_certify_hp_<?php echo $i; ?>">휴대폰</label>
-
-			</td>-->
-
-
-		<!--<td headers="mb_list_tel" class="td_tel"><?php echo get_text($row['mb_tel']); ?></td>
-		<td></td>-->
-		<!-- // <td headers="mb_list_point" class="td_num"><a href="point_list.php?sfl=mb_id&amp;stx=<?php echo $row['mb_id'] ?>"><?php echo number_format($row['mb_point']) ?></a></td> // -->
+		<td headers="mb_list_join" class="td_mbname center" ><?=$row['mb_nick']?></td>
 		<td headers="mb_list_join" class="td_date"><?php echo substr($row['mb_datetime'],2,8); ?></td>
-		<!--
-		<td>
-			<a href="https://www.blockchain.com/ko/btc/address/<?php echo $row['mb_wallet'] ?>" target="_balnk">
-				<?php echo $row['mb_wallet'] ?>
-			</a>
-		</td>
-		-->
 	</tr>
 
 	<?php

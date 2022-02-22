@@ -6,6 +6,7 @@ auth_check($auth[$sub_menu], "r");
 
 $g5['title'] = '주문/구매내역';
 include_once (G5_ADMIN_PATH.'/admin.head.php');
+include_once(G5_THEME_PATH.'/_include/wallet.php');
 include_once(G5_PLUGIN_PATH.'/jquery-ui/datepicker.php');
 
 if (empty($fr_date)) $fr_date = date("Y-m-d", strtotime(date("Y-m-d")."-3 months"));
@@ -458,7 +459,7 @@ if(!sql_query(" select mb_id from {$g5['g5_shop_order_delete_table']} limit 1 ",
         <td class="td_numsum"><?= number_format($row['od_rate'])?></td>
         <!-- <td><?php echo $row['od_settle_case'] ?></td> -->
 		<td rowspan="2" style="text-align:right;"><?=number_format($row['od_cash'])?></td>
-        <td class="bg_<?=$row['od_select']?>"> <?=$row['od_select']?>차</td>
+        <td class="bg_<?=$row['od_select']?>"> <?=od_selected($row['od_select'])?></td>
         <td > <?=$row['od_recharge']?></td>
         <td > <?=$row['od_layer']?>대</td>
         <td > <?=$row['pay_count']?> / <?=$row['pay_end']?><?=$od_complete?></td>

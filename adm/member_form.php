@@ -544,7 +544,6 @@ $rank_sql = "select * from rank where mb_id = '{$mb['mb_id']}' and rank = '{$mb[
 	</tr>
 
 	<tr class="ly_up padding-box">
-		<input type="hidden" id='recharge' value="<?=$extra_recharge?>">
 		<th scope="row">패키지 보유</th>
 
 		<td colspan="3">
@@ -552,6 +551,8 @@ $rank_sql = "select * from rank where mb_id = '{$mb['mb_id']}' and rank = '{$mb[
 			<!-- <span class='badge t_white color<?= max_item_level_array($mb['mb_id'], 'number') ?>' style='padding:15px;'><?= max_item_level_array($mb['mb_id']) ?></span> -->
 			<span class='badge t_white <?=rank_return($mb['rank'],'color')?>' style='padding:15px;'><?=rank_return($mb['rank'])?></span>
 			<span class='divide' style="margin-right:20px;">|</span>
+			재기부 설정 : <input type="text" id='recharge' class='frm_input' style="width:40px;min-width:40px;" value="<?=$extra_recharge?>">
+			<span class='divide' style="margin:0 20px;">|</span>
 			<?php
 			
 			function rank_return($val,$color=''){

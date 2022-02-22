@@ -5,6 +5,7 @@ $debug = 1;
 $today=date("Y-m-d");
 
 $target = $_REQUEST['excel'];
+
 if($_REQUEST['order']){
     $order = $_REQUEST['order'];
 }else{
@@ -12,7 +13,7 @@ if($_REQUEST['order']){
 }
 
 header( "Content-type: application/vnd.ms-excel;charset=utf-8" ); 
-header( "Content-Disposition: attachment; filename=$target-$today".".xls" ); 
+header( "Content-Disposition: attachment; filename=$target-$today".".xls" );
 header( "Content-Description: PHP4 Generated Data" ); 
 print("<meta http-equiv=\"Content-Type\" content=\"application/vnd.ms-excel; charset=utf-8\">");
 
@@ -65,6 +66,29 @@ $result = sql_query($query);
             <td><?=Number_format($row['amt'])?></td>
             <td></td>
             <td></td>
+        </tr>
+    <?}?>
+
+<?}else if($target == 'soodang_extra' ){?>
+    <tr align='center' class='title_header'>
+        <td>no</td>
+        <td>차수</td>
+        <td>주문번호</td>
+        <td>1차수당금액</td>
+        <td>날짜</td>
+        <td>날짜시간</td>
+        <td>회원아이디</td>
+        <td>추천인</td>
+        <td>센터</td>
+        <td>지점</td>
+        <td>지사</td>
+        <td>본부</td>
+    </tr>  
+    <?while($row = sql_fetch_row_array($result)){?>
+        <tr align='center'>
+        <?for($i=0;$i<count($row);$i++){?>
+            <td><?=$row[$i]?></td>
+        <?}?>
         </tr>
     <?}?>
 

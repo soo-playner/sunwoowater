@@ -12,16 +12,7 @@ if($_GET['debug']) $debug = 1;
 
 if($_POST['nw_soodang_reset'] == 'on'){
     $trunc1 = sql_query(" TRUNCATE TABLE `soodang_pay` ");
-
-    $trunc14 = sql_query(" TRUNCATE TABLE `brecom_bonus_noo` ");
-    $trunc14 = sql_query(" TRUNCATE TABLE `brecom_bonus_today` ");
-    $trunc14 = sql_query(" TRUNCATE TABLE `brecom_bonus_week` ");
-
-    $trunc15 = sql_query(" TRUNCATE TABLE `recom_bonus_noo` ");
-    $trunc15 = sql_query(" TRUNCATE TABLE `recom_bonus_today` ");
-    $trunc15 = sql_query(" TRUNCATE TABLE `recom_bonus_week` ");
-
-    $trunc16 = sql_query(" TRUNCATE TABLE `iwol` ");
+    $trunc16 = sql_query(" TRUNCATE TABLE `soodang_extra` ");
 
     $member_update_sql = " UPDATE g5_member set  mb_balance = 0 WHERE mb_level < 9 ";
     sql_query($member_update_sql);

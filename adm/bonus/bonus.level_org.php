@@ -75,25 +75,28 @@ $target = '';
 if ($_GET['center'] != '' ) {
     $target = 'center';
     $keyword = trim($_GET['center']);
+    $qstr .= "&center=" . $keyword;
 }
 
 if ($_GET['jijum'] != '' ) {
     $target = 'jijum';
     $keyword = trim($_GET['jijum']);
+    $qstr .= "&jijum=" . $keyword;
 }
 
 if ($_GET['jisa'] != '' ) {
     $target = 'jisa';
     $keyword = trim($_GET['jisa']);
+    $qstr .= "&jisa=" . $keyword;
 }
 
 if ($_GET['bonbu'] != '' ) {
     $target = 'bonbu';
     $keyword = trim($_GET['bonbu']);
+    $qstr .= "&bonbu=" . $keyword;
 }
 
 if($target != ''){
-    
     $mb = search_org($keyword,$target);
     $sql_search .= " and ( ";
     $sql_search .= " {$target} = '{$mb}' ";
@@ -137,12 +140,13 @@ if($_GET['sst'] == "center"){
     if ($page < 1) $page = 1; // 페이지가 없으면 첫 페이지 (1 페이지)
     $from_record = ($page - 1) * $rows; // 시작 열을 구함
 
-    $sql = " select *
+    $query = " select *
                 {$sql_common} 
                 {$sql_search}
                 {$sql_order}
                 limit {$from_record}, {$rows} ";
-    $result = sql_query($sql);
+                
+    $result = sql_query($query);
 
     $rank_category = ['센터수당지급','지점수당지급','지사수당지급','본부수당지급'];
 
@@ -157,7 +161,6 @@ if($_GET['sst'] == "center"){
         }
     }
     
-
 ?>
 
 
@@ -207,8 +210,9 @@ function fvisit_submit(act)
 
 <div class="local_desc01 local_desc">
 	<p>
-		<strong>조직관리 : 하위직급이 누락된 경우 - 자동 상위 직급 표시(빨간색 미등록인상태)</strong> : 정보수정/등록 으로 등록 필요 <br>
-        ① 체크- 정보수정/등록 하여 등록 수당지급가능 | ②정보수정/등록 시 회원정보쪽에도 변경내용 연동처리됨 <br>
+		조직정보 : 수당지급시점의 조직정보상태이며, 정보수정/등록 시 회원정보쪽에도 변경내용 연동처리됨  
+            <br><strong>조직관리 : 하위직급이 누락된 경우 - 자동으로 상위 직급으로 표시되며(빨간색 미등록인상태)</strong><br>
+            ① 체크- 정보수정/등록 하여 빨간색이 아닌상태에서만 직급수당 지급됨. <br>
 	</p>
 </div>
 
@@ -253,10 +257,10 @@ function fvisit_submit(act)
 		<option value="mb_name" <?php echo get_selected($_GET['sfl'], "mb_name"); ?>>회원이름</option>
 		<option value="mb_nick" <?php echo get_selected($_GET['sfl'], "mb_nick"); ?>>회원닉네임</option>
 	</select>
+    <input type="text" name="stx" value="<?php echo $stx ?>" id="stx" class="frm_input" style="padding-left:5px;">
 
 	
 	<label for="stx" class="sound_only">기간검색<strong class="sound_only"> 필수</strong></label>
-	<input type="text" name="stx" value="<?php echo $stx ?>" id="stx" class="frm_input">
 	검색 기간 : <input type="text" name="start_dt" id="start_dt" placeholder="From" class="frm_input date" value="<?= $start_dt ?>" />
 	~ <input type="text" name="end_dt" id="end_dt" placeholder="To" class="frm_input date" value="<?= $end_dt ?>" />
 	
@@ -270,7 +274,8 @@ function fvisit_submit(act)
     <input type="text" name="bonbu" value="<?=$bonbu?>" id="bonbu" class="frm_input text" placeholder="본부회원/명">
 	
     <input type="submit" class="btn_submit search" style="width:100px;margin-left:10px;" value="검색" />
-	<input type="button" class="btn_submit excel" style="width:100px;margin-left:5px;" value="엑셀다운" onclick="document.location.href='/excel/benefit_list_excel_down.php?excel_sql=<? echo $excel_sql ?>&start_dt=<?= $_GET['start_dt'] ?>&end_dt=<?= $_GET['end_dt'] ?>'" />
+    
+	<input type="button" class="btn_submit excel" style="width:100px;margin-left:5px;" value="전체엑셀다운" onclick="document.location.href='/excel/excel_excute.php?excel=soodang_extra&order=no asc'" />
 	
 	</div>
 </form>
@@ -323,11 +328,17 @@ function fvisit_submit(act)
         }
         return $link;
     }
-    
+
     function org_check($center_1,$jijum_1,$jisa_1,$bonbu_1){
 
         $list = [$center_1,$jijum_1,$jisa_1,$bonbu_1];
-        $blank_key = min(array_keys(array_filter($list)));
+        $res = array_keys(array_filter($list));
+
+        if(count($res) > 1){
+            $blank_key = min($res);
+        }else{
+            $blank_key = 0;
+        }
         
         // $center = blank_replace_input($center_1,);
         if($blank_key == 0){
