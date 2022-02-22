@@ -38,6 +38,8 @@ $sql = "SELECT *
 $sql .= "order by od_receipt_time desc limit {$from_record}, {$rows} ";
 
 $result = sql_query($sql);
+
+
 ?>
 
 <link rel="stylesheet" href="<?= G5_THEME_URL ?>/css/default.css">
@@ -310,17 +312,23 @@ $result = sql_query($sql);
 							<h3 class='tit'> 기부유형선택</h3>
 						</div>
 
-						<div class='col-6'>
+						<div class='col-4 pr0'>
 							<label class="box-radio-input">
-							<input type="radio" name="schedule" value="1" checked="checked"><span>1차</span>
+							<input type="radio" name="schedule" value="1" checked="checked"><span>1차수당</span>
 							</label>
 						</div>
 
-						<div class="col-6">
+						<div class="col-4 pl0 pr0">
 							<label class="box-radio-input">
-							<input type="radio" name="schedule" value="2"><span>2차</span></label>
+							<input type="radio" name="schedule" value="2"><span>2차수당</span></label>
 						</div>
 
+						<div class="col-4 pl0">
+							<label class="box-radio-input">
+							<input type="radio" name="schedule" value="3"><span>재구매없음</span></label>
+						</div>
+
+						<span class="desc" style="margin-top:10px; padding-left:10px;font-size:12px;" > ※ 기부구좌 및 기부유형에 선택후 지급 스케쥴표에서 미리보기 가능</span>
 						
 					</div>
 					<!-- 기부옵션 -->
@@ -350,7 +358,8 @@ $result = sql_query($sql);
 									<div class="col-6 nopadding">
 										<span class="hist_date"><?= $row['od_date'] ?></span>
 										<h2 class="pack_name pack_f_<?= substr($od_name, 1, 1) ?>" style="width:100%;">
-											<?= strtoupper($row['od_name']) ?> : <span style='color:#3b86ff'><?=$row['od_rate']?>구좌</span> / <?=$row['od_select']?>차
+											<?= strtoupper($row['od_name']) ?> : <span style='color:#3b86ff'><?=Number_format($row['od_rate'])?>구좌</span> / 
+											<?=od_selected($row['od_select'])?>
 										</h2>
 									</div>
 									<div class="col-5 nopadding">
@@ -427,6 +436,8 @@ $result = sql_query($sql);
 			change_coin = purchase_curency;
 
 			change_coin_status();
+			$('.r_card').removeClass("active");
+			$(this).addClass("active");
 		});
 
 		/* $('#coin_select').on('change',function(){
@@ -467,7 +478,13 @@ $result = sql_query($sql);
 
 			var pre_price = it_price;
 			var pre_schedule = $('input[name=schedule]:checked').val();
-			var pre_recharge = $("#recharge").val();
+
+			if(pre_schedule == 3){
+				var pre_recharge = 0;
+				var pre_schedule = 1;
+			}else{
+				var pre_recharge = $("#recharge").val();
+			}
 
 			console.log(`price : ${pre_price}\nrecharge : ${pre_recharge}\nschedule : ${pre_schedule}\n`);
 
@@ -499,7 +516,13 @@ $result = sql_query($sql);
 		$('#purchase').on('click', function() {
 			var nw_purchase = '<?= $nw_purchase ?>'; // 점검코드
 			var pre_schedule = $('input[name=schedule]:checked').val();
-			var pre_recharge = $("#recharge").val();
+			
+			if(pre_schedule == 3){
+				var pre_recharge = 0;
+				var pre_schedule = 1;
+			}else{
+				var pre_recharge = $("#recharge").val();
+			}
 
 			// 부분시스템 점검
 			if (nw_purchase == 'N') {
@@ -532,7 +555,7 @@ $result = sql_query($sql);
 			console.log(`total:${total_fund}\nprice:${it_price}`);
 			console.log(`recharge : ${recharge}`);
 
-			dialogModal('Package 상품구매 확인', '<strong>[' + it_name + '] '+ it_supply_point+' 구좌를 기부 하시겠습니까?</strong>', 'confirm');
+			dialogModal('Package 상품구매 확인', '<strong>[' + it_name + '] '+ Price(it_supply_point)+' 구좌를 기부 하시겠습니까?</strong>', 'confirm');
 
 
 			$('#modal_confirm').on('click', function() {

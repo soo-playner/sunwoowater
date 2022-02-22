@@ -279,17 +279,37 @@ a.btn_cancle:hover, .btn_cancle:hover {
 }
 
 .user_icon.lv2 {
-  background: #2b3a6d;
-  color: gold;
+  background: #61b5ff;
+  color: #1a4158;
 }
 
 .user_icon.lv3 {
-  background: #2b3a6d;
-  color: #40d0fb;
+  background: red;
+  color: white;
+}
+
+.user_icon.lv4 {
+  background: green;
+  color: white;
+}
+
+.user_icon.lv5 {
+  background: black;
+  color: gold;
+}
+
+.user_icon.lv9 {
+  background: black;
+  color: white;
 }
 
 .user_icon.lv10 {
-  color: black;
+  background: black;
+  color: white;
+}
+
+.user-content .userid {
+  font-size: 30px;
 }
 
 /*국가선택 - 나라국기표시*/
@@ -315,6 +335,27 @@ a.btn_cancle:hover, .btn_cancle:hover {
 .modal-body {
   max-height: 400px;
   overflow-y: scroll;
+}
+
+/* 레이아웃 유틸 */
+.mr0 {
+  margin-right: 0;
+}
+
+.pr0 {
+  padding-right: 0;
+}
+
+.ml0 {
+  margin-left: 0;
+}
+
+.pl0 {
+  padding-left: 0;
+}
+
+.r_card.active {
+  border: 2px solid white;
 }
 
 /* 대쉬보드 버튼 추가 */

@@ -32,18 +32,12 @@ $total_shift_amt = $member['mb_shift_amt'];
 
 $total_fund = $total_bonus;
 
-// $shop_point = $total_bonus*0.1;
-
 // 출금가능금액 :: 총보너스 - 기출금
 $total_withraw = $total_bonus - $total_shift_amt;
 
 // 구매가능잔고 :: 입금액 - 구매금액 = 남은금액
 $available_fund = $total_deposit;
 
-// 마이닝합계
-$mining_acc = $member['mb_mining_1'];
-$mining_amt = $member['mb_mining_1_amt'];
-$mining_total = ($mining_acc - $mining_amt);
 
 $bonus_sql = "select * from {$g5['bonus_config']} order by no asc";
 $list = sql_query($bonus_sql);
@@ -109,24 +103,24 @@ function coin_prices($income, $category = 'cost')
 $member_level_array = array('일반회원', '정회원', '센터', '지점', '지사', '본부', '', '', '', '관리자', '슈퍼관리자');
 
 
-/* 회원분류(등급 - level)*/
-// $user_icon  = "<img src='".G5_THEME_URL."/img/user.png' alt='user'>";
-$user_icon = "<span class='user_icon lv0'><i class='ri-vip-crown-line'></i></span>";
-
 // 기본 회원가입시 0 LEVEL
+$user_level = $member_level_array[$member['mb_level']];
+
 if ($member['mb_level'] == 1) {
-	// $user_icon  = "<img src='".G5_THEME_URL."/img/user_general.png' alt='user'>";
 	$user_icon = "<span class='user_icon lv1'><i class='ri-vip-crown-line'></i></span>";
+} else if ($member['mb_level'] == 2) {
+	$user_icon = "<span class='user_icon lv2'><i class='ri-team-fill'></i></span>";
+} else if ($member['mb_level'] == 3) {
+	$user_icon = "<span class='user_icon lv3'><i class='ri-community-line'></i></span>";
+} else if ($member['mb_level'] == 4) {
+	$user_icon = "<span class='user_icon lv4'><i class='ri-building-2-line'></i></span>";
+} else if ($member['mb_level'] == 5) {
+	$user_icon = "<span class='user_icon lv5'><i class='ri-government-line'></i></span>";
+}else if($member['mb_level'] >8){
 	$user_level = $member_level_array[$member['mb_level']];
-} else if ($member['mb_level'] == 2 && $member['center_use'] != '') {
-	$user_level = $member_level_array[$member['mb_level']];
-	$user_icon = "<span class='user_icon lv2'><i class='ri-vip-crown-line'></i></span>";
-} else if ($member['mb_level'] > 9) {
-	$user_level = $member_level_array[9];
-	// $user_icon  = "<img src='".G5_THEME_URL."/img/user_admin.png' alt='user'>";
-	$user_icon = "<span class='user_icon lv10'><i class='ri-vip-crown-line'></i></span>";
-} else {
-	$user_level = $member_level_array[$member['mb_level']];
+	$user_icon = "<span class='user_icon lv9'><i class='ri-user-settings-line'></i></span>";
+}else{
+	$user_icon = "<span class='user_icon lv0'><i class='ri-vip-crown-line'></i></span>";
 }
 
 
@@ -137,26 +131,26 @@ function user_icon($id, $func)
 	$mb_sql = "SELECT * from g5_member WHERE mb_id = '{$id}' ";
 	$result = sql_fetch($mb_sql);
 	$mb_level = $result['mb_level'];
-	// $user_icon  = "<img src='".G5_THEME_URL."/img/user.png' alt='user'>";
 	$user_icon = "<span class='user_icon lv0'><i class='ri-vip-crown-line'></i></span>";
 	$user_level = $member_level_array[$mb_level];
 
 	if ($mb_level > 0) {
-		// $user_icon  = "<img src='".G5_THEME_URL."/img/user_general.png' alt='user'>";
 		$user_icon = "<span class='user_icon lv1'><i class='ri-vip-crown-line'></i></span>";
 	}
 	if ($mb_level == 2) {
-		// $user_icon  = "<img src='".G5_THEME_URL."/img/user_2.png' alt='user'>";
-		$user_icon = "<span class='user_icon lv2'><i class='ri-vip-crown-line'></i></span>";
+		$user_icon = "<span class='user_icon lv2'><i class='ri-team-fill'></i></span>";
 	}
 	if ($mb_level == 3) {
-		// $user_icon  = "<img src='".G5_THEME_URL."/img/user_3.png' alt='user'>";
-		// $user_icon  = "<img src='".G5_THEME_URL."/img/user_general.png' alt='user'>";
-		$user_icon = "<span class='user_icon lv3'><i class='ri-vip-crown-line'></i></span>";
+		$user_icon = "<span class='user_icon lv3'><i class='ri-community-line'></i></span>";
+	}
+	if ($mb_level == 4) {
+		$user_icon = "<span class='user_icon lv4'><i class='ri-building-2-line'></i></span>";
+	}
+	if ($mb_level == 5) {
+		$user_icon = "<span class='user_icon lv5'><i class='ri-government-line'></i></span>";
 	}
 	if ($mb_level > 9) {
-		// $user_icon  = "<img src='".G5_THEME_URL."/img/user_admin.png' alt='user'>";
-		$user_icon = "<span class='user_icon lv10'><i class='ri-vip-crown-line'></i></span>";
+		$user_icon = "<span class='user_icon lv9'><i class='ri-user-settings-line'></i></span>";
 	}
 
 
@@ -708,33 +702,6 @@ function max_item_level_array($mb_id, $func = 'name')
 	}
 }
 
-
-// 특수설정
-function week_jewel()
-{
-	global $member;
-
-	if ($member['mb_week_dividend'] == 1) {
-		echo '보석수령';
-	} else {
-		echo '-';
-	}
-}
-
-function rank_name($val)
-{
-	if ($val < 4) {
-		$rank_name = '';
-	} else if ($val == 4) {
-		$rank_name = '메가';
-	} else if ($val == 5) {
-		$rank_name = '기가';
-	} else if ($val == 6) {
-		$rank_name = '테가';
-	} else if ($val == 7) {
-		$rank_name = '제타';
-	}
-}
 
 function national_flag($ncode, $return = 'icon')
 {

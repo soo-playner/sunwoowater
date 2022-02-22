@@ -19,7 +19,7 @@ header .left_gnbWrap {position: fixed;width: 300px;left: -200px;top: 0;backgroun
 	height: fill-available;}
 header .left_gnbWrap + .top_title{padding-left:50px;}
 header .left_gnbWrap.on {left: 0; visibility: visible;}
-header .left_gnbWrap i {vertical-align: bottom;}
+header .left_gnbWrap i {vertical-align: middle;}
 header .left_gnbWrap .b_line3 {margin-top: 0px; margin-bottom: 0px;}
 header .left_gnbWrap .close {}
 header .left_gnbWrap .close img {width: 20px; margin: 17px 0px;}

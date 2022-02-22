@@ -58,7 +58,7 @@ header .top_title h3 img{margin-top:0;}
             <div class="box-header row">
                 <div class='col-12 text-left'>
                     <span><?= $sub_result['od_name'] ?></span>
-                    <span class='m_hist_exp'> : <?=$sub_result['od_rate'] ?> 구좌 / <?=$sub_result['od_select']?>차 / <?=$sub_result['od_layer']?>대</span>
+                    <span class='m_hist_exp'> : <?=$sub_result['od_rate'] ?> 구좌 / <?=od_selected($sub_result['od_select'],$sub_result['od_recharge'])?> / <?=$sub_result['od_layer']?>대</span>
                 </div>
             </div>
             <div class='row'>
@@ -75,16 +75,17 @@ header .top_title h3 img{margin-top:0;}
             
             <div class='schedule'>
                 <div>
-                    <p class="mb10"> <?=$sub_result['od_select']?>차 수익률 지급스케쥴  </p>
+                    <p class="mb10"> <?=od_selected($sub_result['od_select'])?> 수익률 지급스케쥴  </p>
                     <?
                     $price = json_decode($sub_result['od_schedule'.$sub_result['od_select']],true);
+                    
                     $total_value =0;
 
                     $value_month = date("m",time($sub_result['od_date']));
                     $value_layer = $sub_result['od_layer'];
 
                     echo "<li class='header'><dt>월</dt><dt>대수</dt><dd>지급보너스</dd><dd>지급</dd></li>";
-
+                
                     foreach ($price as $key => $value) {
                         
                         $total_value += $value;
@@ -108,6 +109,7 @@ header .top_title h3 img{margin-top:0;}
                     echo "<li class='li-footer'><dt></dt><dt></dt><dd>";
                     echo Number_format($total_value);
                     echo "</dd><dd></dd></li>";
+                   
                     ?>
                 </div>
             </div>
