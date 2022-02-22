@@ -11,14 +11,14 @@ auth_check($auth[$sub_menu], 'r');
 
 $category ='rank';
 // 해당차수
-$exc_layer = $_GET['exc_layer'];
+$bonus_layer = $_GET['exc_layer'];
 
 if (!$debug) {
-    $dupl_check_sql = "select mb_id from rank where count={$exc_layer}";
+    $dupl_check_sql = "select mb_id from rank where count={$bonus_layer}";
     $get_today = sql_fetch($dupl_check_sql);
 
     if ($get_today['mb_id']) {
-        alert($exc_layer . " 차수 승급이 이미 완료 되었습니다.");
+        alert($bonus_layer . " 차수 승급이 이미 완료 되었습니다.");
         die;
     }
 }
@@ -71,7 +71,7 @@ ob_start();
 
 // 설정로그 
 echo "<strong> 현재일 : " . $bonus_day;
-echo " [ ".$exc_layer."대 ]";
+echo " [ ".$bonus_layer."대 ]";
 echo "</strong> <br>";
 
 /* 승급기준 로그 출력 */
@@ -175,7 +175,7 @@ echo "<div class='btn' onclick=bonus_url('".$category."');>돌아가기</div>";
         {
             global $g5, $search_condition, $admin_condition, $pre_condition;
             global $bonus_day, $grade_cnt, $code, $lvlimit_pv,$bonus_rates, $lvlimit_grade,$lvlimit_recom,$lvlimit_recom_val;
-            global $debug,$mem_list,$member_level_array,$exc_layer;
+            global $debug,$mem_list,$member_level_array,$bonus_layer;
 
             for ($i = $grade_cnt; $i > 0; $i--) {
                 $cnt_sql = "SELECT count(*) as cnt From {$g5['member_table']} WHERE mb_level = {$i} {$search_condition}" . $admin_condition . $pre_condition . " ORDER BY mb_no";
@@ -230,18 +230,6 @@ echo "<div class='btn' onclick=bonus_url('".$category."');>돌아가기</div>";
 
                     if ($member_count > 0) {
 
-                        // 직추천자수 
-                        /* $mem_cnt_sql = "SELECT count(*) as cnt FROM g5_member where mb_recommend = '{$mb_id}' ";
-                        $mem_cnt_result = sql_fetch($mem_cnt_sql);
-                        $mem_cnt = $mem_cnt_result['cnt'];
-
-                        echo "<br>직추천인수 : <span class='blue'>" . $mem_cnt . "</span>";
-                        if ($mem_cnt >= $lvlimit_pv[$i]) {
-                            $rank_cnt += 1;
-                            $rank_option1 = 1;
-                            echo "<span class='red'> == OK </span>";
-                        } */
-
 
                         // 내 매출 
                         echo "<br>본인 PV : <span class='blue'>" . Number_format($mb_save_point) . "</span>";
@@ -251,47 +239,6 @@ echo "<div class='btn' onclick=bonus_url('".$category."');>돌아가기</div>";
                             $rank_option1 = 1;
                             echo "<span class='red'> == OK </span>";
                         }
-
-
-                        // 하부 지난주 매출 
-                        /* $recom_week_sales = return_down_manager($mb_id);
-
-                        echo "<br>추천 하부 매출 - ";
-                        // print_R($recom_week_sales);
-
-                        if($recom_week_sales){
-                            $sum_sale = array_sum($recom_week_sales);
-                            $max_sale = max($recom_week_sales);
-                            
-                            echo  "하부매출(". $sum_sale .") - 대실적(". $max_sale .") = 계산실적( <span class='blue'>".($sum_sale - $max_sale)."</span> )";
-                            // if($mem_sales >= $lvlimit_recom[$i]*$lvlimit_recom_val){$rank_cnt += 1;}
-                            if($mem_sales >= $lvlimit_recom[$i]*1){$rank_cnt += 1; echo "<span class='red'> == OK </span>";}
-                            if($debug)  echo "<code>"; print_R($recom_week_sales);echo "</code>";
-                        } */
-                       
-
-
-
-                        // 본인 해쉬파워 
-                        /* echo "<br>본인 해쉬파워 : <span class='blue'>" . $mb_rate . "</span>";
-                        if ($mb_rate >= $lvlimit_sales_level[$i]) {
-                            $rank_cnt += 1;
-                            $rank_option2 = 1;
-                            echo "<span class='red'> == OK </span>";
-                        } */
-
-                        
-
-                        // 후원 소실적(PV)
-                       /*  $mem_result = brecommend_direct($mb_id);
-                        $brecommed_min_pv = brecommed_min_pv($mem_result[0]);
-                        echo "<br>소실적(PV) : <span class='blue'>" .$brecommed_min_pv. "</span>";
-
-                        if( $brecommed_min_pv >= $lvlimit_recom[$i]*$lvlimit_recom_val){
-                            $rank_cnt += 1;
-                            $rank_option3 = 1;
-                            echo "<span class='red'> == OK </span>";
-                        } */
 
 
                         // 산하 추천  매출 -  mb_pv 기준
@@ -314,22 +261,6 @@ echo "<div class='btn' onclick=bonus_url('".$category."');>돌아가기</div>";
                         echo ($recom_id);
                         echo "</span>";
                         
-                        
-                        /* if($recom_week_sales){
-                            $sum_sale = array_sum($recom_week_sales);
-                            $max_sale = max($recom_week_sales);
-                            
-                            echo  "하부매출(". $sum_sale .") - 대실적(". $max_sale .") = 계산실적( <span class='blue'>".($sum_sale - $max_sale)."</span> )";
-                            // if($mem_sales >= $lvlimit_recom[$i]*$lvlimit_recom_val){$rank_cnt += 1;}
-                            if($mem_sales >= $lvlimit_recom[$i]*1){$rank_cnt += 1; echo "<span class='red'> == OK </span>";}
-                            if($debug)  echo "<code>"; print_R($recom_week_sales);echo "</code>";
-                        }
-                        /* if ($item_rank >= $lvlimit_sales_level[$i]) {
-                            $rank_cnt += 1;
-                            $rank_option2 = 1;
-                            echo "<span class='red'> == OK </span>";
-                        } */
-
 
                         // 디버그 로그
                         if ($debug) {
@@ -362,7 +293,7 @@ echo "<div class='btn' onclick=bonus_url('".$category."');>돌아가기</div>";
                             echo "<br><span class='red'> ▶▶ 직급 승급 => " . $member_level_array[$upgrade] . " </span><br> ";
                             
                             $benefit=$bonus_rate;
-                            $rec = $code." Promote to {$upgrade} Lv (".$member_level_array[$upgrade].") IN " . $bonus_day."[".$exc_layer."차수]";
+                            $rec = $code." Promote to {$upgrade} Lv (".$member_level_array[$upgrade].") IN " . $bonus_day."[".$bonus_layer."차수]";
                             $rec_adm= $rec;
 
                             // 승급기록 
@@ -372,7 +303,7 @@ echo "<div class='btn' onclick=bonus_url('".$category."');>돌아가기</div>";
                             $bonus_sql .= " ,rank           = {$upgrade}";
                             $bonus_sql .= " ,rank_note	    = '{$rec}' ";
                             $bonus_sql .= " ,category	    = 0 ";
-                            $bonus_sql .= " ,count	        = '{$exc_layer}' ";
+                            $bonus_sql .= " ,count	        = '{$bonus_layer}' ";
                             $bonus_sql .= " ,upgrade_clue	= '{$recom_sales}' ";
                             
 
@@ -384,9 +315,6 @@ echo "<div class='btn' onclick=bonus_url('".$category."');>돌아가기</div>";
                                 sql_query($bonus_sql);
                             }
 
-                            // 승급 수당지급 - 별도지급
-                            // echo "<span class=blue> ▶▶ 수당 지급 : ".Number_format($benefit)."</span><br>";
-                            // $record_result = soodang_record($mb_id, $code, $benefit,$rec,$rec_adm,$bonus_day);
 
                             $record_result = 1;
 
@@ -417,15 +345,14 @@ echo "<div class='btn' onclick=bonus_url('".$category."');>돌아가기</div>";
         } //function
         ?>
 
-        <? include_once('./bonus_footer.php'); ?>
+<? include_once('./bonus_footer.php'); ?>
 
-        <?
-        if ($debug) {
-        } else {
-            $html = ob_get_contents();
-            //ob_end_flush();
-            $logfile = G5_PATH . '/data/log/' . $code . '/' . $code . '_' . $bonus_day . '.html';
-            fopen($logfile, "w");
-            file_put_contents($logfile, ob_get_contents());
-        }
-        ?>
+<?
+if($debug){}else{
+    $html = ob_get_contents();
+    //ob_end_flush();
+    $logfile = G5_PATH.'/data/log/'.$code.'/'.$code.'_'.$bonus_layer.'.html';
+    fopen($logfile, "w");
+    file_put_contents($logfile, ob_get_contents());
+}
+?>
