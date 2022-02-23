@@ -314,13 +314,13 @@ $result = sql_query($sql);
 
 						<div class='col-4 pr0'>
 							<label class="box-radio-input">
-							<input type="radio" name="schedule" value="1" checked="checked"><span>1차수당</span>
+							<input type="radio" name="schedule" value="1" checked="checked"><span>1차재구매</span>
 							</label>
 						</div>
 
 						<div class="col-4 pl0 pr0">
 							<label class="box-radio-input">
-							<input type="radio" name="schedule" value="2"><span>2차수당</span></label>
+							<input type="radio" name="schedule" value="2"><span>2차재구매</span></label>
 						</div>
 
 						<div class="col-4 pl0">
@@ -516,7 +516,7 @@ $result = sql_query($sql);
 		$('#purchase').on('click', function() {
 			var nw_purchase = '<?= $nw_purchase ?>'; // 점검코드
 			var pre_schedule = $('input[name=schedule]:checked').val();
-			
+
 			if(pre_schedule == 3){
 				var pre_recharge = 0;
 				var pre_schedule = 1;

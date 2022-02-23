@@ -255,7 +255,7 @@ $title = 'Dashboard';
 <!-- 펼쳐보기 -->
 <script>
 	$(document).ready(function(){
-		move(<?=bonus_per()?>,1);
+		// move(<?=bonus_per()?>,1);
 	});
 
 	$(document).ready(function() {
