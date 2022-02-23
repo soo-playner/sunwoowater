@@ -247,7 +247,7 @@ $rank_sql = "select * from rank where mb_id = '{$mb['mb_id']}' and rank = '{$mb[
 		display:none;
 	}
 	.search_result{
-		max-height:500px;
+		max-height:270px;
 		overflow-y:scroll;
 	}
 	.search_container.active{
@@ -291,8 +291,8 @@ $rank_sql = "select * from rank where mb_id = '{$mb['mb_id']}' and rank = '{$mb[
 <div class="local_desc01 local_desc">
     <p>
 		- 최초 닉네임지정시 체크시 <strong>닉네임 등록</strong> : (닉네임으로 센터,지사,지점,본부 동일 검색사용)<br>
-		- 센터/지사/지점/본부 회원은 직접검색-등록하거나 <strong>자동(상위에 해당직급이 있는경우)으로 등록</strong> 가능 <br>
-		- <strong>마케팅-승급처리시</strong> 센터/지사/지점/본부 회원은 자동 업데이트 
+		- 센터/지사/지점/본부 회원은 직접검색-등록하거나(정회원이상) <strong>자동(상위에 해당직급이 있는경우)으로 자동검색</strong> 가능 <br>
+		<!-- - <strong>마케팅-승급처리시</strong> 센터/지사/지점/본부 회원은 자동 업데이트  -->
 	</p>
 </div>
 
