@@ -56,7 +56,7 @@ if($option2 == 0){
         ?>
     </div>
 
-    <?if($option3 != 3){?>
+    <?if($option2 != 0){?>
     <div class='<?=$class?>'>
         <p> 2차 수익률 지급스케쥴  </p>
         <?

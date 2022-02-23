@@ -422,16 +422,16 @@ $rank_sql = "select * from rank where mb_id = '{$mb['mb_id']}' and rank = '{$mb[
 	<tr >
 		<th scope="row">추천인</th>
 		<td colspan="1">
-			<input type="text" name="mb_recommend" id="mb_recommend" value="<?=$mb['mb_recommend']?>" class="frm_input " />
+			<!-- <input type="text" name="mb_recommend" id="mb_recommend" value="<?=$mb['mb_recommend']?>" class="frm_input " />
 			<span id="ajax_rcm_search" class="btn flexible">검색</span>
+			<span class='exp_nick'><?=get_name($mb['mb_recommend'])?></span> -->
+
+			<input type="text" name="mb_recommend" id="mb_recommend" value="<?=$mb['mb_recommend']?>" class="frm_input " />
+			<span class="btn flexible member_search" data-category="recommend">검색</span>
+			<span class='exp_nick'><?=get_name($mb['mb_recommend'])?></span>
 		</td>
-		<!-- 
-		<th scope="row">후원인</th>
-		<td colspan="1">
-			<input type="text" name="mb_brecommend" id="mb_brecommend" value="<?=$mb['mb_brecommend']?>" class="frm_input " disabled/>
-			<span><?=$mb['mb_bre_time'] ? "등록일 : ".$mb['mb_bre_time'] : "" ?></span>
-		</td> 
-		-->
+		
+		
 		<th scope="row">닉네임지정</th>
 		<td colspan="1">
 			<input type="checkbox" style='width:24px;height:24px;text-align:left' name="center_use" id="center_use" value=" <?=$mb['center_use']?> " class="" <? if($mb['center_use'] == '1') {echo "checked";}?> />
@@ -453,6 +453,7 @@ $rank_sql = "select * from rank where mb_id = '{$mb['mb_id']}' and rank = '{$mb[
 			<input type="text" name="mb_center" id="mb_center" value="<?=$mb['mb_center']?>" class="frm_input " />
 			<span class="btn flexible member_search" data-category="center">검색</span>
 			<span class="btn flexible btn2 member_auto_regist" data-category="center" data-category_value="2">자동등록</span>
+			<span class='exp_nick'><?=get_name($mb['mb_center'])?></span>
 		</td>
 
 		<th scope="row">지점회원</th>
@@ -460,6 +461,7 @@ $rank_sql = "select * from rank where mb_id = '{$mb['mb_id']}' and rank = '{$mb[
 			<input type="text" name="mb_jijum" id="mb_jijum" value="<?=$mb['mb_jijum']?>" class="frm_input " />
 			<span class="btn flexible member_search" data-category="jijum">검색</span>
 			<span class="btn flexible btn2 member_auto_regist" data-category="jijum" data-category_value="3">자동등록</span>
+			<span class='exp_nick'><?=get_name($mb['mb_jijum'])?></span>
 		</td>
 		
 	</tr>
@@ -470,6 +472,7 @@ $rank_sql = "select * from rank where mb_id = '{$mb['mb_id']}' and rank = '{$mb[
 			<input type="text" name="mb_jisa" id="mb_jisa" value="<?=$mb['mb_jisa']?>" class="frm_input " />
 			<span class="btn flexible member_search" data-category="jisa">검색</span>
 			<span class="btn flexible btn2 member_auto_regist" data-category="jisa" data-category_value="4">자동등록</span>
+			<span class='exp_nick'><?=get_name($mb['mb_jisa'])?></span>
 		</td>
 	
 		<th scope="row">본부회원</th>
@@ -477,6 +480,7 @@ $rank_sql = "select * from rank where mb_id = '{$mb['mb_id']}' and rank = '{$mb[
 			<input type="text" name="mb_bonbu" id="mb_bonbu" value="<?=$mb['mb_bonbu']?>" class="frm_input " />
 			<span class="btn flexible member_search" data-category="bonbu">검색</span>
 			<span class="btn flexible btn2 member_auto_regist" data-category="bonbu" data-category_value="5">자동등록</span>
+			<span class='exp_nick'><?=get_name($mb['mb_bonbu'])?></span>
 		</td>
 
 	</tr>
@@ -1066,6 +1070,12 @@ $(function() {
 			var target = $("#mb_"+category);
 			var search_member = target.val();
 			
+			var divX = $(this).offset().left;
+			var divY = $(this).offset().top;
+
+			console.log(divX);
+			console.log(divY);
+
 			$.ajax({
 				type: "POST",
 				url: "/util/ajax.search_member.php",
@@ -1077,8 +1087,8 @@ $(function() {
 				},
 				success: function(result) {
 					if(result.code == 0000){
-						// console.log(result.data);
 						$('.search_container').addClass("active");
+						$('.search_container').css('left',(divX - 170)).css('top',(divY - 500));
 
 							var cnt = result.data.length;
 							var html = "<ul class='content'>";

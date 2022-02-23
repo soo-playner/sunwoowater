@@ -172,7 +172,7 @@ function user_grade($id)
 }
 
 
-// 닉네임검사
+// 닉네임 가져오기
 function get_name($id)
 {
 	global $g5;
@@ -183,6 +183,17 @@ function get_name($id)
 		return $result['mb_nick'];
 	} else {
 		return ' - ';
+	}
+}
+
+// 이름 + 닉네임
+function express_nick_name($mb_id){
+	$mb = sql_fetch("SELECT mb_nick,mb_name FROM g5_member WHERE mb_id = '{$mb_id}' ");
+	
+	if($mb) {
+		return $mb['mb_name']."[".$mb['mb_nick']."]";
+	}else{
+		return '';
 	}
 }
 

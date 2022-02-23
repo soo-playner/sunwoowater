@@ -1098,7 +1098,7 @@ hr{border-top:2px solid rgba(0,0,0,0.1)}
 h1 {min-width:100px}	
 #hd  {min-width:100px}	
 #gnb  {min-width:100px}	
-#wrapper  {min-width:100px}	
+#wrapper  {min-width:1200px}	
 .local_sch {min-width:100px}
 .local_ov {min-width:100px}
 main{min-height:100vh;padding-bottom:30px;height:100%;}

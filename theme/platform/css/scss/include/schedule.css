@@ -65,12 +65,16 @@
   line-height: 26px;
   border: 1px solid #ccc;
   border-bottom: none;
-  width: 90%;
+  width: 100%;
   text-align: right;
   font-weight: 600;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+}
+
+.duel li {
+  width: 90%;
 }
 
 .schedule li dt {

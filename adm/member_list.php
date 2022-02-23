@@ -369,7 +369,7 @@ $stats_result = sql_fetch($stats_sql);
 		<th scope="col" id="mb_list_auth2" class="bonus_bb bonus_out"  rowspan="2">DSP</th>
 		<th scope="col" rowspan="2" id="" class="item_title">상위보유패키지</th>
 		
-		<th scope="col" id="mb_list_member"><?php echo subject_sort_link('mb_today_login', '', 'desc') ?>최종접속</a></th>
+		<th scope="col" id="mb_list_member" style="min-width:40px;"><?php echo subject_sort_link('mb_today_login', '', 'desc') ?>최종접속</a></th>
 		<th scope="col" rowspan="2" id="mb_list_mng">관리</th>
 	</tr>
 
