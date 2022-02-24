@@ -52,19 +52,27 @@ $_POST['center_use'] != "" ? $center_use = $_POST['center_use'] : $center_use = 
 /*레벨 처리*/
 $mb = get_member($mb_id);
 $mb_level = $mb['mb_level'];
+$temp_mb_level = $_POST['mb_level'];
 
-if($center_use > 0){
+if($temp_mb_level > 1){
 	
-	if($_POST['mb_level'] < 2){
-		$temp_mb_level = 2;
-	}else{
-		$temp_mb_level = $_POST['mb_level'];
+	if($mb_level < 10 &&  $temp_mb_level > $mb_level){
+		$rec = "관리자 수동 승급처리";
+
+		// 승급기록 
+		$bonus_sql = " insert rank set rank_day='{$todate}'";
+		$bonus_sql .= " ,mb_id			= '{$mb_id}' ";
+		$bonus_sql .= " ,old_level		= '{$mb_level}' ";
+		$bonus_sql .= " ,rank           = {$temp_mb_level}";
+		$bonus_sql .= " ,rank_note	    = '{$rec}' ";
+		$bonus_sql .= " ,category	    = 2 ";
+		$bonus_sql .= " ,count	        = 0 ";
+		$bonus_sql .= " ,upgrade_clue	= '{$mb['recom_sales']}' ";
+		sql_query($bonus_sql);
 	}
 }
 
-if($mb_level < 10 &&  $temp_mb_level > $mb_level){
-	$mb_level = $temp_mb_level;
-}
+$mb_level = $temp_mb_level;
 
 
 $_POST['mb_center'] != "" ? $mb_center = $_POST['mb_center'] : $mb_center = '';

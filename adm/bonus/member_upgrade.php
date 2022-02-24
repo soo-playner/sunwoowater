@@ -203,7 +203,6 @@ function fvisit_submit(act)
         | 지점:     <strong><?=member_cnt('3')?></strong> 명
         | 지사:     <strong><?=member_cnt('4')?></strong> 명
         | 본부:     <strong><?=member_cnt('5')?></strong> 명
-		
 	</p>
 </div>
 

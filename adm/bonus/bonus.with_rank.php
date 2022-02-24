@@ -14,7 +14,7 @@ $category ='rank';
 $bonus_layer = $_GET['exc_layer'];
 
 if (!$debug) {
-    $dupl_check_sql = "select mb_id from rank where count={$bonus_layer}";
+    $dupl_check_sql = "select mb_id from rank where count={$bonus_layer} AND category = 1";
     $get_today = sql_fetch($dupl_check_sql);
 
     if ($get_today['mb_id']) {
