@@ -5,6 +5,12 @@ $begin_time = get_microtime();
 
 include_once(G5_PATH.'/head.sub.php');
 
+if($member['mb_level'] > 9){
+    $super_admin = 1;
+}else{
+    $super_admin = 0;
+}
+
 function print_menu1($key, $no)
 {
     global $menu;

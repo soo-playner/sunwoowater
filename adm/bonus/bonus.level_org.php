@@ -238,7 +238,7 @@ function fvisit_submit(act)
 		$code = $row['code'];
 	?>
         <li class='outbox <?=$code?>'>
-            <input type='submit' name="act_button" value="<?= $row['name'] ?> 보너스 지급" class="frm_input benefit" onclick="bonus_excute('<?= $code ?>','<?= $row['name'] ?>');">
+            <?if($super_admin == 1){?><input type='submit' name="act_button" value="<?= $row['name'] ?> 보너스 지급" class="frm_input benefit" onclick="bonus_excute('<?= $code ?>','<?= $row['name'] ?>');"><?}?>
         </li>
         <li>
             <input type="submit" name="act_button" value="<?= $row['name'] ?> 보너스 내역" class="view_btn" style="height:36px; " onclick="bonus_view('<?= $code ?>');">

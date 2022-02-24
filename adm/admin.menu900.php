@@ -1,5 +1,5 @@
 <?php
-if($member['mb_id'] == 'admin'){
+if($member['mb_level'] > 9){
 $menu["menu900"] = array (
 	array('900000', '기타', ''.G5_ADMIN_URL.'/admin.sub.maintenance.php', 'maintenance'),
 	array('900100', '서비스 점검 사용 관리', ''.G5_ADMIN_URL.'/admin.sub.maintenance.php', 'maintenance'),
@@ -32,8 +32,7 @@ $menu["menu900"] = array (
   $menu["menu900"] = array (
     array('900000', '기타', ''.G5_ADMIN_URL.'/admin.sub.maintenance.php', 'maintenance'),
     array('900100', '서비스 점검 사용 관리', ''.G5_ADMIN_URL.'/admin.sub.maintenance.php', 'maintenance'),
-    array('900110', '부분 서비스 설정', ''.G5_ADMIN_URL.'/admin.sub.switch.php', 'serviceonoff'),
-    array('900150', '초기화/테스트 설정', ''.G5_ADMIN_URL.'/bonus/config_reset.php', 'serviceonoff')
+    array('900110', '부분 서비스 설정', ''.G5_ADMIN_URL.'/admin.sub.switch.php', 'serviceonoff')
   );
 }
 ?>

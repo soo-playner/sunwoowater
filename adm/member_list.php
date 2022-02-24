@@ -58,7 +58,7 @@ if($_GET['level']){
 }
 
 if($member['mb_id'] != 'admin'){
-	$sql_search .= " and mb_id  != 'admin' ";
+	$sql_search .= " and mb_level < 10 ";
 }
 
 if($_GET['nation']){
