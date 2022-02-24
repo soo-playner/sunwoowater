@@ -17,16 +17,16 @@ website:	http://code.google.com/p/jquerytree/
 .ztree li a {padding:1px 3px 0 0; margin:0; cursor:pointer; height:17px; color:#333; background-color: transparent;
 	text-decoration:none; vertical-align:top; display: inline-block}
 .ztree li a:hover {text-decoration:underline}
-.ztree li a.curSelectedNode {padding-top:0px; background-color:#FFE6B0; color:black; height:16px; border:1px #FFB951 solid; opacity:0.8;}
-.ztree li a.curSelectedNode_Edit {padding-top:0px; background-color:#FFE6B0; color:black; height:16px; border:1px #FFB951 solid; opacity:0.8;}
-.ztree li a.tmpTargetNode_inner {padding-top:0px; background-color:#316AC5; color:white; height:16px; border:1px #316AC5 solid;
+.ztree li a.curSelectedNode {padding-top:0px; background-color:#FFE6B0; color:black; height:10px; border:1px #FFB951 solid; opacity:0.8;}
+.ztree li a.curSelectedNode_Edit {padding-top:0px; background-color:#FFE6B0; color:black; height:10px; border:1px #FFB951 solid; opacity:0.8;}
+.ztree li a.tmpTargetNode_inner {padding-top:0px; background-color:#316AC5; color:white; height:10px; border:1px #316AC5 solid;
 	opacity:0.8; filter:alpha(opacity=80)}
 .ztree li a.tmpTargetNode_prev {}
 .ztree li a.tmpTargetNode_next {}
 .ztree li a input.rename {height:14px; width:80px; padding:0; margin:0;
 	font-size:12px; border:1px #7EC4CC solid; *border:0px}
-.ztree li span {line-height:16px; margin-right:2px}
-.ztree li span.button {line-height:0; margin:0; width:16px; height:16px; display: inline-block; vertical-align:middle;
+.ztree li span {line-height:10px; margin-right:2px}
+.ztree li span.button {line-height:0; margin:0; width:16px; height:10px; display: inline-block; vertical-align:middle;
 	border:0 none; cursor: pointer;outline:none;
 	background-color:transparent; background-repeat:no-repeat; background-attachment: scroll;
 	background-image:url("/js/img/zTreeStandard.png"); *background-image:url("/js/img/zTreeStandard.gif")}
@@ -80,7 +80,7 @@ website:	http://code.google.com/p/jquerytree/
 
 ul.tmpTargetzTree {background-color:#FFE6B0; opacity:0.8; filter:alpha(opacity=80)}
 
-span.tmpzTreeMove_arrow {width:16px; height:16px; display: inline-block; padding:0; margin:2px 0 0 1px; border:0 none; position:absolute;
+span.tmpzTreeMove_arrow {width:16px; height:10px; display: inline-block; padding:0; margin:2px 0 0 1px; border:0 none; position:absolute;
 	background-color:transparent; background-repeat:no-repeat; background-attachment: scroll;
 	background-position:-110px -80px; background-image:url("/js/img/zTreeStandard.png"); *background-image:url("/js/img/zTreeStandard.gif")}
 

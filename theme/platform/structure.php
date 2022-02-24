@@ -228,7 +228,7 @@ var gradeMap = {
 				var user_icon = '';
 				if(member.mb_level == 0) {
 					user_icon = "<img src='<?=G5_THEME_URL?>/img/user.png' alt='일반회원'>";
-				}else if(member.mb_level > 9){
+				}else if(member.mb_level > 8){
 					user_icon = "<img src='<?=G5_THEME_URL?>/img/user_admin.png' alt='관리자'>";
 				}else{
 					if(member.mb_level == 2){
@@ -332,7 +332,7 @@ var gradeMap = {
 					if(member.mb_level == 0) {
 						// user_icon = "<img src='<?=G5_THEME_URL?>/img/user.png' alt='일반회원'>";
 						user_icon ="<span class='user_icon lv0'><i class='ri-vip-crown-line'></i></span>";
-					}else if(member.mb_level > 9){
+					}else if(member.mb_level > 8){
 						// user_icon = "<img src='<?=G5_THEME_URL?>/img/user_admin.png' alt='관리자'>";
 						user_icon ="<span class='user_icon lv10'><i class='ri-vip-crown-fill'></i></span>";
 					}else{

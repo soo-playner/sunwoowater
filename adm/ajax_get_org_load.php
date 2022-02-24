@@ -44,10 +44,15 @@ $sql = "SELECT c.c_id,c.c_class,(
 	SELECT mb_no
 	FROM g5_member
 	WHERE mb_id=c.c_id) AS m_no
-	,(select mb_rate FROM g5_member WHERE mb_id=c.c_id) AS mb_rate
+	,(select mb_save_point FROM g5_member WHERE mb_id=c.c_id) AS mb_rate
 	,(select mb_pv FROM g5_member WHERE mb_id=c.c_id) AS mb_pv
-	,(select grade FROM g5_member WHERE mb_id=c.c_id) AS grade
+	,(select recom_sales FROM g5_member WHERE mb_id=c.c_id) AS recom_sales
 	,(SELECT mb_child FROM g5_member WHERE mb_id=c.c_id) AS mb_children
+	,(SELECT mb_nick FROM g5_member WHERE mb_id=c.c_id) AS mb_nick
+	,(SELECT mb_center FROM g5_member WHERE mb_id=c.c_id) AS mb_center
+	,(SELECT mb_jijum FROM g5_member WHERE mb_id=c.c_id) AS mb_jijum
+	,(SELECT mb_jisa FROM g5_member WHERE mb_id=c.c_id) AS mb_jisa
+	,(SELECT mb_bonbu FROM g5_member WHERE mb_id=c.c_id) AS mb_bonbu
 	FROM g5_member m
 	JOIN ".$class_name." c ON m.mb_id=c.mb_id
 	WHERE c.mb_id='{$member['mb_id']}' AND c.c_id='$go_id'
@@ -155,15 +160,15 @@ if ($srow['c_class']){
 			[<?=(strlen($srow['c_class'])/2)-1?>-<?=($srow['c_child'])?>-<?=($srow['b_child']-1)?>]
 			|<?=get_member_label($srow['mb_level'])?>
 			|<?=$srow['c_id']?>|<?=$srow['c_name']?>
-			|<?=number_format($row3['tpv']/$order_split)?>
-			|<?=number_format($row5['tpv']/$order_split)?>
+			|<?=$srow['mb_center']?>
+			|<?=$srow['mb_jijum']?>
 			|<?=$srow['mb_level']?>
-			|<?=number_format($row6['tpv']/$order_split)?>
-			|<?=number_format($row7['tpv']/$order_split)?>
-			|999
+			|<?=$srow['mb_jisa']?>
+			|<?=$srow['mb_bonbu']?>
+			|<?if($srow['mb_nick'] != '') {echo trim($srow['mb_nick']);}else{echo '0';}?>
 			|<?=($srow['mb_children']-1)?>
 			|<?=Number_format($srow['mb_rate'])?>
-			|<?=$srow['grade']?>
+			|<?=$srow['recom_sales']?>
 			|<?=Number_format($srow['mb_pv'])?>
 			|<?=(strlen($srow['c_class'])/2)-1?>
 			|<?=($srow['c_child'])?>

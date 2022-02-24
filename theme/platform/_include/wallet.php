@@ -149,7 +149,7 @@ function user_icon($id, $func)
 	if ($mb_level == 5) {
 		$user_icon = "<span class='user_icon lv5'><i class='ri-government-line'></i></span>";
 	}
-	if ($mb_level > 9) {
+	if ($mb_level > 8) {
 		$user_icon = "<span class='user_icon lv9'><i class='ri-user-settings-line'></i></span>";
 	}
 

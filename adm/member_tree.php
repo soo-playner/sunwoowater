@@ -126,6 +126,7 @@ else
 </style>
 <link type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/themes/base/jquery-ui.css" rel="stylesheet" />
 <link rel="stylesheet" href="/js/zTreeStyle.css" type="text/css">
+
 <script type="text/javascript" src="/js/jquery.ztree.core-3.5.js"></script>
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/jquery-ui.min.js"></script>
 <script>
@@ -149,6 +150,20 @@ else
 	$.datepicker.setDefaults($.datepicker.regional["ko"]);
 
 </script>
+<link href="<?=G5_ADMIN_URL?>/css/scss/member_tree.css" rel="stylesheet">
+<style>
+	
+	.ztree li a{
+		padding:0;
+	}
+	.mb{margin:-20px 0 -20px 20px;color:#666;}
+</style>
+<div class="local_desc01 local_desc">
+	<p>
+		조직도 트리 - 아이디클릭시 바로가기 | 리스트(아이디제외부분) 더블클릭시 접어두기
+	</p>
+</div>
+
 <div style="padding:0px 0px 0px 10px;">
 	<a name="org_start"></a>
 	<div style="float:left">
@@ -185,7 +200,7 @@ if (!$to_date) $to_date = Date("Y-m-d", time());
 			<tr>
 				<td bgcolor="#f2f5f9" height="20" style="padding:10px 10px 10px 10px" align=center>
 				<input type="radio" id="gubun" name="gubun" onclick="document.sForm2.submit();" value=""<?if ($gubun=="") echo " checked"?>> 추천인
-				<input type="radio" id="gubun" name="gubun" onclick="document.sForm2.submit();" value="B"<?if ($gubun=="B") echo " checked"?>> 바이너리레그
+				<!-- <input type="radio" id="gubun" name="gubun" onclick="document.sForm2.submit();" value="B"<?if ($gubun=="B") echo " checked"?>> 바이너리레그 -->
 
 				</td>
 			</tr>
@@ -267,8 +282,29 @@ $srow      = sql_fetch($sql);
 $my_depth  = strlen($srow['c_class']);
 $max_depth = ($my_depth+($max_org_num*2));
 
-?>
 
+?>
+<?
+		//업데이트유무 확인
+		$sql = "select * from ".$class_name."_chk where cc_date='".date("Y-m-d",time())."' order by cc_no desc";
+		// print_R($sql )
+		$mrow = sql_fetch($sql);
+		
+
+		$sql = "select c.c_id,c.c_class,(select mb_level from g5_member where mb_id=c.c_id) as mb_level,
+		(select mb_name from g5_member where mb_id=c.c_id) as c_name,
+		(select count(*) from g5_member where mb_recommend=c.c_id) as c_child,(select mb_b_child from g5_member where mb_id=c.c_id) as b_child,(select mb_id from g5_member where mb_brecommend=c.c_id and mb_brecommend_type='L' limit 1) as b_recomm,(select mb_id from g5_member where mb_brecommend=c.c_id and mb_brecommend_type='R' limit 1) as b_recomm2,(select count(mb_no) from g5_member where ".$recommend_name."=c.c_id and mb_leave_date = '') as m_child, ( SELECT mb_save_point FROM g5_member WHERE mb_id = c.c_id) AS mb_rate
+		, (select mb_pv FROM g5_member WHERE mb_id=c.c_id) AS mb_pv
+		, ( SELECT recom_sales FROM g5_member WHERE mb_id = c.c_id) AS recom_sales
+		,(SELECT mb_child FROM g5_member WHERE mb_id=c.c_id) AS mb_children
+		,(SELECT mb_nick FROM g5_member WHERE mb_id=c.c_id) AS mb_nick
+		,(SELECT mb_center FROM g5_member WHERE mb_id=c.c_id) AS mb_center
+		,(SELECT mb_jijum FROM g5_member WHERE mb_id=c.c_id) AS mb_jijum
+		,(SELECT mb_jisa FROM g5_member WHERE mb_id=c.c_id) AS mb_jisa
+		,(SELECT mb_bonbu FROM g5_member WHERE mb_id=c.c_id) AS mb_bonbu from g5_member m join ".$class_name." c on m.mb_id=c.mb_id where c.mb_id='{$tree_id}' and c.c_class like '{$srow['c_class']}%' and length(c.c_class)<".$max_depth." order by c.c_class";
+		
+		$result = sql_query($sql);
+		?>
 
 <div id="div_right" style="width:85%;float:left;min-height:500px">
 		<div class="zTreeDemoBackground left" style="min-height:573px;margin:0px 10px 0px 10px;border:1px solid #d9d9d9;">
@@ -288,22 +324,10 @@ $max_depth = ($my_depth+($max_org_num*2));
 				}
 			};
 			var zNodes =[];
-			
-		
 
 		<?
-		//업데이트유무 확인
-		$sql = "select * from ".$class_name."_chk where cc_date='".date("Y-m-d",time())."' order by cc_no desc";
-		// print_R($sql )
-		$mrow = sql_fetch($sql);
-		
-
-		$sql = "select c.c_id,c.c_class,(select grade from g5_member where mb_id=c.c_id) as grade,(select mb_name from g5_member where mb_id=c.c_id) as c_name,(select count(*) from g5_member where mb_recommend=c.c_id) as c_child,(select mb_b_child from g5_member where mb_id=c.c_id) as b_child,(select mb_id from g5_member where mb_brecommend=c.c_id and mb_brecommend_type='L' limit 1) as b_recomm,(select mb_id from g5_member where mb_brecommend=c.c_id and mb_brecommend_type='R' limit 1) as b_recomm2,(select count(mb_no) from g5_member where ".$recommend_name."=c.c_id and mb_leave_date = '') as m_child from g5_member m join ".$class_name." c on m.mb_id=c.mb_id where c.mb_id='{$tree_id}' and c.c_class like '{$srow['c_class']}%' and length(c.c_class)<".$max_depth." order by c.c_class";
-
-		// print_r($sql);
-
-		$result = sql_query($sql);
 		for ($i=0; $row=sql_fetch_array($result); $i++) {
+			
 			if (strlen($row['c_class'])==2){
 				$parent_id = 0;
 			}else{
@@ -408,9 +432,32 @@ $max_depth = ($my_depth+($max_org_num*2));
 			if (!$row['b_child']) $row['b_child']=1;
 			//if (!$row['c_child']) $row['c_child']=1;
 
-      		$name_line = "<img src='/img/".$row['grade'].".png' class='pool' />";
- 
-			$name_line .="<span class='user_name'>". $row['c_id'] ."</span>"  /*"[".((strlen($row['c_class'])/2)-1)."-".($row['c_child'])."-".($row['b_child']-1)."]".$row['c_name']."(".$row['c_id'].")  <img src='/adm/img/dot.gif' /> 누적매출".number_format($row3['tpv']/$order_split)."<img src='/adm/img/dot.gif' /> 30일매출 ".number_format($row5['tpv']/$order_split)."<img src='/adm/img/dot.gif' /> 바이너리레그매출".number_format($row6['tpv']/$order_split)."-".number_format($row7['tpv']/$order_split);*/
+      		// "<img src='/img/".$row['mb_level'].".png' class='pool' />";
+			if($row['mb_level'] == 2){
+				$user_icon = "<i class='ri-team-fill'></i>";
+			}else if($row['mb_level'] == 3){
+				$user_icon = "<i class='ri-community-line'></i>";
+			}else if($row['mb_level'] == 4){
+				$user_icon = "<i class='ri-building-2-line'></i>";
+			}else if($row['mb_level'] == 5){
+				$user_icon = "<i class='ri-government-line'></i>";
+			}else if($row['mb_level'] > 8){
+				$user_icon = "<i class='ri-user-settings-line'></i>";
+			}else{
+				$user_icon = "<i class='ri-vip-crown-line'></i>";
+			}
+
+			$name_line =  "<p class='mb'><span class='user_icon lv".trim($row['mb_level'])."'>".$user_icon."</span>";
+			$name_line .= "<span class='user_id' data-id='{$row['c_id']}'>". $row['c_id'] ."</span>";
+			$name_line .= "<span class='user_name'>". $row['c_name'] ."</span>";
+			if($row['mb_nick'] != ''){
+				$name_line .= "<span class='user_nick'>[ ". $row['mb_nick'] ." ]</span>";
+			}
+			$name_line .= " | <span class='mb_pv'> B : ".$row['mb_pv']."</span>";
+			$name_line .= " | <span class='mb_rate'> PV : ".Number_format($row['mb_rate'])."</span>";
+			$name_line .= "</p>";
+
+			
 		?>
 			zNodes.push({ id:"<?=$row['c_class']?>", pId:"<?=$parent_id?>", name:"<?php echo $name_line;?>", open:true, click:false});
 			
@@ -430,18 +477,6 @@ $max_depth = ($my_depth+($max_org_num*2));
 			//-->
 		</SCRIPT>
 </div>
-
-<style type="text/css">
-
-.ztree li a:hover {text-decoration:none; background-color: #FAD7E0;}
-.pool{
-  width:50px;
-  height:50px;
-}
-.user_name{
-  margin-left:50px;
-}
-</style>
 
 
 <script type="text/javascript">
@@ -514,7 +549,6 @@ function go_member(go_id){
 		}
 		
 		data2 += "</table>";
-
 		$('#div_member').html(data2);
 
 		$.get("ajax_get_tree_load.php?gubun=<?=$gubun?>&fr_date=<?=$fr_date?>&to_date=<?=$to_date?>&go_id="+go_id, function (data) {
@@ -534,6 +568,14 @@ function btn_user(){
 	}
 }
 
+$(function(){
+	$('.user_id').on('click',function(){
+		var target = $(this).data('id');
+		console.log(target);
+		go_member(target);
+
+	});
+});
 //-->
 </script>
 

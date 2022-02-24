@@ -1048,7 +1048,7 @@
 		 }else{
 
         var html = '<div class="title"><div align=right style="padding:0px 2px 5px 5px;border-bottom:1px solid #111;text-align:left;"><img src="/img/go.png" onclick="go_member(\''+temp[2]+'\')"><img src="/img/edit.png" style="float:right" onclick="edit_member(\''+temp[2]+'\')"></div>';
-        html += '<div style="display:none;clear:both;height:20px;text-align:center;letter-spacing: -4px;">';
+        /* html += '<div style="display:none;clear:both;height:20px;text-align:center;letter-spacing: -4px;">';
         
         if(temp[9] > 0){
           html += '<img src="/img/P1.png" > ';
@@ -1065,10 +1065,11 @@
         if(temp[13] > 0){
           html += '<img src="/img/P5.png" > ';
         }
-        html += '</div>';
+        html += '</div>'; */
 
         // html += "<div class='lv_icon'><span class='user_icon lv"+trim(temp[6])+"'><i class='ri-vip-crown-line'></i></span></div>";
         
+
         if(Number(temp[6]) == 2){
           var user_icon = "<i class='ri-team-fill'></i>";
         }else if(temp[6] == 3){
@@ -1082,27 +1083,40 @@
         }else{
           var user_icon = "<i class='ri-vip-crown-line'></i>";
         }
+        html +="<p class='mb'><span class='user_icon lv"+trim(temp[6])+"'>"+user_icon+"</span>" + temp[2]+"<span class='mb_name'>"+temp[3];
+        
+        if(String(temp[9]) != 0){
+          html += "[ "+String(temp[9])+"]";
+        }
+        html += "</span></p>" ;
+        
 
 
-        html +="<p class='mb'><span class='user_icon lv"+trim(temp[6])+"'>"+user_icon+"</span>" + temp[2] + "</p>" ;
-
-        var badge_color = 'color'+temp[12];
-        html += "<div class='dec' style='margin-bottom:5px;'>등급: <span class='badge "+badge_color+"' style='font-size:11px;'>"+temp[12]+"S</span></div>";
-        html += '<div class="dec">스폰서(직추천): <strong>' + temp[15] + '명</strong></div>';
+        // var badge_color = 'color'+temp[12];
+        // html += "<div class='dec' style='margin-bottom:5px;'>등급: <span class='badge "+badge_color+"' style='font-size:11px;'>"+temp[12]+"S</span></div>";
+        // html += '<div class="dec">스폰서(직추천): <strong>' + temp[15] + '명</strong></div>';
 
         if(temp[17] == 'B'){
           html += '<div class="dec">후원산하: <strong>' + temp[16] + '명</strong></div>';
         }else{
-          html += '<div class="dec">추천산하: <strong>' + temp[10] + '명</strong></div>';
+          html += '<div class="dec">산하회원 총: <strong>' + temp[10] + '명</strong></div>';
         }
 
-        html += '<div class="dec"><span class=f_blue><strong>PV: ' + temp[13] + '</strong></span></div>';
+        html += '<div class="dec"><span >구매실적: ' + temp[11] + ' </span></div>';
+        html += '<div class="dec"><span class=f_blue><strong>기부볼: ' + temp[13] + ' B</strong></span></div>';
+
+        /* html += "<div class='org'>";
+        html += '<li class="duel">센터: ' + temp[5] + ' </li>';
+        html += '<li class="duel">지점: ' + temp[6] + ' </li>';
+        html += '<li class="duel">지사: ' + temp[8] + ' </li>';
+        html += '<li class="duel">본부: ' + temp[9] + ' </li>';
+        html += "</div>"; */
 
         if(temp[17] == 'B'){
           html += '<div class="box_foot"><div class="dec p_left"><span class="red">' + temp[7] + '</span></div>';
           html += '<div class="dec p_right"><span class="red">' + temp[8] + '</span></div></div>';
         }else{
-          html += '<div class="box_foot"><div class="dec p_full"><span class="red">' + temp[4] + '</span></div>';
+          html += '<div class="box_foot"><div class="dec p_full">하부 B : <span class="red">' + temp[12] + '</span></div>';
         }
         $nodeDiv.append(html).append(typeof opts.nodeContent !== 'undefined' ? '<div class="content">' + (nodeData[opts.nodeContent] || '') + '</div>' : '');
 		 }

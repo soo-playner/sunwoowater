@@ -220,10 +220,15 @@ function get_org_down($srow){
 			SELECT COUNT(mb_no)
 			FROM g5_member
 			WHERE ".$recommend_name."=c.c_id AND mb_leave_date = '') AS m_child
-			, ( SELECT mb_rate FROM g5_member WHERE mb_id = c.c_id) AS mb_rate
+			, ( SELECT mb_save_point FROM g5_member WHERE mb_id = c.c_id) AS mb_rate
 			, (select mb_pv FROM g5_member WHERE mb_id=c.c_id) AS mb_pv
-			, ( SELECT grade FROM g5_member WHERE mb_id = c.c_id) AS grade
+			, ( SELECT recom_sales FROM g5_member WHERE mb_id = c.c_id) AS recom_sales
 			,(SELECT mb_child FROM g5_member WHERE mb_id=c.c_id) AS mb_children
+			,(SELECT mb_nick FROM g5_member WHERE mb_id=c.c_id) AS mb_nick
+			,(SELECT mb_center FROM g5_member WHERE mb_id=c.c_id) AS mb_center
+			,(SELECT mb_jijum FROM g5_member WHERE mb_id=c.c_id) AS mb_jijum
+			,(SELECT mb_jisa FROM g5_member WHERE mb_id=c.c_id) AS mb_jisa
+			,(SELECT mb_bonbu FROM g5_member WHERE mb_id=c.c_id) AS mb_bonbu
 			FROM g5_member m
 			JOIN ".$class_name." c ON m.mb_id=c.mb_id
 			WHERE c.mb_id='{$member['mb_id']}' AND LENGTH(c.c_class)={$clen} AND c.c_class LIKE '".$srow['c_class']."%'
@@ -393,12 +398,12 @@ function get_org_down($srow){
 						<li><?=(strlen($row['c_class'])/2)-$mdepth?>-<?=($row['c_child'])?>-<?=($row['b_child']-1)?>
 						|<?=get_member_label($row['mb_level'])?>
 						|<?=$row['c_id']?>|<?=$row['c_name']?>
-						|<?=number_format($row3['tpv'])?> 
-						|<?=number_format($row5['tpv'])?>
+						|<?=$row['mb_center']?>
+						|<?=$row['mb_jijum']?>
 						|<?=$row['mb_level']?>
-						|<?=number_format($row6['tpv'])?>
-						|<?=number_format($row7['tpv'])?>
-						|999
+						|<?=$row['mb_jisa']?>
+						|<?=$row['mb_bonbu']?>
+						|<?if($srow['mb_nick'] != '') {echo trim($srow['mb_nick']);}else{echo '0';}?>
 						|<?=($srow['mb_children']-1)?>
 						|<?=number_format($row['mb_rate'])?>
 						|<?=$row['grade']?>

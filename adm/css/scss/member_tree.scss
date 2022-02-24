@@ -1,12 +1,116 @@
 @charset "utf-8";
 
 .btn_menu {padding:5px;border:1px solid #ced9de;background:rgb(246,249,250);cursor:pointer}
-
+.ztree li a{color:#555}
 .ztree li a:hover {text-decoration:none; background-color: #FAD7E0;}
 .pool{
   width:50px;
   height:50px;
 }
-.user_name{
-  margin-left:50px;
+.user_id{
+  margin-left:20px;
+  font-weight:600;
+  color:black;
 }
+.user_name{
+  margin-left:20px;
+  font-size:15px;
+  font-weight:600;
+  color:royalblue;
+  font-family:dotum,Arial, Helvetica, sans-serif;
+}
+.user_nick{
+  margin-left:10px;
+  font-size:13px;
+  color:#777;
+  font-family:dotum,Arial, Helvetica, sans-serif;
+}
+
+.mb_pv{
+  font-size:16px;
+  color:black;
+  font-weight:600;
+}
+
+.mb_rate{
+  font-size:16px;
+  font-weight:600;
+  color:#777;
+}
+
+
+.treedemo .mb {
+  margin: 3px 0;
+  word-break: break-all;
+  white-space: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 11px;
+  padding: 0;
+  color: orange;
+}
+
+
+/* 유저 아이콘*/
+.user_icon {
+	background:#cbd2de;width:100%;height:100%;
+	text-align:center;display:block;border-radius:50%;
+	display: inline-block;
+  width: 34px;
+  height: 34px;
+  vertical-align: middle !important;
+  line-height: 30px !important;
+	margin-right:5px;
+	font-size:19px !important;
+}
+.user_icon > i{font-weight: 300;}
+
+.user_icon.lv0{
+	color:white !important;
+}
+.user_icon.lv1{
+	background:#2b3a6d;
+	color:white !important;
+	}
+.user_icon.lv2{
+	background:#61b5ff;
+	color:#1a4158 !important;
+	}
+.user_icon.lv3{
+	background:red;
+	color:white !important;
+}
+.user_icon.lv4{
+	background:green;
+	color:white !important;
+}
+.user_icon.lv5{
+	background:black;
+	color:gold !important;
+}
+
+.user_icon.lv9{
+	background:black;
+	color:white !important;
+}
+.user_icon.lv10{
+	background:black;
+	color:white !important;
+}
+.badge{padding:3px 6px;color:white;font-weight:600;}
+
+/*검색바*/
+.searchid{color:green;font-weight:600;}
+.search_nick{color:#666;font-weight:300;margin-left:10px;}
+
+/* 컬러 */
+
+.color0 {background: #cacaca !important;color:black}
+.color1 {background: #b55dccd9 !important}
+.color2 {background: #516feb !important;}
+.color3 {background: #09c3fd !important;}
+.color4 {background: #5ed2dc !important;}
+.color5 {background: #373cbc !important;}
+.color6 {background: #2b3a6d !important;}
+.color9 {background: #6214ab !important;}
+.color10 {background: #6214ab !important;}
