@@ -185,7 +185,7 @@ include_once(G5_PLUGIN_PATH . '/jquery-ui/datepicker.php');
 <div class="local_desc01 local_desc">
 	<p>
 		공통 : 보너스기준일자로 각 보너스지급버튼 클릭<br>
-		- 현재 누적볼 총합 : <span class='green'><?=Number_format($total_ball_count)?></span> / 다음대수까지 : <strong>-<?=Number_format($next_layer_remain)?></strong><br>
+		- 현재 누적볼 총합 : <span class='green'><?=Number_format($total_ball_count)?> (+<?=Number_format($current_count*0.3)?>)</span> / 다음대수까지 : <strong>-<?=Number_format($next_layer_remain)?></strong><br>
         - 현재 누적 차수 : <strong><?=$total_layer?> 대</strong>
 	</p>
 </div>
@@ -217,7 +217,7 @@ include_once(G5_PLUGIN_PATH . '/jquery-ui/datepicker.php');
 		$code = $row['code'];
 		?>
 			<li class='outbox'>
-				<input type='submit' name="act_button" value="<?= $row['name'] ?> 보너스 지급" class="frm_input benefit" onclick="bonus_excute('<?= $code ?>','<?= $row['name'] ?>');">
+				<?if($super_admin == 1){?><input type='submit' name="act_button" value="<?= $row['name'] ?> 보너스 지급" class="frm_input benefit" onclick="bonus_excute('<?= $code ?>','<?= $row['name'] ?>');"><?}?>
 				<input type="submit" name="act_button" value="<?= $row['name'] ?> 지급 내역" class="view_btn" onclick="bonus_view('<?= $code ?>');">
 			</li>
 	<? } ?>

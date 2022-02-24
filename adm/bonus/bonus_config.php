@@ -17,7 +17,7 @@ $token = get_token();
 <div class="local_desc01 local_desc">
     <p>
         - 마케팅수당설정 - 관리자외 설정금지<br>
-        - 현재 누적볼 총합 : <span class='green'><?=Number_format($total_ball_count)?></span> / 다음대수까지 : <strong>-<?=Number_format($next_layer_remain)?></strong><br>
+        - 현재 누적볼 총합 : <span class='green'><?=Number_format($total_ball_count)?> (+<?=Number_format($current_count*0.3)?>)</span> / 다음대수까지 : <strong>-<?=Number_format($next_layer_remain)?></strong><br>
         - 현재 누적 차수 : <strong><?=$total_layer?> 대</strong>
 	</p>
 </div>
