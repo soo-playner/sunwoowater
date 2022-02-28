@@ -314,18 +314,18 @@ $result = sql_query($sql);
 
 						<div class='col-4 pr0'>
 							<label class="box-radio-input">
-							<input type="radio" name="schedule" value="1" checked="checked"><span>1차재구매</span>
+							<input type="radio" name="schedule" value="1" checked="checked"><span>1차재기부</span>
 							</label>
 						</div>
 
 						<div class="col-4 pl0 pr0">
 							<label class="box-radio-input">
-							<input type="radio" name="schedule" value="2"><span>2차재구매</span></label>
+							<input type="radio" name="schedule" value="2"><span>2차재기부</span></label>
 						</div>
 
 						<div class="col-4 pl0">
 							<label class="box-radio-input">
-							<input type="radio" name="schedule" value="3"><span>재구매없음</span></label>
+							<input type="radio" name="schedule" value="3"><span>재기부없음</span></label>
 						</div>
 
 						<span class="desc" style="margin-top:10px; padding-left:10px;font-size:12px;" > ※ 기부구좌 및 기부유형에 선택후 지급 스케쥴표에서 미리보기 가능</span>
@@ -348,7 +348,7 @@ $result = sql_query($sql);
 				<h3 class="hist_tit">내 보유 구좌</h3>
 
 				<? if (sql_num_rows($result) == 0) { ?>
-					<div class="no_data"> Package 구매 내역이 존재하지 않습니다</div>
+					<div class="no_data"> 기부 내역이 존재하지 않습니다</div>
 				<? } else { ?>
 					
 					<? while ($row = sql_fetch_array($result)) { ?>
@@ -466,7 +466,7 @@ $result = sql_query($sql);
 			$('#shift_won').text('￦' + Price(it_price) + '원');
 			$('#shift_dollor').val(Price(Math.floor(price_calc)));
 
-			// 상품구매로 이동
+			// 상품기부로 이동
 			var scrollPosition = $('#pakage_sale').offset().top;
 			window.scrollTo({
 				top: scrollPosition,
@@ -512,7 +512,7 @@ $result = sql_query($sql);
 			// window.open(url);  
 		});
 
-		// 패키지구매
+		// 패키지기부
 		$('#purchase').on('click', function() {
 			var nw_purchase = '<?= $nw_purchase ?>'; // 점검코드
 			var pre_schedule = $('input[name=schedule]:checked').val();
@@ -545,7 +545,7 @@ $result = sql_query($sql);
 				return false;
 			}
 
-			/* if (confirm(it_name + '팩을 구매 하시겠습니까?')) {
+			/* if (confirm(it_name + '팩을 기부 하시겠습니까?')) {
 				} else {
 					return false;
 				} 
@@ -555,7 +555,7 @@ $result = sql_query($sql);
 			console.log(`total:${total_fund}\nprice:${it_price}`);
 			console.log(`recharge : ${recharge}`);
 
-			dialogModal('Package 상품구매 확인', '<strong>[' + it_name + '] '+ Price(it_supply_point)+' 구좌를 기부 하시겠습니까?</strong>', 'confirm');
+			dialogModal('Package 상품기부 확인', '<strong>[' + it_name + '] '+ Price(it_supply_point)+' 구좌를 기부 하시겠습니까?</strong>', 'confirm');
 
 
 			$('#modal_confirm').on('click', function() {

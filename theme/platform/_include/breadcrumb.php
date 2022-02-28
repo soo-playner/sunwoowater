@@ -91,7 +91,7 @@ $title = 'Dashboard';
 				<div class="total_view_top">
 					<ul class="row top">
 						<li class="col-4">
-							<dt class="title" >구매 가능 잔고</dt>
+							<dt class="title" >기부 가능 잔고</dt>
 							<dd class="value" style='font-size:15px;'><?=shift_auto($available_fund,ASSETS_CURENCY)?><span class='currency'><?=ASSETS_CURENCY?></span></dd>
 						</li>
 						<li class="col-4">
@@ -189,7 +189,7 @@ $title = 'Dashboard';
 						</li> -->
 
 						<li class="col-6">
-							<dt class="title">구매등급</dt>
+							<dt class="title">기부등급</dt>
 							<dd class="value">
 								<?=check_value($member['mb_5'])?>
 							</dd>
