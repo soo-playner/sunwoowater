@@ -84,7 +84,7 @@ function imageview(id, w, h)
 /*## layer id search ################################################*/
 ?>
 
-<?include_once(G5_PATH.'/test_server.php')?>
+<?include_once(G5_PATH.'/t_server.php')?>
 
 
 <div id="framewrp">
