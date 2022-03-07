@@ -108,7 +108,7 @@ $listall = '<a href="'.$_SERVER['SCRIPT_NAME'].'" class="ov_listall">전체목�
 $sql = " select * {$sql_common} {$sql_search} {$sql_order} limit {$from_record}, {$rows} ";
 //echo $sql; exit;
 $result = sql_query($sql);
-$colspan = 11;
+$colspan = 8;
 
 /* 레벨 */
 $grade = "SELECT grade, count( grade ) as cnt FROM g5_member GROUP BY grade order by grade";
