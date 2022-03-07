@@ -1,6 +1,6 @@
 <?
-define('CONFIG_TITLE','SAMWOO SYSTEM');
-define('CONFIG_SUB_TITLE','SAMWOO SYSTEM');
+define('CONFIG_TITLE','SUNWOO WATER');
+define('CONFIG_SUB_TITLE','SUNWOO WATER');
 
 // 메일설정
 define('CONFIG_MAIL_ACCOUNT','willsoftkr');
