@@ -684,14 +684,15 @@ if ($_GET['recom_referral']){
 					<?}?>
 			</section>
 			-->
-
+			
+			
 			<p class="check_appear_title mt40"><span >회원가입 약관동의 </span></p>
 			<div class="mt20">
 				<div class="term_space">
 					<input type="checkbox" id="service_checkbox" class="term_none" name="term" >
 					<label for="service_checkbox" style="width:25px;height:25px;">
 						<span style='margin-left:10px;line-height:30px;'><?= $service_term['wr_subject'] ?> 및 서약서 동의</span>
-						<a id="service" href="javascript:collapse('#service');"  style="width:25px;height:25px;position:absolute;right:25px;"><i class="fas fa-angle-down" style="width:25px;height:25px;"></i></a>
+						<a id="service" href="javascript:collapse('#service');"  style="width:25px;height:25px;position:absolute;right:25px;"><i class="ri-arrow-down-s-line" style="font-size:24px"></i></a>
 					</label>
 				</div>
 				
@@ -701,7 +702,7 @@ if ($_GET['recom_referral']){
 					<input type="checkbox" id="private_checkbox" class="term_none" name="term" >
 					<label for="private_checkbox" style="width:25px;height:25px;">
 						<span style='margin-left:10px;line-height:30px;'><?= $private_term['wr_subject'] ?> 동의</span>
-						<a id="private" href="javascript:collapse('#private');"  style="width:25px;height:25px;position:absolute;right:25px;"><i class="fas fa-angle-down" style="width:25px;height:25px;"></i></a>
+						<a id="private" href="javascript:collapse('#private');"  style="width:25px;height:25px;position:absolute;right:25px;"><i class="ri-arrow-down-s-line" style="font-size:24px"></i></a>
 					</label>
 				</div>
 				<textarea id="private_term" class="term_textarea term_none"><?= $private_term['wr_content'] ?></textarea>
@@ -772,14 +773,18 @@ if ($_GET['recom_referral']){
 				$(id + "_term").animate({
 					height: "150px"
 				}, 100, function() {
-					$(id + ' .svg-inline--fa').css('transform', "rotate(180deg)");
+					$(id + ' .ri-arrow-down-s-line').css('transform', "rotate(180deg)");
+					$(id + ' i').addClass('ri-arrow-up-s-line');
+					$(id + ' i').removeClass('ri-arrow-down-s-line');
 				});
 			} else {
 				$(id + "_term").animate({
 					height: "0px"
 				}, 100, function() {
 					$(id + "_term").css("display", "none");
-					$(id + ' .svg-inline--fa').css('transform', "rotate(360deg)");
+					$(id + ' .ri-arrow-down-s-line').css('transform', "rotate(360deg)");
+					$(id + ' i').addClass('ri-arrow-down-s-line');
+					$(id + ' i').removeClass('ri-arrow-up-s-line');
 				});
 			}
 		}
