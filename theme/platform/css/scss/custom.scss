@@ -1,7 +1,7 @@
 
 $main-point-color: #3c8fcd !global;
-$main-button-color:#3c8fcd !global;
-$main-button-color2:#005596 !global;
+$main-button-color:#2fcaf6 !global;
+$main-button-color2:#0574a7  !global;
 $login-button-color1: #e3e7f6;
 $login-button-color2: #b2bed2;
 $main-button-border-color: #3ca1ec !global;
@@ -27,6 +27,9 @@ $main-title-color: #29386b !global;
 $content-box-background: #ffffff !global;
 $content-box-color: #000000 !global;
 
+$login-background1: #ffffff !global;
+$login-background2: #c0f2ff !global;
+
 $sub-color:#c47c2e;
 
 $main2-color:#3a0c39;
@@ -37,8 +40,8 @@ $second-color:#f0be63;
 $third-color:#c47c2e;
 $back-color:#171716;
 
-$navy-color:#1e5ab9;
-$sky-color:#3b86ff;
+$navy-color:#0574a7;
+$sky-color:#2fcaf6;
 
 #wrapper{}
 
@@ -65,14 +68,14 @@ $sky-color:#3b86ff;
 .btn, a.btn{border-radius:3px;}
 a.btn_secondary, .btn_secondary{
     color:black;
-    background:linear-gradient(to left, rgba(255,255,255,0.6),rgba(255,255,255,1));
+    background:linear-gradient(to bottom, $login-background1,$login-background2);
     border:none;
     border-radius: 8px;
     box-shadow: 0px 1px 2px rgba(0,0,0,0.25);
 
     &:hover{
         color:black;
-        background:linear-gradient(to left, #fff,#fff);;
+        background:linear-gradient(to top, #fff,#fff);;
         border:none;
     }
 }
@@ -97,13 +100,13 @@ a.btn_primary, .btn_primary, .btn.btn_primary{
     color:white;
     border-radius: 8px;
     box-shadow: 0px 1px 2px rgba(0,0,0,0.25);
-    background:linear-gradient(90deg, $main-button-color,$main-button-color2);
+    background:linear-gradient(to bottom, $main-button-color,$main-button-color2);
     border:1px solid $main-button-border-color;
     transition:all 1s;
 
     &:hover{
         color:white;
-        background:linear-gradient(90deg, $main-button-color,$main-button-color);
+        background:linear-gradient(to bottom, $main-button-color,$main-button-color);
     }
 }
 
@@ -267,7 +270,8 @@ a.btn_cancle, .btn_cancle{
 
 .r_card.active{
     border: 2px solid #ffffff;
-    box-shadow: 1px 1px 4px rgb(0 0 0 / 75%);
+    // box-shadow: 1px 1px 4px rgba(0 0 0 / 75%);
+    box-shadow: 0px 1px 2px rgba(0,0,0,0.75);
 }
 
 

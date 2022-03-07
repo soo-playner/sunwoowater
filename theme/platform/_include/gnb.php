@@ -113,7 +113,7 @@ $(document).ready(function(){
 		</div>	
 
 		<div class="gnb-footer">
-			<p class="copyright">Copyright ⓒ SUNWOO Co. ALL right reserved.</p>
+			<p class="copyright">Copyright ⓒ SUNWOO WATER Co. ALL right reserved.</p>
 		</div>
 	</nav>
 	<?}?>
