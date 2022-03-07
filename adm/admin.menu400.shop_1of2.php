@@ -33,11 +33,11 @@ if($member['mb_id'] == 'admin'){
     array('400400', '패키지 상품 현황', ''.G5_ADMIN_URL.'/bonus/rank_table.php','bbs_board'),
     );
 }else{
-    $menu['menu400'] = array (
+    /*$menu['menu400'] = array (
         array('400000', '패키지 상품관리', G5_ADMIN_URL.'/shop_admin/itemlist.php', 'scf_item'),
         array('400300', '패키지 상품관리', G5_ADMIN_URL.'/shop_admin/itemlist.php', 'scf_item'),
         array('400400', '패키지 상품 현황', ''.G5_ADMIN_URL.'/bonus/rank_table.php','bbs_board'),
-    );
+    );*/
 }
 
 ?>

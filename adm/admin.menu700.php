@@ -23,7 +23,7 @@ $menu["menu700"] = array (
 	*/
 );
 }else{
-	$menu["menu700"] = array (
+	/*$menu["menu700"] = array (
 	array('700000', ' 입금/출금/매출', ''.G5_ADMIN_URL.'/shop_admin/orderlist.php', '0'),
 	// array('70080', '통화/시세설정', G5_ADMIN_URL.'/bonus/config_price.php', 'sst_order_stats'),
 	array('70050', '입출금설정', G5_ADMIN_URL.'/bonus/wallet.config.php', 'sst_order_stats'),
@@ -31,7 +31,7 @@ $menu["menu700"] = array (
 	array('700400', '출금 요청 내역', G5_ADMIN_URL.'/adm.withdrawal_request.php', 'bbs_board'),
 	// array('700400', '마이닝 출금 요청 내역', G5_ADMIN_URL.'/adm.withdrawal_request_mining.php', 'bbs_board'),
 	array('700600', '입금 요청 내역', G5_ADMIN_URL.'/adm.deposit_request.php', 'bbs_board')
-	);
+	);*/
 }
 
 ?>
