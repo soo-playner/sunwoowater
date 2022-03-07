@@ -358,7 +358,7 @@ if ($w == '') {
 		$update_sql = "UPDATE auth_email set auth_check = '2' WHERE email = '{$mb_email}' AND id = {$row['id']}";
 		sql_query($update_sql); */
 
-        // 센터찾기 
+        /* // 센터찾기 
         $mb_center = return_org_member($mb_id,2);
        
         // 지점찾기 
@@ -371,7 +371,7 @@ if ($w == '') {
         $mb_bonbu = return_org_member($mb_id,5);
 
         $update_org_sql = "UPDATE g5_member set mb_center = '{$mb_center}', mb_jijum = '{$mb_jijum}', mb_jisa = '{$mb_jisa}', mb_bonbu = '{$mb_bonbu}' WHERE mb_id = '{$mb_id}' ";
-		sql_query($update_org_sql);
+		sql_query($update_org_sql); */
 	}
 	
 	/////////////////////////////////////////////////////////////////// 아바타 생성 코드

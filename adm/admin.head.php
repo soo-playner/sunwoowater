@@ -139,7 +139,7 @@ $(function(){
 
         <div id="logo"><a href="<?php echo G5_ADMIN_URL ?>">
             <img src="<?php echo G5_ADMIN_URL ?>/img/logo.jpg" alt="<?php echo $config['cf_title'] ?> 관리자"> 
-            <img class='adm_logo' src="<?=G5_THEME_URL?>/img/title.png" style='margin-left:15px;padding:5px 0'/>
+            <img class='adm_logo' src="<?=G5_THEME_URL?>/img/title_white.png" style='margin-left:15px;padding:5px 0'/>
             </a>
         </div>
        
