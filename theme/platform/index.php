@@ -8,8 +8,9 @@ if (G5_IS_MOBILE) {
 }
 
 // Header("Location:/page.php?id=structure");
-include_once(G5_THEME_PATH.'/dashboard.php');
-
+//**20220307 조진형 임시 조직도로  바로 갈수 있게 작업 */
+//include_once(G5_THEME_PATH.'/dashboard.php');
+include_once(G5_THEME_PATH.'/structure.php');
 ?>
 
 <!-- 최신글 시작 { 
