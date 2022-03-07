@@ -339,11 +339,11 @@ $stats_result = sql_fetch($stats_sql);
 		<col width="180" />
 		<col width="180" />
 		<col width="160" />
-		<col width="180" />
+		<!--<col width="180" />
 		<col width="180" />
 		<col width="150" />
 		<col width="150" />
-		<col width="120" />
+		<col width="120" />-->
 		<col width="120" />
 		<col width="100" />
 	</colgroup>
