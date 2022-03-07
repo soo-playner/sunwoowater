@@ -83,10 +83,10 @@ $(document).ready(function(){
 			
 
 			<li class="profile_icon"><a href="/page.php?id=profile"><span>개인정보&보안설정</span></a></li>
-			<li class="mywallet_icon"><a href="/page.php?id=mywallet"><span>입출금</span></a></li> 
+			<!--<li class="mywallet_icon"><a href="/page.php?id=mywallet"><span>입출금</span></a></li> 
 			<!--<li class="mining_icon"><a href="/page.php?id=mining"><span>마이닝</span></a></li>-->
-			<li class="upstairs_icon"><a href="/page.php?id=upstairs"><span>기부</span></a></li>
-			<li class="bonus_history_icon"><a href="/page.php?id=bonus_history"><span>보너스내역</span></a></li>
+			<!--<li class="upstairs_icon"><a href="/page.php?id=upstairs"><span>기부</span></a></li>
+			<li class="bonus_history_icon"><a href="/page.php?id=bonus_history"><span>보너스내역</span></a></li>-->
 			<?
 				if($member['center_use'] == 1){?>
 				<li class="center_page"><a href="/page.php?id=center_page"><i class="ri-team-line" style='font-size:26px;color:#435388'></i><span style='margin-left:22px;'>센터회원관리</span></a></li>
@@ -98,6 +98,7 @@ $(document).ready(function(){
 			<li class="notice_icon"><a href="/page.php?id=news"><span>공지사항</span></a></li>
 			<li class="question_icon"><a href="/page.php?id=support_center"><span>1:1문의사항</span></a></li>
 			<li class="reffer_icon"><a href="/page.php?id=referral_link"><span>추천인링크</span></a></li>
+			<?if($member['mb_level'] >= 9){?><li class="profile_icon"><a href="<?=G5_ADMIN_URL?>"><span>관리자</span></a></li><?}?>
 			<!-- <li class="shopping_mall_icon"><a href="javascript:move_to_shop();"><span>쇼핑몰</span></a></li> -->
 			<!-- <div class="b_line3"></div> -->
 		</ul>	
