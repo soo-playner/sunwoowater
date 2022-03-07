@@ -360,14 +360,14 @@ $stats_result = sql_fetch($stats_sql);
 		<th scope="col" rowspan="2" id="mb_list_id" class="td_name center"><?php echo subject_sort_link('mb_name') ?>이름/닉네임</a></th>
 		<th scope="col" rowspan="2" id="mb_list_mobile" class="td_mail"><?php echo subject_sort_link('mb_recommend') ?>추천인</th>
 		<th scope="col" id="mb_list_auth"  class="bonus_eth" rowspan="2"><?php echo subject_sort_link('total_fund') ?>구매가능잔고</th>
-		<th scope="col" id="mb_list_auth2" class="bonus_calc"  rowspan="2"><?php echo subject_sort_link('deposit_point') ?>총입금액 <br></th>
+		<!--<th scope="col" id="mb_list_auth2" class="bonus_calc"  rowspan="2"><?php echo subject_sort_link('deposit_point') ?>총입금액 <br></th>
 		<th scope="col" id="mb_list_auth2" class="bonus_usdt" style='color:white !important' rowspan="2"><?php echo subject_sort_link('mb_shift_amt') ?>출금총액</th>
 		
 		<th scope="col" id="mb_list_auth2" class="bonus_bb bonus_benefit"  rowspan="2"><?php echo subject_sort_link('mb_balance') ?> 수당합계</th>
 		<th scope="col" id="mb_list_auth2" class="bonus_cc"  rowspan="2"><?php echo subject_sort_link('mb_save_point') ?> 구매실적(PV)</th>
 		<th scope="col" id="mb_list_auth2" class="bonus_aa"  rowspan="2"><?php echo subject_sort_link('mb_rate') ?> 보유볼(B)</th>
 		<th scope="col" id="mb_list_auth2" class="bonus_bb bonus_out"  rowspan="2">DSP</th>
-		<th scope="col" rowspan="2" id="" class="item_title">상위보유패키지</th>
+		<th scope="col" rowspan="2" id="" class="item_title">상위보유패키지</th>-->
 		
 		<th scope="col" id="mb_list_member" style="min-width:40px;"><?php echo subject_sort_link('mb_today_login', '', 'desc') ?>최종접속</a></th>
 		<th scope="col" rowspan="2" id="mb_list_mng">관리</th>
@@ -448,7 +448,7 @@ $stats_result = sql_fetch($stats_sql);
 		<td rowspan="2" class="td_mbname center"><?php echo $row['mb_recommend'] ?></td>
 
 		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><strong><?=shift_auto_zero($available_fund)?></strong></td>
-		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><strong><?=shift_auto_zero($row['mb_deposit_point'])?> </strong></td>
+		<!--<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><strong><?=shift_auto_zero($row['mb_deposit_point'])?> </strong></td>
 		<td headers="mb_list_auth" class="td_mbstat" style='color:red' rowspan="2"><?=shift_auto_zero($row['mb_shift_amt'])?></td>
 		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><strong><?= shift_auto_zero($total_bonus) ?> </strong></td>
 		<td headers="mb_list_auth" class="td_mbstat" rowspan="2"><?= shift_auto_zero($row['mb_save_point']) ?></td>
