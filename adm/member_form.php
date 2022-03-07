@@ -489,10 +489,11 @@ $rank_sql = "select * from rank where mb_id = '{$mb['mb_id']}' and rank = '{$mb[
 	
 
 	<tr class='divide-top'>
-		<td colspan="4" style="background:#fff1ab;">회원자산 및 상품현황</td>
+		<!--<td colspan="4" style="background:#fff1ab;">회원자산 및 상품현황</td>-->
+		<td colspan="4" style="background:#fff1ab;">회원자산</td>
 	<tr>
 
-	<tr class="ly_up padding-box fund">
+	<!--<tr class="ly_up padding-box fund">
 		<th scope="row">보유 잔고 (<?=ASSETS_CURENCY?>)</th>
 		
 		<td colspan="1">
@@ -537,15 +538,15 @@ $rank_sql = "select * from rank where mb_id = '{$mb['mb_id']}' and rank = '{$mb[
 		<td colspan="1"><span class='strong mining_soodang'><?=shift_auto($mb[$mining_target],$minings[0])?> <?=strtoupper($minings[0])?></span> </td>
 	</tr> -->
 
-	<tr class="ly_up padding-box fund">
+	<!--<tr class="ly_up padding-box fund">
 		<th scope="row">출금총액</th>
 		<td colspan="1"><span class='strong amt'><?=shift_auto($mb['mb_shift_amt'])?> <?=ASSETS_CURENCY?> </span>  
 		<!-- &nbsp&nbsp( <?=shift_auto(($mb['mb_shift_amt']),WITHDRAW_CURENCY)?> <?=WITHDRAW_CURENCY?> ) -->
-	</td>
+	<!--</td>
 
 		<!-- <th scope="row">마이닝출금액</th>
 		<td colspan="1"><span class='strong amt'><?=shift_auto($mb[$mining_amt_target],$minings[0])?> <?=strtoupper($minings[0])?></span></td> -->
-	</tr>
+	<!--</tr>
 
 	<tr class="ly_up padding-box">
 		<th scope="row">패키지 보유</th>
@@ -553,7 +554,7 @@ $rank_sql = "select * from rank where mb_id = '{$mb['mb_id']}' and rank = '{$mb[
 		<td colspan="3">
 			최고보유 패키지 :
 			<!-- <span class='badge t_white color<?= max_item_level_array($mb['mb_id'], 'number') ?>' style='padding:15px;'><?= max_item_level_array($mb['mb_id']) ?></span> -->
-			<span class='badge t_white <?=rank_return($mb['rank'],'color')?>' style='padding:15px;'><?=rank_return($mb['rank'])?></span>
+			<!--<span class='badge t_white <?=rank_return($mb['rank'],'color')?>' style='padding:15px;'><?=rank_return($mb['rank'])?></span>
 			<span class='divide' style="margin-right:20px;">|</span>
 			재기부 설정 : <input type="text" id='recharge' class='frm_input' style="width:40px;min-width:40px;" value="<?=$extra_recharge?>">
 			<span class='divide' style="margin:0 20px;">|</span>
@@ -603,7 +604,7 @@ $rank_sql = "select * from rank where mb_id = '{$mb['mb_id']}' and rank = '{$mb[
 	</tr>
 
 	
-	</tr>
+	</tr>-->
 
 	<script>
 		$(function(){
