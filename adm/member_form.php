@@ -278,6 +278,9 @@ $rank_sql = "select * from rank where mb_id = '{$mb['mb_id']}' and rank = '{$mb[
 	}
 </style>
 
+<link href="<?=G5_THEME_URL ?>/css/dd.css" rel="stylesheet">
+<script src="<?=G5_THEME_URL?>/_common/js/jquery.dd.min.js"></script>
+
 <form name="fmember" id="fmember" action="./member_form_update.php" onsubmit="return fmember_submit(this);" method="post" enctype="multipart/form-data">
 <input type="hidden" name="w" value="<?php echo $w ?>">
 <input type="hidden" name="sfl" value="<?php echo $sfl ?>">
@@ -403,6 +406,10 @@ $rank_sql = "select * from rank where mb_id = '{$mb['mb_id']}' and rank = '{$mb[
 
 		<th scope="row"><label for="mb_level">회원 레벨</label></th>
 		<td ><?php echo get_member_level_select('mb_level', 0, $member['mb_level'], $mb['mb_level']) ?> <div> </td>
+	</tr>
+	<tr>
+		<th scope="row"><label for="mb_level">회원 국적</label></th>
+		<td ><?=get_member_nation_select('nation_number',$mb['nation_number'])?></td>
 	</tr>
 
 
@@ -1001,6 +1008,7 @@ function fmember_submit(f)
 
 $(function() {
 		onlyNumber('bank_account');
+		$("#nation_number").msDropDown();
 
 		// 주소 찾기
 		const mb_addr1 = document.getElementById("mb_addr1");
