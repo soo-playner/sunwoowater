@@ -388,7 +388,7 @@ function sponsor_habu_sales($mb_id)
 
 
 /*국가코드*/
-$nation_name = array('Japan' => 81, 'Republic of Korea' => 82, 'Vietnam' => 84, 'China' => 86, 'Indonesia' => 62, 'Philippines' => 63, 'Thailand' => 66);
+$nation_name = array('Korea' => 82,'USA' => 1, 'Japan' => 81,  'Vietnam' => 84, 'China' => 86, 'Thailand' => 66);
 
 // 회원가입시
 function get_member_nation_select($name, $selected = 0, $key = "")
@@ -399,11 +399,10 @@ function get_member_nation_select($name, $selected = 0, $key = "")
 	$str .= ">\n";
 
 	foreach ($nation_name as $key => $value) {
-		$str .= '<option value="' . $value . '"';
-		echo $value . " | " . $selected . "<br>";
+		$str .= '<option value="' . $value . '" title='.national_flag($value) ;
 		if ($value == $selected)
 			$str .= ' selected="selected"';
-		$str .= ">0" . $value . " - {$key}</option>\n";
+		$str .= ">{$key}</option>\n";
 	}
 	$str .= "</select>\n";
 	return $str;

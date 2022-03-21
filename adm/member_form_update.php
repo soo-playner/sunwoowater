@@ -130,7 +130,8 @@ $sql_common = "  mb_name = '{$_POST['mb_name']}',
 				 mb_jisa = '{$_POST['mb_jisa']}',
 				 mb_jijum = '{$_POST['mb_jijum']}',
 				 mb_bonbu = '{$_POST['mb_bonbu']}',
-				 mb_block = '{$mb_block}' ";
+				 mb_block = '{$mb_block}',
+				 nation_number = '{$_POST['nation_number']}' ";
 
 if ($w == '')
 {
