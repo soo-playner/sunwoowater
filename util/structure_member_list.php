@@ -9,9 +9,9 @@ $mb_id = $srow['mb_id'];
 
 
 if($srow['mb_level'] < 2){
-	$depth_limit = 4;
+	$depth_limit = 1;
 }else{
-	$depth_limit = 4;
+	$depth_limit = 1;
 }
 
 $result  = return_down_manager($mb_id,$depth_limit);
