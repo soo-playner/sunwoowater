@@ -1,8 +1,6 @@
 <?php 
 include_once('./_common.php');
 
-
-
 $servername = G5_MYSQL_HOST;
 $username = G5_MYSQL_USER;
 $password = G5_MYSQL_PASSWORD; // on localhost by default there is no password
@@ -20,7 +18,7 @@ if( $geturl && $geturl != "" )
     if (filter_var($url, FILTER_VALIDATE_URL)) 
     {
         // Create connection
-        $conn = new mysqli($servername, $username, $password, $dbname);
+        $conn = $connect_db;
         // Check connection
         if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
