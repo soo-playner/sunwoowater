@@ -564,14 +564,14 @@ if ($_GET['recom_referral']){
 
 
 			<!-- 추천인 정보 -->
-			<p class="check_appear_title mt10"><span >추천인 등록</span></p>
+			<p class="check_appear_title mt10"><span >추천인 등록</span><span class='' style='margin-left:20px;font-weight:500; font-size:12px;'>※ 회원아이디 또는 닉네임을 정확히 입력해주세요</span></p>
 			<section class='referzone'>
 				<div class="btn_input_wrap">
 					<input type="text" name="mb_recommend" id="reg_mb_recommend" value="<?= $mb_recommend ?>" required placeholder="추천인 아이디" />
-					<div class='in_btn_ly2'>
+					
+					<div class='in_btn_ly' style='margin-top:-38px;'>
 						<button type='button' class="btn_round check " onclick="getUser('#reg_mb_recommend',1);" style=""><span data-i18n="signUp.검색">Search</span></button>
 					</div>
-					
 				</div>
 			</section>
 
