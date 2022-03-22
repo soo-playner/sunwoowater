@@ -2946,24 +2946,63 @@ function member_delete($mb_id)
 	// sql_query($sql);
 	// print_R($sql);
 
+	$selectinsert = "  ";
+    $selectinsert = $selectinsert." INSERT INTO {$g5['member_del_table']} ( ";
+	$selectinsert = $selectinsert." 							mb_no,mb_id,grade,mb_level,mb_balance,mb_deposit_point,mb_deposit_calc,mb_rate,";
+	$selectinsert = $selectinsert." 							mb_pv,mb_save_point,mb_shift_amt,cash_point,mb_mining_1,mb_mining_1_amt,mb_balance_ignore,";
+	$selectinsert = $selectinsert." 								sales_day,rank_note,rank,mb_bre_time,depth,mb_brecommend,mb_brecommend_type,mb_lr,mb_recommend,";
+	$selectinsert = $selectinsert." 								mb_recommend_no,mb_sponsor,mb_center,mb_jisa,mb_jijum,mb_bonbu,center_use,mb_password,mb_name,";
+	$selectinsert = $selectinsert." 								mb_nick,mb_nick_date,mb_email,nation_number,mb_homepage,mb_sex,mb_birth,mb_tel,mb_hp,mb_certify,";
+	$selectinsert = $selectinsert." 								mb_adult,mb_dupinfo,mb_zip1,mb_zip2,mb_addr1,mb_addr2,mb_addr3,mb_addr_jibeon,mb_signature,mb_block,";
+	$selectinsert = $selectinsert." 								eth_addr,eth_key,eth_download,mb_today_login,mb_login_ip,mb_datetime,mb_ip,mb_leave_date,mb_intercept_date,";
+	$selectinsert = $selectinsert." 								mb_email_certify,mb_email_certify2,mb_memo,mb_lost_certify,mb_mailling,mb_sms,mb_open,mb_open_date,mb_profile,";
+	$selectinsert = $selectinsert." 								mb_memo_call,mb_1,mb_2,mb_3,mb_4,mb_5,mb_6,mb_7,mb_8,mb_9,reg_tr_password,mb_child,mb_org_num,mb_my_sales,";
+	$selectinsert = $selectinsert." 								mb_habu_sum,noo_my_sales,noo_habu_sum,mon_my_sales,mon_habu_sum,otp_key,otp_flag,recom_sales,brecom_sales,";
+	$selectinsert = $selectinsert." 								mb_index,recom_mining,brecom_mining,mb_b_child,mb_fee,pool_level,day_habu_sales,reset_day,membership_yn,last_name,";
+	$selectinsert = $selectinsert." 								first_name,webhook,eth_wallet,eth_wallet_id,btc_wallet,ltc_wallet,mail_invalid,avatar_rate,it_avatar_profit,";
+	$selectinsert = $selectinsert." 								fcm_token,bank_name,bank_account,account_name,withdraw_wallet,key_download,del_ip,del_date";
+	$selectinsert = $selectinsert." 							)";
+	$selectinsert = $selectinsert." SELECT mb_no,mb_id,grade,mb_level,mb_balance,mb_deposit_point,mb_deposit_calc,mb_rate,";
+	$selectinsert = $selectinsert." 	   mb_pv,mb_save_point,mb_shift_amt,cash_point,mb_mining_1,mb_mining_1_amt,mb_balance_ignore,";
+	$selectinsert = $selectinsert." 	   sales_day,rank_note,rank,mb_bre_time,depth,mb_brecommend,mb_brecommend_type,mb_lr,mb_recommend,";
+	$selectinsert = $selectinsert." 	   mb_recommend_no,mb_sponsor,mb_center,mb_jisa,mb_jijum,mb_bonbu,center_use,mb_password,mb_name,";
+	$selectinsert = $selectinsert." 	   mb_nick,mb_nick_date,mb_email,nation_number,mb_homepage,mb_sex,mb_birth,mb_tel,mb_hp,mb_certify,";
+	$selectinsert = $selectinsert." 	   mb_adult,mb_dupinfo,mb_zip1,mb_zip2,mb_addr1,mb_addr2,mb_addr3,mb_addr_jibeon,mb_signature,mb_block,";
+	$selectinsert = $selectinsert." 	   eth_addr,eth_key,eth_download,mb_today_login,mb_login_ip,mb_datetime,mb_ip,mb_leave_date,mb_intercept_date,";
+	$selectinsert = $selectinsert." 	   mb_email_certify,mb_email_certify2,mb_memo,mb_lost_certify,mb_mailling,mb_sms,mb_open,mb_open_date,mb_profile,";
+	$selectinsert = $selectinsert." 	   mb_memo_call,mb_1,mb_2,mb_3,mb_4,mb_5,mb_6,mb_7,mb_8,mb_9,reg_tr_password,mb_child,mb_org_num,mb_my_sales,";
+	$selectinsert = $selectinsert." 	   mb_habu_sum,noo_my_sales,noo_habu_sum,mon_my_sales,mon_habu_sum,otp_key,otp_flag,recom_sales,brecom_sales,";
+	$selectinsert = $selectinsert." 	   mb_index,recom_mining,brecom_mining,mb_b_child,mb_fee,pool_level,day_habu_sales,reset_day,membership_yn,last_name,";
+	$selectinsert = $selectinsert." 	   first_name,webhook,eth_wallet,eth_wallet_id,btc_wallet,ltc_wallet,mail_invalid,avatar_rate,it_avatar_profit,";
+	$selectinsert = $selectinsert." 	   fcm_token,bank_name,bank_account,account_name,withdraw_wallet,key_download,'{$_SERVER['REMOTE_ADDR']}',NOW() ";
+	$selectinsert = $selectinsert."	FROM {$g5['member_table']} WHERE mb_id = '{$mb_id}'";
+
+	sql_query($selectinsert);
+
+	$sql = " select count(*) as count  from {$g5['member_table']} where mb_id= '".$mb_id."' ";
+	$mb = sql_fetch($sql);
+	if($mb['count'] <= 0) return;
+
+	// $mb = sql_fetch($sql);
 	// 멤버 테이블에서 삭제
 	sql_query(" delete from {$g5['member_table']} where mb_id = '$mb_id' ");
 
 	// 포인트 테이블에서 삭제
 	sql_query(" delete from {$g5['point_table']} where mb_id = '$mb_id' ");
-
+	//데이터를 안넣고 있음.
 	// 그룹접근가능 삭제
 	sql_query(" delete from {$g5['group_member_table']} where mb_id = '$mb_id' ");
-
+	//데이터를 안넣고 있음.
 	// 쪽지 삭제
 	sql_query(" delete from {$g5['memo_table']} where me_recv_mb_id = '$mb_id' or me_send_mb_id = '$mb_id' ");
 
 	// 스크랩 삭제
 	sql_query(" delete from {$g5['scrap_table']} where mb_id = '$mb_id' ");
+	//데이터를 안넣고 있음.
 
 	// 관리권한 삭제
 	sql_query(" delete from {$g5['auth_table']} where mb_id = '$mb_id' ");
-
+	//데이터를 안넣고 있음.
 	// 그룹관리자인 경우 그룹관리자를 공백으로
 	sql_query(" update {$g5['group_table']} set gr_admin = '' where gr_admin = '$mb_id' ");
 
